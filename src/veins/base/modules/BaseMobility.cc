@@ -243,7 +243,7 @@ void BaseMobility::handleSelfMsg(cMessage* msg)
 
 void BaseMobility::handleBorderMsg(cMessage* msg)
 {
-    EV_TRACE << "start MOVE_TO_BORDER:" << move.info() << endl;
+    EV_TRACE << "start MOVE_TO_BORDER:" << move.str() << endl;
 
     BorderMsg* bMsg = static_cast<BorderMsg*>(msg);
 
@@ -277,12 +277,12 @@ void BaseMobility::handleBorderMsg(cMessage* msg)
 
     delete bMsg;
 
-    EV_TRACE << "end MOVE_TO_BORDER:" << move.info() << endl;
+    EV_TRACE << "end MOVE_TO_BORDER:" << move.str() << endl;
 }
 
 void BaseMobility::updatePosition()
 {
-    EV_DEBUG << "updatePosition: " << move.info() << endl;
+    EV_DEBUG << "updatePosition: " << move.str() << endl;
 
     // publish the the new move
     emit(mobilityStateChangedSignal, this);
