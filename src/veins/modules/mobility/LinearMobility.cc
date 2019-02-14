@@ -54,7 +54,7 @@ void LinearMobility::fixIfHostGetsOutside()
  */
 void LinearMobility::makeMove()
 {
-    EV_TRACE << "start makeMove " << move.info() << endl;
+    EV_TRACE << "start makeMove " << move.str() << endl;
 
     move.setStart(stepTarget, simTime());
 
