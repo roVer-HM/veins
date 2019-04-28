@@ -25,14 +25,17 @@ import inet.physicallayer.unitdisk.UnitDiskRadioMedium;
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.node.icn.ICNPublisherHost;
 import inet.node.icn.ICNAccessPoint;
+import inet.node.inet.StandardHost;
+import inet.node.wireless.AccessPoint;
 import ned.DatarateChannel;
 import inet.visualizer.integrated.IntegratedCanvasVisualizer;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetCar;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetPerson;
+import org.car2x.veins.subprojects.veins_inet.VeinsInetPersonClassic;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetManager;
+import inet.node.inet.Router;
 
-
-network ScenarioPedestrians
+network ScenarioPedestriansClassic
 {
     types:
         channel C extends DatarateChannel
@@ -47,24 +50,21 @@ network ScenarioPedestrians
         manager: VeinsInetManager {
             @display("p=244.976,64.256");
         }
-        carNode[0]: VeinsInetCar {
-            @display("p=903.6,841.352");
-        }
-        personNode[0]: VeinsInetPerson {
+        personNode[0]: VeinsInetPersonClassic {
             @display("p=757.016,901.592");
         }
         configurator: Ipv4NetworkConfigurator {
             @display("p=82.327995,64.256");
         }
-        publisher: ICNPublisherHost {
+        publisher: StandardHost {
             parameters:
                 numWlanInterfaces = 0;
                 @display("p=160.64,228.91199");
         }
-        accessPoint2: ICNAccessPoint {
+        accessPoint2: AccessPoint {
             parameters:
                 @display("p=625.3,657.41");
         }
     connections:
-        publisher.pppg++ <--> C <--> accessPoint2.pppg++;
+        publisher.ethg++ <--> C <--> accessPoint2.ethg++;
 }
