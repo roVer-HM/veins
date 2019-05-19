@@ -32,10 +32,6 @@ module VeinsInetPersonClassic extends WirelessHost
     parameters:
         @display("i=device/cellphone");
         ipv4.configurator.networkConfiguratorModule = "";
-    submodules:
-        ifConfig: HostAutoConfigurator {
-            @display("p=125,320;is=s");
-		}
 
 }
 

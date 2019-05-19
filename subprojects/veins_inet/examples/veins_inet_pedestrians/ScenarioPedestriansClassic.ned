@@ -34,6 +34,7 @@ import org.car2x.veins.subprojects.veins_inet.VeinsInetPerson;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetPersonClassic;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetManager;
 import inet.node.inet.Router;
+import inet.visualizer.integrated.IntegratedCanvasVisualizer;
 
 network ScenarioPedestriansClassic
 {
@@ -61,10 +62,25 @@ network ScenarioPedestriansClassic
                 numWlanInterfaces = 0;
                 @display("p=160.64,228.91199");
         }
+        gateway: Router {
+            @display("p=364,446");
+        }
+        dhcpServer: StandardHost {
+            @display("p=787,579");
+            numApps = 1;
+            app[0].typename = "DhcpServer";
+            app[0].numReservedAddresses = 3;
+            app[0].maxNumClients = 1000;
+            app[0].gateway = "192.168.0.1";
+            app[0].leaseTime = 500s;
+        }
         accessPoint2: AccessPoint {
             parameters:
                 @display("p=625.3,657.41");
         }
+        visualizer: IntegratedCanvasVisualizer;
     connections:
-        publisher.ethg++ <--> C <--> accessPoint2.ethg++;
+        gateway.ethg++ <--> C <--> accessPoint2.ethg++;
+        publisher.ethg++ <--> C <--> gateway.ethg++;
+        accessPoint2.ethg++ <--> C <--> dhcpServer.ethg++;
 }
