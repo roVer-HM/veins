@@ -199,6 +199,11 @@ protected:
      * calls the subscription manager and updates modules according to results.
      */
     void processSubscriptions(TraCIBuffer& buffer);
+
+private:
+
+    simsignal_t activePersonsSignal;
+    long activePersonCount;
 };
 
 class VEINS_API TraCIScenarioManagerAccess {

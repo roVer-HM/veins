@@ -21,17 +21,17 @@
 package org.car2x.veins.subprojects.veins_inet;
 
 import inet.networklayer.configurator.ipv4.HostAutoConfigurator;
-import inet.node.inet.AdhocHost;
-import inet.node.icn.ICNSubscriberHost;
+import inet.node.inet.WirelessHost;
 import inet.node.icn.ICNAdvancedSubscriberHost;
 
 //
 // Wireless-enabled Host
 //
-module VeinsInetPerson extends ICNSubscriberHost
+module VeinsInetPersonClassic extends WirelessHost
 {
     parameters:
         @display("i=device/cellphone");
+        ipv4.configurator.networkConfiguratorModule = "";
 
 }
 

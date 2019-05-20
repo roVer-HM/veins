@@ -275,6 +275,9 @@ void TraCIScenarioManager::initialize(int stage)
     executeOneTimestepTrigger = new cMessage("step");
     scheduleAt(firstStepAt, executeOneTimestepTrigger);
 
+    activePersonsSignal = registerSignal("activePersons");
+    activePersonCount = 0;
+
     EV_DEBUG << "initialized TraCIScenarioManager" << endl;
 }
 
@@ -560,6 +563,9 @@ void TraCIScenarioManager::executeOneTimestep()
 
     emit(traciTimestepEndSignal, targetTime);
 
+    // emit number of active persons
+    emit(activePersonsSignal, activePersonCount);
+
     if (!autoShutdownTriggered) scheduleAt(simTime() + updateInterval, executeOneTimestepTrigger);
 }
 
@@ -589,6 +595,7 @@ void TraCIScenarioManager::processSubscriptions(TraCIBuffer& buffer)
         cModule* mod = getManagedModule(personID);
         if (mod) deleteManagedModule(personID);
         EV_DEBUG << "Unsubscribed to person with id " << personID << std::endl;
+        activePersonCount--;
     }
 
     // simulation next
@@ -786,6 +793,7 @@ void TraCIScenarioManager::processUpdatedPersons(std::vector<TraCISubscriptionMa
             if (mType != "0") {
                 addModule(person.id, mType, mName, mDisplayString, p, person.edgeID, person.speed, heading);
                 EV_DEBUG << "Added person #" << person.id << endl;
+                activePersonCount++;
             }
         }
         else {

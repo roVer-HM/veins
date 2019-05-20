@@ -41,6 +41,8 @@ simple TraCIScenarioManager
         @signal[org.car2x.veins.modules.mobility.traciModuleRemoved](type=cModule);
         @signal[org.car2x.veins.modules.mobility.traciTimestepBegin](type=simtime_t);
         @signal[org.car2x.veins.modules.mobility.traciTimestepEnd](type=simtime_t);
+        @signal[activePersons](type="long");
+        @statistic[activePersonsStatistic](title="active persons statistic"; source="activePersons"; record=vector; interpolationmode=none);
         @class(veins::TraCIScenarioManager);
         double connectAt @unit("s") = default(0s);  // when to connect to TraCI server (must be the initial timestep of the server)
         double firstStepAt @unit("s") = default(-1s);  // when to start synchronizing with the TraCI server (-1: immediately after connecting)
