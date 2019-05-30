@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Wed Mar  6 15:00:14 2019 by Eclipse SUMO polyconvert Version 1.1.0
+<!-- generated on Mon May 27 17:10:39 2019 by Eclipse SUMO polyconvert Version 1.1.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/polyconvertConfiguration.xsd">
 
     <input>
         <net-file value="hochschule_muenchen.net.xml"/>
         <osm-files value="hochschule_muenchen.osm"/>
+        <type-file value="/usr/share/sumo/data/typemap/osmPolyconvert.typ.xml"/>
     </input>
 
     <output>

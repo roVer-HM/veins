@@ -34,6 +34,8 @@ import org.car2x.veins.subprojects.veins_inet.VeinsInetManager;
 
 network ScenarioPedestrians
 {
+    //    parameters:
+    //        @display("bgb=1684,885;bgi=veins/background/hochschule_muenchenBGI");
     types:
         channel C extends DatarateChannel
         {
@@ -48,10 +50,10 @@ network ScenarioPedestrians
             @display("p=244.976,64.256");
         }
         carNode[0]: VeinsInetCar {
-            @display("p=903.6,841.352");
+            @display("p=192.65999,839.93");
         }
         personNode[0]: VeinsInetPerson {
-            @display("p=757.016,901.592");
+            @display("p=96.329994,839.93");
         }
         configurator: Ipv4NetworkConfigurator {
             @display("p=82.327995,64.256");
@@ -59,11 +61,11 @@ network ScenarioPedestrians
         publisher: ICNPublisherHost {
             parameters:
                 numWlanInterfaces = 0;
-                @display("p=160.64,228.91199");
+                @display("p=684.45,699.66");
         }
         accessPoint2: ICNAccessPoint {
             parameters:
-                @display("p=625.3,657.41");
+                @display("p=290.68,346.44998");
         }
     connections:
         publisher.pppg++ <--> C <--> accessPoint2.pppg++;
