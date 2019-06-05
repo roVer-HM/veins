@@ -60,13 +60,14 @@ network ScenarioPedestriansClassic
         publisher: StandardHost {
             parameters:
                 numWlanInterfaces = 0;
-                @display("p=160.64,228.91199");
+                // exactly the same position as in icn config
+                @display("p=684.45,699.66");
         }
         gateway: Router {
-            @display("p=364,446");
+            @display("p=483,515");
         }
         dhcpServer: StandardHost {
-            @display("p=787,579");
+            @display("p=410,276");
             numApps = 1;
             app[0].typename = "DhcpServer";
             app[0].numReservedAddresses = 3;
@@ -76,7 +77,8 @@ network ScenarioPedestriansClassic
         }
         accessPoint2: AccessPoint {
             parameters:
-                @display("p=625.3,657.41");
+                // exactly the same position as in icn config
+                @display("p=290.68,346.44998");
         }
         visualizer: IntegratedCanvasVisualizer;
     connections:

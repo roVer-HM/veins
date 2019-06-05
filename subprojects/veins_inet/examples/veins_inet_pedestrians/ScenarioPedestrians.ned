@@ -61,10 +61,12 @@ network ScenarioPedestrians
         publisher: ICNPublisherHost {
             parameters:
                 numWlanInterfaces = 0;
+                // exactly the same position as in classic config
                 @display("p=684.45,699.66");
         }
         accessPoint2: ICNAccessPoint {
             parameters:
+                // exactly the same position as in classic config
                 @display("p=290.68,346.44998");
         }
     connections:
