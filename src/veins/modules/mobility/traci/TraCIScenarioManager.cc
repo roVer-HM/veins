@@ -450,7 +450,7 @@ void TraCIScenarioManager::updateModulePosition(cModule* mod, const Coord& p, co
 }
 
 // name: host;Car;i=vehicle.gif
-void TraCIScenarioManager::addModule(std::string nodeId, std::string type,
+bool TraCIScenarioManager::addModule(std::string nodeId, std::string type,
     std::string name, std::string displayString, const Coord& position,
     std::string road_id, double speed, Heading heading,
     VehicleSignalSet signals, double length, double height, double width)
@@ -463,7 +463,7 @@ void TraCIScenarioManager::addModule(std::string nodeId, std::string type,
 
     if (fabs(option1 - penetrationRate) < fabs(option2 - penetrationRate)) {
         unEquippedHosts.insert(nodeId);
-        return;
+        return false;
     }
 
     int32_t nodeVectorIndex = nextNodeVectorIndex++;
@@ -504,6 +504,8 @@ void TraCIScenarioManager::addModule(std::string nodeId, std::string type,
     }
 
     emit(traciModuleAddedSignal, mod);
+
+    return true;
 }
 
 cModule* TraCIScenarioManager::getManagedModule(std::string nodeId)
@@ -748,13 +750,13 @@ void TraCIScenarioManager::processUpdatedPersons(std::vector<TraCISubscriptionMa
                 unEquippedHosts.erase(person.id);
                 EV_DEBUG << "person (unequipped) # " << person.id << " left region of interest" << endl;
             }
-            return;
+            continue;
         }
 
         // Check if unequipped
         // ------------------------------
         if (isModuleUnequipped(person.id)) {
-            return;
+            continue;
         }
 
         // Update or create module
@@ -791,9 +793,12 @@ void TraCIScenarioManager::processUpdatedPersons(std::vector<TraCISubscriptionMa
             }
 
             if (mType != "0") {
-                addModule(person.id, mType, mName, mDisplayString, p, person.edgeID, person.speed, heading);
-                EV_DEBUG << "Added person #" << person.id << endl;
-                activePersonCount++;
+                bool personAdded = addModule(person.id, mType, mName, mDisplayString, p, person.edgeID, person.speed, heading);
+                if (personAdded) {
+                    EV_DEBUG << "Added person #" << person.id << endl;
+                    activePersonCount++;
+                }
+
             }
         }
         else {
