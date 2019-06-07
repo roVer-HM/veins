@@ -248,6 +248,7 @@ void TraCIScenarioManager::initialize(int stage)
     if (firstStepAt == -1) firstStepAt = connectAt + updateInterval;
     parseModuleTypes();
     penetrationRate = par("penetrationRate").doubleValue();
+    maximumNumberOfModules = par("maximumNumberOfModules");
     ignoreGuiCommands = par("ignoreGuiCommands");
     host = par("host").stdstringValue();
     port = par("port");
@@ -277,6 +278,18 @@ void TraCIScenarioManager::initialize(int stage)
 
     activePersonsSignal = registerSignal("activePersons");
     activePersonCount = 0;
+
+    addModuleCallCounter = 0;
+    size_t numberOfModulesNeeded = penetrationRate * maximumNumberOfModules;
+
+    while (selectedCalls.size() < numberOfModulesNeeded) {
+        int call = intuniform(1, maximumNumberOfModules);
+        auto search = selectedCalls.find(call);
+        if (search == selectedCalls.end()) {
+            // not in selected
+            selectedCalls.insert(call);
+        } // if already stored keep going
+    }
 
     EV_DEBUG << "initialized TraCIScenarioManager" << endl;
 }
@@ -455,13 +468,13 @@ bool TraCIScenarioManager::addModule(std::string nodeId, std::string type,
     std::string road_id, double speed, Heading heading,
     VehicleSignalSet signals, double length, double height, double width)
 {
+    addModuleCallCounter++;
 
     if (hosts.find(nodeId) != hosts.end()) error("tried adding duplicate module");
 
-    double option1 = hosts.size() / (hosts.size() + unEquippedHosts.size() + 1.0);
-    double option2 = (hosts.size() + 1) / (hosts.size() + unEquippedHosts.size() + 1.0);
-
-    if (fabs(option1 - penetrationRate) < fabs(option2 - penetrationRate)) {
+    auto search = selectedCalls.find(addModuleCallCounter);
+    // if this call was not selected skip it
+    if (search == selectedCalls.end()) {
         unEquippedHosts.insert(nodeId);
         return false;
     }
@@ -595,9 +608,12 @@ void TraCIScenarioManager::processSubscriptions(TraCIBuffer& buffer)
     for (auto personID : disappearedPersons) {
         // check if this object has been deleted already (e.g. because it was outside the ROI)
         cModule* mod = getManagedModule(personID);
-        if (mod) deleteManagedModule(personID);
+        if (mod) {
+            deleteManagedModule(personID);
+            activePersonCount--;
+        }
         EV_DEBUG << "Unsubscribed to person with id " << personID << std::endl;
-        activePersonCount--;
+
     }
 
     // simulation next

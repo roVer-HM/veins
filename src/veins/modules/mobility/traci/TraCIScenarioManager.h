@@ -122,7 +122,7 @@ protected:
     std::vector<std::string> trafficLightModuleIds; /**< list of traffic light module ids that is subscribed to (whitelist) */
 
     bool autoShutdown; /**< Shutdown module as soon as no more vehicles are in the simulation */
-    double penetrationRate;
+
     bool ignoreGuiCommands; /**< whether to ignore all TraCI commands that only make sense when the server has a graphical user interface */
     TraCIRegionOfInterest roi; /**< Can return whether a given position lies within the simulation's region of interest. Modules are destroyed and re-created as managed vehicles leave and re-enter the ROI */
     double areaSum;
@@ -142,6 +142,22 @@ protected:
     BaseWorldUtility* world;
     std::map<const TraCIMobility*, const VehicleObstacle*> vehicleObstacles;
     VehicleObstacleControl* vehicleObstacleControl;
+
+    // Everything related to penetration rate
+    double penetrationRate;
+    /**
+     * Counts the number of addModule() calls.
+     */
+    int addModuleCallCounter;
+    /**
+     * Stores which calls of addModule should actually add a module.
+     */
+    std::set<int> selectedCalls;
+    /**
+     * Set by ned param and stores what the maximum number of modules is
+     * that could be added.
+     */
+    int maximumNumberOfModules;
 
     /**
      * Stores the subscription manager handling everything related to subscriptions.
