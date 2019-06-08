@@ -21,6 +21,7 @@
 package org.car2x.veins.subprojects.veins_inet.example;
 
 import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
+import inet.physicallayer.ieee80211.packetlevel.Ieee80211DimensionalRadioMedium;
 import inet.physicallayer.unitdisk.UnitDiskRadioMedium;
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.node.icn.ICNPublisherHost;
@@ -34,8 +35,6 @@ import org.car2x.veins.subprojects.veins_inet.VeinsInetManager;
 
 network ScenarioPedestrians
 {
-    //    parameters:
-    //        @display("bgb=1684,885;bgi=veins/background/hochschule_muenchenBGI");
     types:
         channel C extends DatarateChannel
         {
@@ -43,7 +42,7 @@ network ScenarioPedestrians
             delay = 0.1us;
         }
     submodules:
-        radioMedium: Ieee80211ScalarRadioMedium {
+        radioMedium: Ieee80211DimensionalRadioMedium {
             @display("p=580,275");
         }
         manager: VeinsInetManager {

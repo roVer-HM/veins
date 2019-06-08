@@ -46,7 +46,7 @@ network ScenarioPedestriansClassic
             delay = 0.1us;
         }
     submodules:
-        radioMedium: Ieee80211ScalarRadioMedium {
+        radioMedium: Ieee80211DimensionalRadioMedium {
             @display("p=580,275");
         }
         manager: VeinsInetManager {
