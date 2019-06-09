@@ -21,6 +21,7 @@
 package org.car2x.veins.subprojects.veins_inet.example;
 
 import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
+import inet.physicallayer.ieee80211.packetlevel.Ieee80211DimensionalRadioMedium;
 import inet.physicallayer.unitdisk.UnitDiskRadioMedium;
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.node.icn.ICNPublisherHost;
@@ -41,17 +42,17 @@ network ScenarioPedestrians
             delay = 0.1us;
         }
     submodules:
-        radioMedium: Ieee80211ScalarRadioMedium {
+        radioMedium: Ieee80211DimensionalRadioMedium {
             @display("p=580,275");
         }
         manager: VeinsInetManager {
             @display("p=244.976,64.256");
         }
         carNode[0]: VeinsInetCar {
-            @display("p=903.6,841.352");
+            @display("p=192.65999,839.93");
         }
         personNode[0]: VeinsInetPerson {
-            @display("p=757.016,901.592");
+            @display("p=96.329994,839.93");
         }
         configurator: Ipv4NetworkConfigurator {
             @display("p=82.327995,64.256");
@@ -59,11 +60,13 @@ network ScenarioPedestrians
         publisher: ICNPublisherHost {
             parameters:
                 numWlanInterfaces = 0;
-                @display("p=160.64,228.91199");
+                // exactly the same position as in classic config
+                @display("p=684.45,699.66");
         }
         accessPoint2: ICNAccessPoint {
             parameters:
-                @display("p=625.3,657.41");
+                // exactly the same position as in classic config
+                @display("p=290.68,346.44998");
         }
     connections:
         publisher.pppg++ <--> C <--> accessPoint2.pppg++;

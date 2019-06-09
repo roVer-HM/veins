@@ -122,7 +122,7 @@ protected:
     std::vector<std::string> trafficLightModuleIds; /**< list of traffic light module ids that is subscribed to (whitelist) */
 
     bool autoShutdown; /**< Shutdown module as soon as no more vehicles are in the simulation */
-    double penetrationRate;
+
     bool ignoreGuiCommands; /**< whether to ignore all TraCI commands that only make sense when the server has a graphical user interface */
     TraCIRegionOfInterest roi; /**< Can return whether a given position lies within the simulation's region of interest. Modules are destroyed and re-created as managed vehicles leave and re-enter the ROI */
     double areaSum;
@@ -143,6 +143,22 @@ protected:
     std::map<const TraCIMobility*, const VehicleObstacle*> vehicleObstacles;
     VehicleObstacleControl* vehicleObstacleControl;
 
+    // Everything related to penetration rate
+    double penetrationRate;
+    /**
+     * Counts the number of addModule() calls.
+     */
+    int addModuleCallCounter;
+    /**
+     * Stores which calls of addModule should actually add a module.
+     */
+    std::set<int> selectedCalls;
+    /**
+     * Set by ned param and stores what the maximum number of modules is
+     * that could be added.
+     */
+    int maximumNumberOfModules;
+
     /**
      * Stores the subscription manager handling everything related to subscriptions.
      */
@@ -154,7 +170,7 @@ protected:
 
     virtual void preInitializeModule(cModule* mod, const std::string& nodeId, const Coord& position, const std::string& road_id, double speed, Heading heading, VehicleSignalSet signals);
     virtual void updateModulePosition(cModule* mod, const Coord& p, const std::string& edge, double speed, Heading heading, VehicleSignalSet signals);
-    void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, const Coord& position, std::string road_id = "", double speed = -1, Heading heading = Heading::nan, VehicleSignalSet signals = {VehicleSignal::undefined}, double length = 0, double height = 0, double width = 0);
+    bool addModule(std::string nodeId, std::string type, std::string name, std::string displayString, const Coord& position, std::string road_id = "", double speed = -1, Heading heading = Heading::nan, VehicleSignalSet signals = {VehicleSignal::undefined}, double length = 0, double height = 0, double width = 0);
     cModule* getManagedModule(std::string nodeId); /**< returns a pointer to the managed module named moduleName, or 0 if no module can be found */
     void deleteManagedModule(std::string nodeId);
 

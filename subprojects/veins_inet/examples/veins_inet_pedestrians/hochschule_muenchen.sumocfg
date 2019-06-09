@@ -5,7 +5,7 @@
     <input>
         <net-file value="hochschule_muenchen.net.xml"/>
         <route-files value="hochschule_muenchen.pedestrians.rou.xml"/>
-        <additional-files value="hochschule_muenchen.poly.xml"/>
+	<additional-files value="hochschule_muenchen.poly.xml"/>
     </input>
 
     <time>

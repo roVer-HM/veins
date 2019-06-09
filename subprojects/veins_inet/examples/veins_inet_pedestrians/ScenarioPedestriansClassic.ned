@@ -21,6 +21,7 @@
 package org.car2x.veins.subprojects.veins_inet.example;
 
 import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
+import inet.physicallayer.ieee80211.packetlevel.Ieee80211DimensionalRadioMedium;
 import inet.physicallayer.unitdisk.UnitDiskRadioMedium;
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.node.icn.ICNPublisherHost;
@@ -45,7 +46,7 @@ network ScenarioPedestriansClassic
             delay = 0.1us;
         }
     submodules:
-        radioMedium: Ieee80211ScalarRadioMedium {
+        radioMedium: Ieee80211DimensionalRadioMedium {
             @display("p=580,275");
         }
         manager: VeinsInetManager {
@@ -60,27 +61,27 @@ network ScenarioPedestriansClassic
         publisher: StandardHost {
             parameters:
                 numWlanInterfaces = 0;
-                @display("p=160.64,228.91199");
+                // exactly the same position as in icn config
+                @display("p=684.45,699.66");
         }
-        gateway: Router {
-            @display("p=364,446");
-        }
-        dhcpServer: StandardHost {
-            @display("p=787,579");
-            numApps = 1;
-            app[0].typename = "DhcpServer";
-            app[0].numReservedAddresses = 3;
-            app[0].maxNumClients = 1000;
-            app[0].gateway = "192.168.0.1";
-            app[0].leaseTime = 500s;
-        }
+        //        gateway: Router {
+        //            @display("p=483,515");
+        //        }
+        //        dhcpServer: StandardHost {
+        //            @display("p=410,276");
+        //            numApps = 1;
+        //            app[0].typename = "DhcpServer";
+        //            app[0].numReservedAddresses = 3;
+        //            app[0].maxNumClients = 1000;
+        //            app[0].gateway = "192.168.0.1";
+        //            app[0].leaseTime = 500s;
+        //        }
         accessPoint2: AccessPoint {
             parameters:
-                @display("p=625.3,657.41");
+                // exactly the same position as in icn config
+                @display("p=290.68,346.44998");
         }
         visualizer: IntegratedCanvasVisualizer;
     connections:
-        gateway.ethg++ <--> C <--> accessPoint2.ethg++;
-        publisher.ethg++ <--> C <--> gateway.ethg++;
-        accessPoint2.ethg++ <--> C <--> dhcpServer.ethg++;
+        publisher.ethg++ <--> C <--> accessPoint2.ethg++;
 }

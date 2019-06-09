@@ -248,6 +248,7 @@ void TraCIScenarioManager::initialize(int stage)
     if (firstStepAt == -1) firstStepAt = connectAt + updateInterval;
     parseModuleTypes();
     penetrationRate = par("penetrationRate").doubleValue();
+    maximumNumberOfModules = par("maximumNumberOfModules");
     ignoreGuiCommands = par("ignoreGuiCommands");
     host = par("host").stdstringValue();
     port = par("port");
@@ -277,6 +278,18 @@ void TraCIScenarioManager::initialize(int stage)
 
     activePersonsSignal = registerSignal("activePersons");
     activePersonCount = 0;
+
+    addModuleCallCounter = 0;
+    size_t numberOfModulesNeeded = penetrationRate * maximumNumberOfModules;
+
+    while (selectedCalls.size() < numberOfModulesNeeded) {
+        int call = intuniform(1, maximumNumberOfModules);
+        auto search = selectedCalls.find(call);
+        if (search == selectedCalls.end()) {
+            // not in selected
+            selectedCalls.insert(call);
+        } // if already stored keep going
+    }
 
     EV_DEBUG << "initialized TraCIScenarioManager" << endl;
 }
@@ -450,20 +463,20 @@ void TraCIScenarioManager::updateModulePosition(cModule* mod, const Coord& p, co
 }
 
 // name: host;Car;i=vehicle.gif
-void TraCIScenarioManager::addModule(std::string nodeId, std::string type,
+bool TraCIScenarioManager::addModule(std::string nodeId, std::string type,
     std::string name, std::string displayString, const Coord& position,
     std::string road_id, double speed, Heading heading,
     VehicleSignalSet signals, double length, double height, double width)
 {
+    addModuleCallCounter++;
 
     if (hosts.find(nodeId) != hosts.end()) error("tried adding duplicate module");
 
-    double option1 = hosts.size() / (hosts.size() + unEquippedHosts.size() + 1.0);
-    double option2 = (hosts.size() + 1) / (hosts.size() + unEquippedHosts.size() + 1.0);
-
-    if (fabs(option1 - penetrationRate) < fabs(option2 - penetrationRate)) {
+    auto search = selectedCalls.find(addModuleCallCounter);
+    // if this call was not selected skip it
+    if (search == selectedCalls.end()) {
         unEquippedHosts.insert(nodeId);
-        return;
+        return false;
     }
 
     int32_t nodeVectorIndex = nextNodeVectorIndex++;
@@ -504,6 +517,8 @@ void TraCIScenarioManager::addModule(std::string nodeId, std::string type,
     }
 
     emit(traciModuleAddedSignal, mod);
+
+    return true;
 }
 
 cModule* TraCIScenarioManager::getManagedModule(std::string nodeId)
@@ -593,9 +608,12 @@ void TraCIScenarioManager::processSubscriptions(TraCIBuffer& buffer)
     for (auto personID : disappearedPersons) {
         // check if this object has been deleted already (e.g. because it was outside the ROI)
         cModule* mod = getManagedModule(personID);
-        if (mod) deleteManagedModule(personID);
+        if (mod) {
+            deleteManagedModule(personID);
+            activePersonCount--;
+        }
         EV_DEBUG << "Unsubscribed to person with id " << personID << std::endl;
-        activePersonCount--;
+
     }
 
     // simulation next
@@ -748,13 +766,13 @@ void TraCIScenarioManager::processUpdatedPersons(std::vector<TraCISubscriptionMa
                 unEquippedHosts.erase(person.id);
                 EV_DEBUG << "person (unequipped) # " << person.id << " left region of interest" << endl;
             }
-            return;
+            continue;
         }
 
         // Check if unequipped
         // ------------------------------
         if (isModuleUnequipped(person.id)) {
-            return;
+            continue;
         }
 
         // Update or create module
@@ -791,9 +809,12 @@ void TraCIScenarioManager::processUpdatedPersons(std::vector<TraCISubscriptionMa
             }
 
             if (mType != "0") {
-                addModule(person.id, mType, mName, mDisplayString, p, person.edgeID, person.speed, heading);
-                EV_DEBUG << "Added person #" << person.id << endl;
-                activePersonCount++;
+                bool personAdded = addModule(person.id, mType, mName, mDisplayString, p, person.edgeID, person.speed, heading);
+                if (personAdded) {
+                    EV_DEBUG << "Added person #" << person.id << endl;
+                    activePersonCount++;
+                }
+
             }
         }
         else {
