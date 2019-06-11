@@ -1,5 +1,3 @@
-
-
 //
 // Copyright (C) 2006-2017 Christoph Sommer <sommer@ccs-labs.org>
 //
@@ -14,7 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
+//vtype
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -26,50 +24,30 @@ import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
 import inet.physicallayer.ieee80211.packetlevel.Ieee80211DimensionalRadioMedium;
 import inet.physicallayer.unitdisk.UnitDiskRadioMedium;
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
-import inet.node.icn.ICNPublisherHost;
-import inet.node.icn.ICNAccessPoint;
 import ned.DatarateChannel;
+import inet.node.inet.WirelessHost;
 import inet.visualizer.integrated.IntegratedCanvasVisualizer;
-import org.car2x.veins.subprojects.veins_inet.VeinsInetCar;
-import org.car2x.veins.subprojects.veins_inet.VeinsInetPerson;
-import org.car2x.veins.subprojects.veins_inet.VeinsInetManager;
+//import org.car2x.veins.subprojects.veins_inet.VeinsInetPerson;
+import org.car2x.veins.modules.mobility.traci.TraCIScenarioManager;
 
 
-network ScenarioPedestrians
+network ScenarioVaderePedestrians
 {
-    types:
-        channel C extends DatarateChannel
-        {
-            datarate = 100Mbps;
-            delay = 0.1us;
-        }
+
     submodules:
         radioMedium: Ieee80211DimensionalRadioMedium {
             @display("p=580,275");
         }
-        manager: VeinsInetManager {
+        manager: TraCIScenarioManager {
             @display("p=244.976,64.256");
         }
-        carNode[0]: VeinsInetCar {
-            @display("p=192.65999,839.93");
-        }
-        personNode[0]: VeinsInetPerson {
+        personNode[0]: WirelessHost {
             @display("p=96.329994,839.93");
+          
         }
         configurator: Ipv4NetworkConfigurator {
             @display("p=82.327995,64.256");
         }
-        publisher: ICNPublisherHost {
-            parameters:
-                numWlanInterfaces = 0;
-                // exactly the same position as in classic config
-                @display("p=684.45,699.66");
-        }
-        accessPoint2: ICNAccessPoint {
-            parameters:
-                // exactly the same position as in classic config
-                @display("p=290.68,346.44998");
-        }
-    connections:
-        publisher.pppg++ <--> C <--> accessPoint2.pppg++;
+
 }
+
