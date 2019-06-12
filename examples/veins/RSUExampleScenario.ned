@@ -13,13 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-import org.car2x.veins.nodes.RSU;
-import org.car2x.veins.nodes.Scenario;
+import org.car2x.veins.nodes.VadereRSU;
+import org.car2x.veins.nodes.VadereScenario;
 
-network RSUExampleScenario extends Scenario
+network RSUExampleScenario extends VadereScenario
 {
     submodules:
-        rsu[1]: RSU {
-            @display("p=150,140;i=veins/sign/yellowdiamond;is=vs");
+        rsu[1]: VadereRSU {
+            @display("p=268,162;i=veins/sign/yellowdiamond;is=s");
         }
 }
