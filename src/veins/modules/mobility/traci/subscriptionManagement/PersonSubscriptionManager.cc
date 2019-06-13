@@ -203,6 +203,10 @@ void PersonSubscriptionManager::processPersonIDList(std::list<std::string>& idLi
 
     std::vector<std::string> subscribed = getSubscribed();
 
+    // sort both containers before executing set_difference
+    std::sort(subscribed.begin(), subscribed.end());
+    idList.sort();
+
     // check for persons that need subscribing to
     std::vector<std::string> needSubscribe;
     // basically: idList - getSubscribed()
