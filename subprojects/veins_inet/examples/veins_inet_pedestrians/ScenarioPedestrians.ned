@@ -64,11 +64,11 @@ network ScenarioPedestrians
                 // exactly the same position as in classic config
                 @display("p=684.45,699.66");
         }
-        accessPoint2: ICNAccessPoint {
+        accessPoint: ICNAccessPoint {
             parameters:
                 // exactly the same position as in classic config
-                @display("p=290.68,346.44998");
+                @display("p=275.00,325.00");
         }
     connections:
-        publisher.pppg++ <--> C <--> accessPoint2.pppg++;
+        publisher.pppg++ <--> C <--> accessPoint.pppg++;
 }

@@ -64,24 +64,11 @@ network ScenarioPedestriansClassic
                 // exactly the same position as in icn config
                 @display("p=684.45,699.66");
         }
-        //        gateway: Router {
-        //            @display("p=483,515");
-        //        }
-        //        dhcpServer: StandardHost {
-        //            @display("p=410,276");
-        //            numApps = 1;
-        //            app[0].typename = "DhcpServer";
-        //            app[0].numReservedAddresses = 3;
-        //            app[0].maxNumClients = 1000;
-        //            app[0].gateway = "192.168.0.1";
-        //            app[0].leaseTime = 500s;
-        //        }
-        accessPoint2: AccessPoint {
+        accessPoint: AccessPoint {
             parameters:
                 // exactly the same position as in icn config
-                @display("p=290.68,346.44998");
+                @display("p=275.00,325.00");
         }
-        visualizer: IntegratedCanvasVisualizer;
     connections:
-        publisher.ethg++ <--> C <--> accessPoint2.ethg++;
+        publisher.ethg++ <--> C <--> accessPoint.ethg++;
 }
