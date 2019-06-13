@@ -71,6 +71,8 @@ void TraCIScenarioManagerVadere::initialize(int stage)
 
 void TraCIScenarioManagerVadere::finish()
 {
+    TraCIBuffer buf = connection->query(CMD_CLOSE, TraCIBuffer());
+
     TraCIScenarioManager::finish();
 }
 
