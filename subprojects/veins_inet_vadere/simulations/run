@@ -1,0 +1,4 @@
+#!/bin/sh
+cd `dirname $0`
+../src/veins_inet_vadere -n .:../src $*
+# for shared lib, use: opp_run -l ../src/veins_inet_vadere -n .:../src $*

@@ -13,13 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-import org.car2x.veins.nodes.RSU;
-import org.car2x.veins.nodes.Scenario;
+package org.car2x.veins.subprojects.veins_inet_vadere.modules.mobility.traci;
 
-network RSUExampleScenario extends Scenario
+// Based on veins::TraCIScenarioManagerLauchd.ned This Manager connects to the Vadere Pedestrian
+//  Simulation Framework
+//
+// @author Stefan Schuhäck
+//
+
+import org.car2x.veins.modules.mobility.traci.TraCIScenarioManager;
+
+simple TraCIScenarioManagerVadere extends TraCIScenarioManager
 {
-    submodules:
-        rsu[1]: RSU {
-            @display("p=268,162;i=veins/sign/yellowdiamond;is=s");
-        }
+    parameters:
+        @class(veins::TraCIScenarioManagerVadere);
+        string scenarioFilePath; // launch configuration to send to Vadere
 }

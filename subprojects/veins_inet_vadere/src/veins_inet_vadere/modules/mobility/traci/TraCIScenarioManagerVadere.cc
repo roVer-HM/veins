@@ -18,7 +18,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-#include "veins/modules/mobility/traci/TraCIScenarioManagerVadere.h"
+#include "TraCIScenarioManagerVadere.h"
+
 #include "veins/modules/mobility/traci/TraCICommandInterface.h"
 #include "veins/modules/mobility/traci/TraCIConstants.h"
 
@@ -71,7 +72,10 @@ void TraCIScenarioManagerVadere::initialize(int stage)
 
 void TraCIScenarioManagerVadere::finish()
 {
-    TraCIBuffer buf = connection->query(CMD_CLOSE, TraCIBuffer());
+    if (isConnected()) {
+        // send close command to traci server if still connected.
+        TraCIBuffer buf = connection->query(CMD_CLOSE, TraCIBuffer());
+    }
 
     TraCIScenarioManager::finish();
 }

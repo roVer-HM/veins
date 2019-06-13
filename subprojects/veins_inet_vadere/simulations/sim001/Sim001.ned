@@ -13,13 +13,17 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-import org.car2x.veins.nodes.RSU;
-import org.car2x.veins.nodes.Scenario;
+package veins_inet_vadere.simulations.sim001;
 
-network RSUExampleScenario extends Scenario
+import org.car2x.veins.subprojects.veins_inet_vadere.VadereScenario;
+import org.car2x.veins.subprojects.veins_inet_vadere.VadereRSU;
+
+network Sim001 extends VadereScenario
 {
+    
     submodules:
-        rsu[1]: RSU {
-            @display("p=268,162;i=veins/sign/yellowdiamond;is=s");
+        vadere[1]: VadereRSU {
+        	@display("i=veins/sign/yellowdiamond;is=s");
         }
+    
 }
