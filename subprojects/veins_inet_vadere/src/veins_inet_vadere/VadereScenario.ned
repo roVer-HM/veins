@@ -21,6 +21,7 @@ import org.car2x.veins.subprojects.veins_inet_vadere.modules.mobility.traci.TraC
 import org.car2x.veins.modules.obstacle.ObstacleControl;
 import org.car2x.veins.modules.world.annotations.AnnotationManager;
 import org.car2x.veins.nodes.Car;
+import org.car2x.veins.subprojects.veins_inet_vadere.Pedestrian;
 
 network VadereScenario
 {
@@ -31,29 +32,33 @@ network VadereScenario
         @display("bgb=484,366");
     submodules:
         obstacles: ObstacleControl {
-            @display("p=314,330");
+            @display("p=339,318");
         }
         annotations: AnnotationManager {
-            @display("p=406,317");
+            @display("p=427,313");
         }
         connectionManager: ConnectionManager {
             parameters:
-                @display("p=160,321;i=abstract/multicast");
+                @display("p=158,327;i=abstract/multicast");
         }
         world: BaseWorldUtility {
             parameters:
                 playgroundSizeX = playgroundSizeX;
                 playgroundSizeY = playgroundSizeY;
                 playgroundSizeZ = playgroundSizeZ;
-                @display("p=247,316;i=misc/globe");
+                @display("p=258,316;i=misc/globe");
         }
         manager: TraCIScenarioManagerVadere {
             parameters:
                 @display("p=512,128");
         }
-        node[0]: Car {
-            @display("p=60,319");
+        car[0]: Car {
+            @display("p=60,319;i=veins/node/car");
         }
+        ped[0]: Pedestrian {
+            @display("i=veins/node/pedestrian;p=67,251");
+        }
+
 
     connections allowunconnected:
 }
