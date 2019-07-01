@@ -28,4 +28,6 @@ simple TraCIScenarioManagerVadere extends TraCIScenarioManager
     parameters:
         @class(veins::TraCIScenarioManagerVadere);
         string scenarioFilePath; // launch configuration to send to Vadere
+        string cache_config = default ("cache.config");
+        string cache_suffixes = default (".ffcace, .csv"); // order defines priority
 }

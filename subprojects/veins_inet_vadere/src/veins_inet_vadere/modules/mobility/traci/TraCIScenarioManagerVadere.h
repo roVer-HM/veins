@@ -24,6 +24,17 @@
 
 #include "veins/modules/mobility/traci/TraCIScenarioManager.h"
 
+#include "veins/modules/mobility/traci/TraCICommandInterface.h"
+#include "veins/modules/mobility/traci/TraCIConstants.h"
+
+#include <sstream>
+#include <fstream>
+#include <streambuf>
+#include <iostream>
+#include <fstream>
+#include <string>
+
+
 namespace veins {
 
 /**
@@ -43,7 +54,10 @@ namespace veins {
  * @see TraCIScenarioManager
  *
  */
+
 class VEINS_API TraCIScenarioManagerVadere : public TraCIScenarioManager {
+
+
 public:
     ~TraCIScenarioManagerVadere() override;
     void initialize(int stage) override;
@@ -51,11 +65,32 @@ public:
 
 protected:
     std::string scenarioFilePath; /**< path to scenario file used to setup Vadere */
-
+    std::string cache_config; /** file containing pairs of cacheIdentifier and paths to cache files. Lines starting with '#' will be ignored */
+    std::vector<std::string> cache_suffixes; /** allowed suffixes. Order of this vector defines order of precedence */
+    std::map< std::string, std::string > cachePath; /** contains cache identifier and the corresponding byte data of the cache */
     void init_traci() override;
 
 private:
+    struct vadereTraCIVersion{
+        int traci;      /** Base TraCI version the Vadere API adheres to */
+        int major;      /** Major for additional features not included in TraCI*/
+        int minor;      /** Minor*/
+
+        friend bool operator==(const vadereTraCIVersion& lhs, const vadereTraCIVersion& rhs)
+        {
+            return (lhs.traci == rhs.traci) && (lhs.major == rhs.major) && (lhs.minor == rhs.minor);
+        }
+        friend bool operator>=(const vadereTraCIVersion& lhs, const vadereTraCIVersion& rhs)
+        {
+            return (lhs.traci >= rhs.traci) && (lhs.major >= rhs.major) && (lhs.minor >= rhs.minor);
+        }
+    };
+    const size_t VADERE_VERSION_PREFIX = 12;
+    const vadereTraCIVersion cacheVersion {20,0,1};
+    vadereTraCIVersion buildVadereVersion(std::string versionString);
+    std::vector<std::string> stringTokens(std::string& data, const char *sep);
     std::string scenarioFileContent; /**< content of scenario file (Json based description) */
+    vadereTraCIVersion vadereVersion;
 };
 
 class VEINS_API TraCIScenarioManagerVadereAccess {
