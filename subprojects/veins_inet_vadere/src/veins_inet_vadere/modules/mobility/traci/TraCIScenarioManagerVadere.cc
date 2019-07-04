@@ -86,7 +86,80 @@ void TraCIScenarioManagerVadere::initialize(int stage)
             }
         }
     }
+    simtime_t firstTarget = 51.6;
+    targetTrigger = new cMessage("targetTrigger");
+    scheduleAt(firstTarget, targetTrigger);
     TraCIScenarioManager::initialize(stage);
+}
+
+void TraCIScenarioManagerVadere::handleSelfMsg(cMessage* msg)
+{
+
+    if (msg == targetTrigger){
+        simtime_t curr = simTime();
+        simtime_t next;
+        std::string targetId = "2";
+        if(curr == 51.6){
+            TraCIBuffer p;
+            std::string elId = "33";
+            p << static_cast<uint8_t>(0xfe) << elId; //trargetlist + id
+            int32_t size = 1;
+            p << static_cast<uint8_t>(0x0E) << size;
+            p << targetId;
+            TraCIBuffer buf = connection->query(0xce, p);
+            ASSERT(buf.eof());
+            next = 66.0;
+            scheduleAt(next, targetTrigger);
+        }
+        if(curr == 66.0){
+            TraCIBuffer p;
+            std::string elId = "39";
+            p << static_cast<uint8_t>(0xfe) << elId; //trargetlist + id
+            int32_t size = 1;
+            p << static_cast<uint8_t>(0x0E) << size;
+            p << targetId;
+            TraCIBuffer buf = connection->query(0xce, p);
+            ASSERT(buf.eof());
+            next = 69.2;
+            scheduleAt(next, targetTrigger);
+        }
+        if(curr == 69.2){
+            TraCIBuffer p;
+            std::string elId = "45";
+            p << static_cast<uint8_t>(0xfe) << elId; //trargetlist + id
+            int32_t size = 1;
+            p << static_cast<uint8_t>(0x0E) << size;
+            p << targetId;
+            TraCIBuffer buf = connection->query(0xce, p);
+            ASSERT(buf.eof());
+            next = 78.4;
+            scheduleAt(next, targetTrigger);
+        }
+        if(curr == 78.4){
+            TraCIBuffer p;
+            std::string elId = "47";
+            p << static_cast<uint8_t>(0xfe) << elId; //trargetlist + id
+            int32_t size = 1;
+            p << static_cast<uint8_t>(0x0E) << size;
+            p << targetId;
+            TraCIBuffer buf = connection->query(0xce, p);
+            ASSERT(buf.eof());
+            next = 262.0;
+            scheduleAt(next, targetTrigger);
+        }
+        if(curr == 262.0){
+            TraCIBuffer p;
+            std::string elId = "173";
+            p << static_cast<uint8_t>(0xfe) << elId; //trargetlist + id
+            int32_t size = 1;
+            p << static_cast<uint8_t>(0x0E) << size;
+            p << targetId;
+            TraCIBuffer buf = connection->query(0xce, p);
+            ASSERT(buf.eof());
+        }
+    } else {
+        TraCIScenarioManager::handleSelfMsg(msg);
+    }
 }
 
 std::vector<std::string> TraCIScenarioManagerVadere::stringTokens(std::string& data, const char *sep)

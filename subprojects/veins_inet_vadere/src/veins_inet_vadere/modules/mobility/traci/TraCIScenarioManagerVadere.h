@@ -91,6 +91,9 @@ private:
     std::vector<std::string> stringTokens(std::string& data, const char *sep);
     std::string scenarioFileContent; /**< content of scenario file (Json based description) */
     vadereTraCIVersion vadereVersion;
+    cMessage* targetTrigger;
+    void trigger_set_target();
+    void handleSelfMsg(cMessage* msg);
 };
 
 class VEINS_API TraCIScenarioManagerVadereAccess {

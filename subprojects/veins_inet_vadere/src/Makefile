@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for veins_inet_vadere
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KINET_PROJ=/home/stsc/repos/inet -KVEINS_PROJ=/home/stsc/repos/veins -DINET_IMPORT -DVEINS_IMPORT -I$$\(VEINS_PROJ\)/src -L$$\(INET_PROJ\)/src -L$$\(VEINS_PROJ\)/src -lINET$$\(D\) -lveins$$\(D\)
+#  opp_makemake -f --deep -KINET_PROJ=/home/stsc/repos/rover-main/inet -KVEINS_PROJ=/home/stsc/repos/rover-main/veins -DINET_IMPORT -DVEINS_IMPORT -I$$\(VEINS_PROJ\)/src -L$$\(INET_PROJ\)/src -L$$\(VEINS_PROJ\)/src -lINET$$\(D\) -lveins$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -39,8 +39,8 @@ MSGFILES =
 SMFILES =
 
 # Other makefile variables (-K)
-INET_PROJ=/home/stsc/repos/inet
-VEINS_PROJ=/home/stsc/repos/veins
+INET_PROJ=/home/stsc/repos/rover-main/inet
+VEINS_PROJ=/home/stsc/repos/rover-main/veins
 
 #------------------------------------------------------------------------------
 
