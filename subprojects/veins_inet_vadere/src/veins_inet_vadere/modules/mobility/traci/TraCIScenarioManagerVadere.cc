@@ -95,6 +95,7 @@ void TraCIScenarioManagerVadere::initialize(int stage)
 void TraCIScenarioManagerVadere::handleSelfMsg(cMessage* msg)
 {
 
+
     if (msg == targetTrigger){
         simtime_t curr = simTime();
         simtime_t next;
@@ -157,6 +158,7 @@ void TraCIScenarioManagerVadere::handleSelfMsg(cMessage* msg)
             TraCIBuffer buf = connection->query(0xce, p);
             ASSERT(buf.eof());
         }
+
     } else {
         TraCIScenarioManager::handleSelfMsg(msg);
     }
