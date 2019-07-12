@@ -1,7 +1,4 @@
 //
-// Copyright (C) 2006-2012 Christoph Sommer <christoph.sommer@uibk.ac.at>
-//
-// Documentation for these modules is at http://veins.car2x.org/
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -64,7 +61,7 @@ void TraCIScenarioManagerVadere::initialize(int stage)
     std::string cache_suffixes_str = par("cache_suffixes").stdstringValue();
     cache_suffixes = stringTokens(cache_suffixes_str, ",");
 
-
+    // search for cache files. If they exist prepair loading.
     std::string cacheConfigPath = basedir + cache_config;
     std::ifstream cacheConfigFile(cacheConfigPath.c_str());
 
@@ -86,16 +83,20 @@ void TraCIScenarioManagerVadere::initialize(int stage)
             }
         }
     }
+
+    // setup simple 'target change'. At given time the first 'target change event' is triggerd.
     simtime_t firstTarget = 51.6;
     targetTrigger = new cMessage("targetTrigger");
     scheduleAt(firstTarget, targetTrigger);
+
+
     TraCIScenarioManager::initialize(stage);
 }
 
 void TraCIScenarioManagerVadere::handleSelfMsg(cMessage* msg)
 {
 
-
+    // handle 'target change event'. Only five pedestrian will get a event.
     if (msg == targetTrigger){
         simtime_t curr = simTime();
         simtime_t next;
@@ -158,7 +159,6 @@ void TraCIScenarioManagerVadere::handleSelfMsg(cMessage* msg)
             TraCIBuffer buf = connection->query(0xce, p);
             ASSERT(buf.eof());
         }
-
     } else {
         TraCIScenarioManager::handleSelfMsg(msg);
     }
@@ -230,10 +230,10 @@ void TraCIScenarioManagerVadere::init_traci()
     }
 
     TraCIBuffer buf;
+    // if vadere version supports cache data and cache was found.
+    // build command [String:FilnameScenario, String:ScenarioConntent, int:NumberOfCaches, [String:cacheIdentifier, int:numberOfBytes, bytes...] ... []]
     if(vadereVersion >= cacheVersion && !cachePath.empty()){
         buf << scenarioFilePath << scenarioFileContent;
-
-
         uint32_t numberOfHashes = static_cast<uint32_t>(cachePath.size());
         // add number of hashes (Integer: 4 byte)
         buf << numberOfHashes;
@@ -247,8 +247,9 @@ void TraCIScenarioManagerVadere::init_traci()
                 char* cacheBuffer = new char [len];
                 binF.read(cacheBuffer, len);
 
-                // add hash to traci buffer
+                // add cache identifier to buffer
                 buf << entry.first << len;
+                // add loaded cache (byte for byte) to buffer
                 for(int i=0; i < len; i++){
                     buf << cacheBuffer[i];
                 }
@@ -259,12 +260,10 @@ void TraCIScenarioManagerVadere::init_traci()
             }
         }
 
-        // load filenames (send with complete name including hash)
-        // load data into byte[]
-        // build command [String:FilnameScenario, String:ScenarioConntent, int:NumberOfCaches, [String:cacheIdentifier, int:numberOfBytes, bytes...] ... []]
-
         connection->sendMessage(makeTraCICommand(CMD_FILE_SEND, buf));
-    } else {
+    }
+    // no cache. only send scenario file.
+    else {
         buf << scenarioFilePath << scenarioFileContent;
         connection->sendMessage(makeTraCICommand(CMD_FILE_SEND, buf));
     }

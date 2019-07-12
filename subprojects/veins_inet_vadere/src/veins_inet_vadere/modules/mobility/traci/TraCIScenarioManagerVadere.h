@@ -1,7 +1,4 @@
 //
-// Copyright (C) 2006-2012 Christoph Sommer <christoph.sommer@uibk.ac.at>
-//
-// Documentation for these modules is at http://veins.car2x.org/
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -39,19 +36,18 @@ namespace veins {
 
 /**
  * @brief
- * Extends the TraCIScenarioManager for use with sumo-launchd.py and SUMO.
+ * Extends the TraCIScenarioManager to connect to Vadere, a microscopic pedestrian dynamics simulation framework
  *
- * Connects to a running instance of the sumo-launchd.py script
- * to automatically launch/kill SUMO when the simulation starts/ends.
+ * Connects to a running Vadere server instance (vadere-server.jar)
  *
+ * Based on TraCIScenarioManagerLaunchd implementation with adaption to Vadere.
  * All other functionality is provided by the TraCIScenarioManager.
  *
- * See the Veins website <a href="http://veins.car2x.org/"> for a tutorial, documentation, and publications </a>.
- *
- * @author Christoph Sommer, David Eckhoff
+ * @author Stefan Schuhbaeck
  *
  * @see TraCIMobility
  * @see TraCIScenarioManager
+ * @see TraCIScenarioManagerLaunchd
  *
  */
 

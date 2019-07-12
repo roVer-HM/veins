@@ -13,12 +13,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package veins_inet_vadere.simulations.sim001;
+package veins_inet_vadere.simulations.vadere_traci_demo;
 
 import org.car2x.veins.subprojects.veins_inet_vadere.VadereScenario;
 import org.car2x.veins.subprojects.veins_inet_vadere.VadereRSU;
 
-network Sim001 extends VadereScenario
+network VadereTraCIDemo extends VadereScenario
 {
     
     submodules:

@@ -16,9 +16,9 @@
 package org.car2x.veins.subprojects.veins_inet_vadere.modules.mobility.traci;
 
 // Based on veins::TraCIScenarioManagerLauchd.ned This Manager connects to the Vadere Pedestrian
-//  Simulation Framework
+// Simulation Framework
 //
-// @author Stefan Schuhäck
+// @author Stefan Schuhaeck
 //
 
 import org.car2x.veins.modules.mobility.traci.TraCIScenarioManager;
