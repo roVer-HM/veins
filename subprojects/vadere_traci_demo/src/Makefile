@@ -1,12 +1,12 @@
 #
-# OMNeT++/OMNEST Makefile for veins_inet_vadere
+# OMNeT++/OMNEST Makefile for vadere_traci_demo
 #
 # This file was generated with the command:
 #  opp_makemake -f --deep -KINET_PROJ=/home/stsc/repos/rover-main/inet -KVEINS_PROJ=/home/stsc/repos/rover-main/veins -DINET_IMPORT -DVEINS_IMPORT -I$$\(VEINS_PROJ\)/src -L$$\(INET_PROJ\)/src -L$$\(VEINS_PROJ\)/src -lINET$$\(D\) -lveins$$\(D\)
 #
 
 # Name of target to be created (-o option)
-TARGET = veins_inet_vadere$(D)$(EXE_SUFFIX)
+TARGET = vadere_traci_demo$(D)$(EXE_SUFFIX)
 TARGET_DIR = .
 
 # User interface (uncomment one) (-u option)

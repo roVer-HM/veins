@@ -15,7 +15,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-#include "TraCIScenarioManagerVadere.h"
+#include "../../../../../../vadere_traci_demo/src/veins_inet_vadere/modules/mobility/traci/TraCIScenarioManagerVadere.h"
 
 namespace veins {
 

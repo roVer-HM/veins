@@ -5,7 +5,7 @@ This project contains a small demonstration to connect OMNeT++ to Vadere.
 ## prerequisite 
 
 * Java JDK 11
-* Vadere Server: check out tag ``vadere_traci_demo_001`` from https://gitlab.lrz.de/vadere/vadere and run:
+* Vadere Server: use tag ``vadere_traci_demo_001``
 
 ```
 git clone --branch vadere_traci_demo_001 https://gitlab.lrz.de/vadere/vadere
@@ -18,7 +18,13 @@ java -jar VadereManager/target/vadere-server.jar
 ```
 
 * use ``java -jar VadereManager/target/vadere-server.jar -h`` for configuration help.
+* INET: tested with Branch ``hm_master'' (omnet 5.5 compatibility)
 
+```
+git clone --branch hm_master https://sam-dev.cs.hm.edu/rover/inet
+```
+
+* setup veins and inet in OMNeT++ IDE
 
 ## run demo 
 
