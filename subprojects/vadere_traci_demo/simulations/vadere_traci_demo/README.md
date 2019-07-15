@@ -19,11 +19,6 @@ java -jar VadereManager/target/vadere-server.jar
 
 * use ``java -jar VadereManager/target/vadere-server.jar -h`` for configuration help.
 * INET: tested with Branch ``master`` ([8dd34240][1])
-
-```
-git clone --branch hm_master https://sam-dev.cs.hm.edu/rover/inet
-```
-
 * setup veins and inet in OMNeT++ IDE
 
 ## run demo 
