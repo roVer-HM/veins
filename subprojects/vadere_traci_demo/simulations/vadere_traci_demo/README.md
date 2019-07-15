@@ -18,7 +18,7 @@ java -jar VadereManager/target/vadere-server.jar
 ```
 
 * use ``java -jar VadereManager/target/vadere-server.jar -h`` for configuration help.
-* INET: tested with Branch ``hm_master`` (omnet 5.5 compatibility)
+* INET: tested with Branch ``master`` ([8dd34240][1])
 
 ```
 git clone --branch hm_master https://sam-dev.cs.hm.edu/rover/inet
@@ -32,4 +32,6 @@ git clone --branch hm_master https://sam-dev.cs.hm.edu/rover/inet
 * start subproject  vadere_traci_demo
 * choose config: *VadereTracIDemo_001*
 * choose host and port from vadere server
+
+[1]: https://github.com/inet-framework/inet/commit/8dd34240fb61b6ff931d417b9234e339f022e6c8
 
