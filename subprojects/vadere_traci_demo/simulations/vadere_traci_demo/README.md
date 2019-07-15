@@ -18,7 +18,7 @@ java -jar VadereManager/target/vadere-server.jar
 ```
 
 * use ``java -jar VadereManager/target/vadere-server.jar -h`` for configuration help.
-* INET: tested with Branch ``hm_master'' (omnet 5.5 compatibility)
+* INET: tested with Branch ``hm_master`` (omnet 5.5 compatibility)
 
 ```
 git clone --branch hm_master https://sam-dev.cs.hm.edu/rover/inet
