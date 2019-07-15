@@ -29,7 +29,7 @@ git clone --branch hm_master https://sam-dev.cs.hm.edu/rover/inet
 ## run demo 
 
 * start vadere server 
-* start subproject veins_init_vadere 
+* start subproject  vadere_traci_demo
 * choose config: *VadereTracIDemo_001*
 * choose host and port from vadere server
 
