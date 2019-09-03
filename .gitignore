@@ -77,6 +77,9 @@ subprojects/veins_testsims/opp_tests/**/work
 **/*_dbg
 **/re
 
+subprojects/veins_inet_vadere/
+
+subprojects/vadere_traci_demo/src/vadere_traci_demo
 subprojects/vadere_traci_demo/src/Makefile
 subprojects/vadere_traci_demo/src/*.so
 subprojects/vadere_traci_demo/src/*.dll
