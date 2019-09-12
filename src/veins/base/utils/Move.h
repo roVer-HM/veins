@@ -1,21 +1,27 @@
-/* -*- mode:c++ -*- ********************************************************
- * file:        Move.h
- *
- * author:      Andreas Koepke, Michael Swigulski
- *
- * copyright:   (C) 2005, 2010 Telecommunication Networks Group (TKN) at
- *              Technische Universitaet Berlin, Germany.
- *
- *              This program is free software; you can redistribute it
- *              and/or modify it under the terms of the GNU General Public
- *              License as published by the Free Software Foundation; either
- *              version 2 of the License, or (at your option) any later
- *              version.
- *              For further information see file COPYING
- *              in the top level directory
- ***************************************************************************
- * part of:     framework implementation developed by tkn
- **************************************************************************/
+//
+// Copyright (C) 2005, 2010 Telecommunication Networks Group (TKN) at Technische Universitaet Berlin, Germany.
+//
+// Documentation for these modules is at http://veins.car2x.org/
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+
+// author:      Andreas Koepke, Michael Swigulski
+// part of:     framework implementation developed by tkn
 
 #pragma once
 
@@ -159,12 +165,6 @@ public:
     {
         ASSERT(math::almost_equal(direction.squareLength(), 1.0) || math::almost_equal(direction.squareLength(), 0.0));
         this->direction = direction;
-
-        // only if one of the x or y components is nonzero, also set orientation to
-        // the given value
-        if (direction.x != 0 || direction.y != 0) {
-            setOrientationByVector(direction);
-        }
     }
 
     /**
@@ -180,12 +180,6 @@ public:
 
         ASSERT(!math::almost_equal(direction.length(), 0.0));
         direction /= direction.length();
-
-        // only if one of the x or y components is nonzero, also set orientation to
-        // the new direction
-        if (direction.x != 0 || direction.y != 0) {
-            setOrientationByVector(direction);
-        }
     }
 
     /**

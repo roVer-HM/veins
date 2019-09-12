@@ -1,22 +1,28 @@
-/* -*- mode:c++ -*- ********************************************************
- * file:        BaseModule.cc
- *
- * author:      Steffen Sroka
- *              Andreas Koepke
- *
- * copyright:   (C) 2004 Telecommunication Networks Group (TKN) at
- *              Technische Universitaet Berlin, Germany.
- *
- *              This program is free software; you can redistribute it
- *              and/or modify it under the terms of the GNU General Public
- *              License as published by the Free Software Foundation; either
- *              version 2 of the License, or (at your option) any later
- *              version.
- *              For further information see file COPYING
- *              in the top level directory
- ***************************************************************************
- * part of:     framework implementation developed by tkn
- **************************************************************************/
+//
+// Copyright (C) 2004 Telecommunication Networks Group (TKN) at Technische Universitaet Berlin, Germany.
+//
+// Documentation for these modules is at http://veins.car2x.org/
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+
+// author:      Steffen Sroka
+//              Andreas Koepke
+// part of:     framework implementation developed by tkn
 
 #include "veins/base/modules/BaseModule.h"
 
@@ -25,7 +31,7 @@
 using namespace veins;
 
 // Could not initialize simsignal_t it here!? I got the POST_MODEL_CHANGE id!?
-const simsignal_t BaseModule::catHostStateSignal = registerSignal("org.car2x.veins.base.utils.hoststate");
+const simsignal_t BaseModule::catHostStateSignal = registerSignal("org_car2x_veins_base_utils_hoststate");
 
 BaseModule::BaseModule()
     : cSimpleModule()

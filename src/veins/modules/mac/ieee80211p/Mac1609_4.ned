@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -67,8 +69,8 @@ simple Mac1609_4 extends BaseMacLayer
         double ackErrorRate = default(0.20);
 
         // signal informing interested application about channel busy state
-        @signal[org.car2x.veins.modules.mac.sigChannelBusy](type=bool);
+        @signal[org_car2x_veins_modules_mac_sigChannelBusy](type=bool);
         // signal informing interested application about a collision
-        @signal[org.car2x.veins.modules.mac.sigCollision](type=bool);
+        @signal[org_car2x_veins_modules_mac_sigCollision](type=bool);
 
 }

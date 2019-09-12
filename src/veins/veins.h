@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -30,6 +32,12 @@
 #include <utility>
 
 #include <omnetpp.h>
+
+// Version number of last release ("major.minor.patch") or an alpha version, if nonzero
+#define VEINS_VERSION_MAJOR 5
+#define VEINS_VERSION_MINOR 0
+#define VEINS_VERSION_PATCH 0
+#define VEINS_VERSION_ALPHA 2
 
 // Explicitly check OMNeT++ version number
 #if OMNETPP_VERSION < 0x500

@@ -4,6 +4,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -33,8 +35,8 @@ using std::unique_ptr;
 
 Define_Module(veins::Mac1609_4);
 
-const simsignal_t Mac1609_4::sigChannelBusy = registerSignal("org.car2x.veins.modules.mac.sigChannelBusy");
-const simsignal_t Mac1609_4::sigCollision = registerSignal("org.car2x.veins.modules.mac.sigCollision");
+const simsignal_t Mac1609_4::sigChannelBusy = registerSignal("org_car2x_veins_modules_mac_sigChannelBusy");
+const simsignal_t Mac1609_4::sigCollision = registerSignal("org_car2x_veins_modules_mac_sigCollision");
 
 void Mac1609_4::initialize(int stage)
 {

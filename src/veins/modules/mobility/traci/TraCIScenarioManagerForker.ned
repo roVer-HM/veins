@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -39,6 +41,6 @@ simple TraCIScenarioManagerForker extends TraCIScenarioManager
         string commandLine = default("$command --remote-port $port --seed $seed --configuration-file $configFile"); // command line for running TraCI server (substituting $command, $configFile, $seed, $port)
         string command = default("sumo"); // substitution for $command parameter
         string configFile = default("my.sumo.cfg"); // substitution for $configFile parameter
-        port = default(-1);  // substitution for $port parameter (-1: autodetect)
+        port = default(-1);  // substitution for $port parameter (-1: automatic)
 }
 
