@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -23,6 +25,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <iterator>
+#include <cstdlib>
 
 #include "veins/modules/mobility/traci/TraCIScenarioManager.h"
 #include "veins/base/connectionManager/ChannelAccess.h"
@@ -42,11 +45,11 @@ using veins::TraCITrafficLightInterface;
 
 Define_Module(veins::TraCIScenarioManager);
 
-const simsignal_t TraCIScenarioManager::traciInitializedSignal = registerSignal("org.car2x.veins.modules.mobility.traciInitialized");
-const simsignal_t TraCIScenarioManager::traciModuleAddedSignal = registerSignal("org.car2x.veins.modules.mobility.traciModuleAdded");
-const simsignal_t TraCIScenarioManager::traciModuleRemovedSignal = registerSignal("org.car2x.veins.modules.mobility.traciModuleRemoved");
-const simsignal_t TraCIScenarioManager::traciTimestepBeginSignal = registerSignal("org.car2x.veins.modules.mobility.traciTimestepBegin");
-const simsignal_t TraCIScenarioManager::traciTimestepEndSignal = registerSignal("org.car2x.veins.modules.mobility.traciTimestepEnd");
+const simsignal_t TraCIScenarioManager::traciInitializedSignal = registerSignal("org_car2x_veins_modules_mobility_traciInitialized");
+const simsignal_t TraCIScenarioManager::traciModuleAddedSignal = registerSignal("org_car2x_veins_modules_mobility_traciModuleAdded");
+const simsignal_t TraCIScenarioManager::traciModuleRemovedSignal = registerSignal("org_car2x_veins_modules_mobility_traciModuleRemoved");
+const simsignal_t TraCIScenarioManager::traciTimestepBeginSignal = registerSignal("org_car2x_veins_modules_mobility_traciTimestepBegin");
+const simsignal_t TraCIScenarioManager::traciTimestepEndSignal = registerSignal("org_car2x_veins_modules_mobility_traciTimestepEnd");
 
 TraCIScenarioManager::TraCIScenarioManager()
     : connection(nullptr)
@@ -248,7 +251,10 @@ void TraCIScenarioManager::initialize(int stage)
     penetrationRate = par("penetrationRate").doubleValue();
     ignoreGuiCommands = par("ignoreGuiCommands");
     host = par("host").stdstringValue();
-    port = par("port");
+    port = getPortNumber();
+    if (port == -1) {
+        throw cRuntimeError("TraCI Port autoconfiguration failed, set 'port' != -1 in omnetpp.ini or provide VEINS_TRACI_PORT environment variable.");
+    }
     autoShutdown = par("autoShutdown");
 
     annotations = AnnotationManagerAccess().getIfExists();
@@ -516,11 +522,14 @@ void TraCIScenarioManager::addModule(std::string nodeId, std::string type, std::
     }
 
     if (vehicleObstacleControl) {
-        auto caModules = getSubmodulesOfType<ChannelAccess>(mod, true);
+        std::vector<AntennaPosition> initialAntennaPositions;
+        for (auto& caModule : getSubmodulesOfType<ChannelAccess>(mod, true)) {
+            initialAntennaPositions.push_back(caModule->getAntennaPosition());
+        }
         ASSERT(mobilityModules.size() == 1);
         auto mm = mobilityModules[0];
         double offset = mm->getHostPositionOffset();
-        const VehicleObstacle* vo = vehicleObstacleControl->add(VehicleObstacle(caModules, mm, length, offset, width, height));
+        const MobileHostObstacle* vo = vehicleObstacleControl->add(MobileHostObstacle(initialAntennaPositions, mm, length, offset, width, height));
         vehicleObstacles[mm] = vo;
     }
 
@@ -1084,4 +1093,20 @@ void TraCIScenarioManager::processSubcriptionResult(TraCIBuffer& buf)
     else {
         error("Received unhandled subscription result");
     }
+}
+
+int TraCIScenarioManager::getPortNumber() const
+{
+    int port = par("port");
+    if (port != -1) {
+        return port;
+    }
+
+    // search for externally configured traci port
+    const char* env_port = std::getenv("VEINS_TRACI_PORT");
+    if (env_port != nullptr) {
+        port = std::atoi(env_port);
+    }
+
+    return port;
 }

@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -107,7 +109,7 @@ void TraCIVehicleInserter::receiveSignal(cComponent* source, simsignal_t signalI
             if (vehicleTypeIds.size() == 0) {
                 std::list<std::string> vehTypes = manager->getCommandInterface()->getVehicleTypeIds();
                 for (std::list<std::string>::const_iterator i = vehTypes.begin(); i != vehTypes.end(); ++i) {
-                    if (i->compare("DEFAULT_VEHTYPE") != 0 && i->compare("DEFAULT_PEDTYPE") != 0) {
+                    if (i->substr(0, 8).compare("DEFAULT_") != 0) {
                         EV_DEBUG << *i << std::endl;
                         vehicleTypeIds.push_back(*i);
                     }

@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -43,6 +45,7 @@
 namespace veins {
 
 class TraCICommandInterface;
+class MobileHostObstacle;
 
 /**
  * @brief
@@ -156,7 +159,7 @@ protected:
     cMessage* executeOneTimestepTrigger; /**< self-message scheduled for when to next call executeOneTimestep */
 
     BaseWorldUtility* world;
-    std::map<const TraCIMobility*, const VehicleObstacle*> vehicleObstacles;
+    std::map<const BaseMobility*, const MobileHostObstacle*> vehicleObstacles;
     VehicleObstacleControl* vehicleObstacleControl;
 
     void executeOneTimestep(); /**< read and execute all commands for the next timestep */
@@ -191,6 +194,8 @@ protected:
      * transforms a list of mappings of an omnetpp.ini parameter in a list
      */
     TypeMapping parseMappings(std::string parameter, std::string parameterName, bool allowEmpty = false);
+
+    virtual int getPortNumber() const;
 };
 
 class VEINS_API TraCIScenarioManagerAccess {

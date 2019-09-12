@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -30,7 +32,7 @@ using veins::TraCIMobility;
 
 Define_Module(veins::TraCIMobility);
 
-const simsignal_t TraCIMobility::parkingStateChangedSignal = registerSignal("org.car2x.veins.modules.mobility.parkingStateChanged");
+const simsignal_t TraCIMobility::parkingStateChangedSignal = registerSignal("org_car2x_veins_modules_mobility_parkingStateChanged");
 
 namespace {
 const double MY_INFINITY = (std::numeric_limits<double>::has_infinity ? std::numeric_limits<double>::infinity() : std::numeric_limits<double>::max());
@@ -94,6 +96,7 @@ void TraCIMobility::initialize(int stage)
 
         move.setStart(nextPos);
         move.setDirectionByVector(heading.toCoord());
+        move.setOrientationByVector(heading.toCoord());
         if (this->setHostSpeed) {
             move.setSpeed(speed);
         }
@@ -169,6 +172,7 @@ void TraCIMobility::preInitialize(std::string external_id, const Coord& position
 
     move.setStart(nextPos);
     move.setDirectionByVector(heading.toCoord());
+    move.setOrientationByVector(heading.toCoord());
     if (this->setHostSpeed) {
         move.setSpeed(speed);
     }
@@ -187,6 +191,7 @@ void TraCIMobility::nextPosition(const Coord& position, std::string road_id, dou
     this->signals = signals;
 
     changePosition();
+    ASSERT(getCurrentDirection() == heading.toCoord() and getCurrentDirection() == getCurrentOrientation());
 }
 
 void TraCIMobility::changePosition()
@@ -239,6 +244,7 @@ void TraCIMobility::changePosition()
 
     move.setStart(Coord(nextPos.x, nextPos.y, move.getStartPosition().z)); // keep z position
     move.setDirectionByVector(heading.toCoord());
+    move.setOrientationByVector(heading.toCoord());
     if (this->setHostSpeed) {
         move.setSpeed(speed);
     }

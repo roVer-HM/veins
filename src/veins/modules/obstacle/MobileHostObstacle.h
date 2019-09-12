@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -23,23 +25,24 @@
 #include <vector>
 
 #include "veins/base/utils/Coord.h"
+#include "veins/base/utils/AntennaPosition.h"
 
 namespace veins {
 
-class ChannelAccess;
-
-class TraCIMobility;
+class BaseMobility;
 
 /**
- * stores information about a VehicleObstacle for VehicleObstacleControl
+ * Obstacle for radio waves derived from a mobile host's body.
+ *
+ * Primarily used for VehicleObstacleShadowing.
  */
-class VEINS_API VehicleObstacle {
+class VEINS_API MobileHostObstacle {
 public:
     using Coords = std::vector<Coord>;
 
-    VehicleObstacle(std::vector<ChannelAccess*> channelAccessModules, TraCIMobility* traciMobility, double length, double hostPositionOffset, double width, double height)
-        : channelAccessModules(channelAccessModules)
-        , traciMobility(traciMobility)
+    MobileHostObstacle(std::vector<AntennaPosition> initialAntennaPositions, BaseMobility* mobility, double length, double hostPositionOffset, double width, double height)
+        : initialAntennaPositions(std::move(initialAntennaPositions))
+        , mobility(mobility)
         , length(length)
         , hostPositionOffset(hostPositionOffset)
         , width(width)
@@ -47,13 +50,9 @@ public:
     {
     }
 
-    void setChannelAccess(std::vector<ChannelAccess*> channelAccessModules)
+    void setMobility(BaseMobility* mobility)
     {
-        this->channelAccessModules = channelAccessModules;
-    }
-    void setTraCIMobility(TraCIMobility* traciMobility)
-    {
-        this->traciMobility = traciMobility;
+        this->mobility = mobility;
     }
     void setLength(double d)
     {
@@ -72,13 +71,13 @@ public:
         this->height = d;
     }
 
-    const std::vector<ChannelAccess*> getChannelAccessModules() const
+    const std::vector<AntennaPosition>& getInitialAntennaPositions() const
     {
-        return channelAccessModules;
+        return initialAntennaPositions;
     }
-    const TraCIMobility* getTraCIMobility() const
+    const BaseMobility* getMobility() const
     {
-        return traciMobility;
+        return mobility;
     }
     double getLength() const
     {
@@ -107,8 +106,14 @@ public:
     double getIntersectionPoint(const Coord& senderPos, const Coord& receiverPos, simtime_t t) const;
 
 protected:
-    std::vector<ChannelAccess*> channelAccessModules;
-    TraCIMobility* traciMobility;
+    /**
+     * Positions with identiers for all antennas connected to the host of this obstacle.
+     *
+     * Used to identify which host this obstacle belongs to.
+     * Even works after the host has been destroyed (as AntennaPosition only stores the comonnent id).
+     */
+    std::vector<AntennaPosition> initialAntennaPositions;
+    BaseMobility* mobility;
     double length;
     double hostPositionOffset;
     double width;

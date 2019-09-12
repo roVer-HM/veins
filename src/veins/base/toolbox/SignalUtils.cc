@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -44,6 +46,8 @@ Signal getMaxInterference(simtime_t start, simtime_t end, AirFrame* const refere
     Signal currentInterference(spectrum);
     std::priority_queue<Signal, std::vector<Signal>, greaterByReceptionEnd<Signal>> signalEndings;
     simtime_t currentTime = 0;
+
+    interfererFrames.sort([](const AirFrame* x, const AirFrame* y) { return x->getSignal().getReceptionStart() <  y->getSignal().getReceptionStart(); });
 
     for (auto& interfererFrame : interfererFrames) {
         if (interfererFrame->getTreeId() == referenceFrame->getTreeId()) continue; // skip the signal we want to compare to

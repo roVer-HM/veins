@@ -1,3 +1,25 @@
+//
+// Copyright (C) 2006 Christoph Sommer <sommer@ccs-labs.org>
+//
+// Documentation for these modules is at http://veins.car2x.org/
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+
 #include <stdlib.h>
 
 #include "veins/modules/mobility/traci/TraCIBuffer.h"
@@ -381,6 +403,10 @@ double TraCICommandInterface::Vehicle::getWaitingTime() const
 
 double TraCICommandInterface::Vehicle::getAccumulatedWaitingTime() const
 {
+    const auto apiVersion = traci->versionConfig.version;
+    if (apiVersion <= 15) {
+        throw cRuntimeError("TraCICommandInterface::Vehicle::getAccumulatedWaitingTime requires SUMO 0.31.0 or newer");
+    }
     return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_WAITING_TIME_ACCUMULATED, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
@@ -619,7 +645,16 @@ TraCITrafficLightProgram TraCICommandInterface::Trafficlight::getProgramDefiniti
                 phase.state = buf.readTypeChecked<std::string>(TYPE_STRING); // phase definition (like "[ryg]*")
                 phase.minDuration = buf.readTypeChecked<simtime_t>(traci->getTimeType()); // minimum duration of phase
                 phase.maxDuration = buf.readTypeChecked<simtime_t>(traci->getTimeType()); // maximum duration of phase
-                phase.next = buf.readTypeChecked<int32_t>(TYPE_INTEGER);
+                if (apiVersion <= 19) {
+                    phase.next = {buf.readTypeChecked<int32_t>(TYPE_INTEGER)};
+                }
+                else {
+                    int32_t nextCount = buf.readTypeChecked<int32_t>(TYPE_COMPOUND);
+                    phase.next = {};
+                    for (int32_t k = 0; k < nextCount; ++k) {
+                        phase.next.push_back(buf.readTypeChecked<int32_t>(TYPE_INTEGER));
+                    }
+                }
                 if (apiVersion == 20) {
                     phase.name = buf.readTypeChecked<std::string>(TYPE_STRING);
                 }
@@ -722,8 +757,26 @@ void TraCICommandInterface::Trafficlight::setProgramDefinition(TraCITrafficLight
             inbuf << phase.minDuration;
             inbuf << static_cast<uint8_t>(traci->getTimeType());
             inbuf << phase.maxDuration;
-            inbuf << static_cast<uint8_t>(TYPE_INTEGER);
-            inbuf << phase.next;
+            if (apiVersion <= 19) {
+                inbuf << static_cast<uint8_t>(TYPE_INTEGER);
+                if (phase.next.size() == 0) {
+                    inbuf << static_cast<int32_t>(0);
+                }
+                else if (phase.next.size() == 1) {
+                    inbuf << static_cast<int32_t>(phase.next[0]);
+                }
+                else {
+                    throw cRuntimeError("Setting multiple phase.next requires a newer version of SUMO");
+                }
+            }
+            else {
+                inbuf << static_cast<uint8_t>(TYPE_COMPOUND);
+                inbuf << static_cast<int32_t>(phase.next.size());
+                for (int32_t next : phase.next) {
+                    inbuf << static_cast<uint8_t>(TYPE_INTEGER);
+                    inbuf << next;
+                }
+            }
             if (apiVersion == 20) {
                 inbuf << static_cast<uint8_t>(TYPE_STRING);
                 inbuf << phase.name;

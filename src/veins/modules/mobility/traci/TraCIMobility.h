@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -40,6 +42,10 @@ namespace veins {
  *
  * This module relies on the TraCIScenarioManager for state updates
  * and can not be used on its own.
+ *
+ * TraCI server implementations do not differentiate between the orientation and direction of a vehicle.
+ * Thus, TraCIMobility::updatePosition sets the BaseMobility's orientation and direction to the same value.
+ * Said value is equivalent to the heading of the vehicle.
  *
  * See the Veins website <a href="http://veins.car2x.org/"> for a tutorial, documentation, and publications </a>.
  *

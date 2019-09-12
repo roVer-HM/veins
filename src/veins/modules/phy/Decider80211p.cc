@@ -5,6 +5,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -170,14 +172,11 @@ DeciderResult* Decider80211p::checkIfSignalOk(AirFrame* frame)
 
 enum Decider80211p::PACKET_OK_RESULT Decider80211p::packetOk(double sinrMin, double snrMin, int lengthMPDU, double bitrate)
 {
-
-    // the lengthMPDU includes the PHY_SIGNAL_LENGTH + PHY_PSDU_HEADER + Payload, while the first is sent with PHY_HEADER_BANDWIDTH
-
     double packetOkSinr;
     double packetOkSnr;
 
     // compute success rate depending on mcs and bw
-    packetOkSinr = NistErrorRate::getChunkSuccessRate(bitrate, BANDWIDTH_11P, sinrMin, lengthMPDU);
+    packetOkSinr = NistErrorRate::getChunkSuccessRate(bitrate, BANDWIDTH_11P, sinrMin, PHY_HDR_SERVICE_LENGTH + lengthMPDU + PHY_TAIL_LENGTH);
 
     // check if header is broken
     double headerNoError = NistErrorRate::getChunkSuccessRate(PHY_HDR_BITRATE, BANDWIDTH_11P, sinrMin, PHY_HDR_PLCPSIGNAL_LENGTH);
@@ -186,7 +185,7 @@ enum Decider80211p::PACKET_OK_RESULT Decider80211p::packetOk(double sinrMin, dou
     // compute PER also for SNR only
     if (collectCollisionStats) {
 
-        packetOkSnr = NistErrorRate::getChunkSuccessRate(bitrate, BANDWIDTH_11P, snrMin, lengthMPDU);
+        packetOkSnr = NistErrorRate::getChunkSuccessRate(bitrate, BANDWIDTH_11P, snrMin, PHY_HDR_SERVICE_LENGTH + lengthMPDU + PHY_TAIL_LENGTH);
         headerNoErrorSnr = NistErrorRate::getChunkSuccessRate(PHY_HDR_BITRATE, BANDWIDTH_11P, snrMin, PHY_HDR_PLCPSIGNAL_LENGTH);
 
         // the probability of correct reception without considering the interference

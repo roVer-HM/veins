@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -26,12 +28,12 @@
 #include <cmath>
 
 #include "veins/modules/obstacle/VehicleObstacleControl.h"
-#include "veins/modules/mobility/traci/TraCIMobility.h"
+#include "veins/base/modules/BaseMobility.h"
 #include "veins/base/connectionManager/ChannelAccess.h"
 #include "veins/base/toolbox/Signal.h"
 
+using veins::MobileHostObstacle;
 using veins::Signal;
-using veins::VehicleObstacle;
 using veins::VehicleObstacleControl;
 
 Define_Module(veins::VehicleObstacleControl);
@@ -66,19 +68,19 @@ void VehicleObstacleControl::handleSelfMsg(cMessage* msg)
     error("VehicleObstacleControl doesn't handle self-messages");
 }
 
-const VehicleObstacle* VehicleObstacleControl::add(VehicleObstacle obstacle)
+const MobileHostObstacle* VehicleObstacleControl::add(MobileHostObstacle obstacle)
 {
-    auto* o = new VehicleObstacle(obstacle);
+    auto* o = new MobileHostObstacle(obstacle);
     vehicleObstacles.push_back(o);
 
     return o;
 }
 
-void VehicleObstacleControl::erase(const VehicleObstacle* obstacle)
+void VehicleObstacleControl::erase(const MobileHostObstacle* obstacle)
 {
     bool erasedOne = false;
     for (auto k = vehicleObstacles.begin(); k != vehicleObstacles.end();) {
-        VehicleObstacle* o = *k;
+        MobileHostObstacle* o = *k;
         if (o == obstacle) {
             erasedOne = true;
             k = vehicleObstacles.erase(k);
@@ -140,6 +142,7 @@ Signal VehicleObstacleControl::getVehicleAttenuationDZ(const std::vector<std::pa
     for (size_t i = 0;;) {
         double max_slope = -std::numeric_limits<double>::infinity();
         size_t max_slope_index;
+        bool have_max_slope_index = false;
 
         for (size_t j = i + 1; j < dz_vec.size(); ++j) {
             double slope = (dz_vec[j].second - dz_vec[i].second) / (dz_vec[j].first - dz_vec[i].first);
@@ -147,8 +150,12 @@ Signal VehicleObstacleControl::getVehicleAttenuationDZ(const std::vector<std::pa
             if (slope > max_slope) {
                 max_slope = slope;
                 max_slope_index = j;
+                have_max_slope_index = true;
             }
         }
+
+        // Sanity check
+        ASSERT(have_max_slope_index);
 
         if (max_slope_index >= dz_vec.size() - 1) break;
 
@@ -208,6 +215,7 @@ Signal VehicleObstacleControl::getVehicleAttenuationDZ(const std::vector<std::pa
 
             double min_delta_h = std::numeric_limits<float>::infinity();
             size_t min_delta_h_index;
+            bool have_min_delta_h_index = false;
             for (size_t j = mo[i] + 1; j < mo[i + 1]; ++j) {
                 double h = (y2 - y1) / (x2 - x1) * (dz_vec[j].first - x1) + y1;
                 double delta_h = h - dz_vec[j].second;
@@ -215,8 +223,12 @@ Signal VehicleObstacleControl::getVehicleAttenuationDZ(const std::vector<std::pa
                 if (delta_h < min_delta_h) {
                     min_delta_h = delta_h;
                     min_delta_h_index = j;
+                    have_min_delta_h_index = true;
                 }
             }
+
+            // Sanity check
+            ASSERT(have_min_delta_h_index);
 
             size_t tx = mo[i];
             size_t ob = min_delta_h_index;
@@ -292,12 +304,12 @@ std::vector<std::pair<double, double>> VehicleObstacleControl::getPotentialObsta
     double y2 = std::max(senderPos.y, receiverPos.y);
 
     for (auto o : vehicleObstacles) {
-        auto caModules = o->getChannelAccessModules();
+        auto obstacleAntennaPositions = o->getInitialAntennaPositions();
         double l = o->getLength();
         double w = o->getWidth();
         double h = o->getHeight();
 
-        auto hp_approx = o->getTraCIMobility()->getPositionAt(simTime());
+        auto hp_approx = o->getMobility()->getPositionAt(simTime());
 
         EV << "checking vehicle in proximity of " << hp_approx.info() << " with height: " << h << " width: " << w << " length: " << l << endl;
 
@@ -308,14 +320,12 @@ std::vector<std::pair<double, double>> VehicleObstacleControl::getPotentialObsta
 
         // check if this is either the sender or the receiver
         bool ignoreMe = false;
-        for (auto ca : caModules) {
-            auto pos = ca->getAntennaPosition();
-            EV_TRACE << "...it has an antenna at " << pos.getPositionAt() << std::endl;
-            if (pos.isSameAntenna(senderPos_)) {
+        for (auto obstacleAntenna : obstacleAntennaPositions) {
+            if (obstacleAntenna.isSameAntenna(senderPos_)) {
                 EV_TRACE << "...this is the sender: ignore" << std::endl;
                 ignoreMe = true;
             }
-            if (pos.isSameAntenna(receiverPos_)) {
+            if (obstacleAntenna.isSameAntenna(receiverPos_)) {
                 EV_TRACE << "...this is the receiver: ignore" << std::endl;
                 ignoreMe = true;
             }

@@ -3,6 +3,8 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -39,7 +41,7 @@ simple TraCIMobility extends BaseMobility
 {
     parameters:
         @class(veins::TraCIMobility);
-        @signal[org.car2x.veins.modules.mobility.parkingStateChanged](type=veins::TraCIMobility);
+        @signal[org_car2x_veins_modules_mobility_parkingStateChanged](type=veins::TraCIMobility);
         @display("i=block/cogwheel");
         double hostPositionOffset @unit("m") = default(0.0m);  // shift OMNeT++ module this far from front of the car
         bool setHostSpeed = default(false);  // whether to update the speed of the host (along with its position)
