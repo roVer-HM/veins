@@ -41,8 +41,12 @@ public:
 
     TraCIGenericScenarioManager();
     virtual ~TraCIGenericScenarioManager();
+    int numInitStages() const override
+    {
+        return std::max(cSimpleModule::numInitStages(), 2);
+    }
 
-    void initialize(int stage) override;
+    virtual void initialize(int stage) override;
 
     void handleMessage(cMessage* msg) override;
     virtual void handleSelfMsg(cMessage* msg);
@@ -104,8 +108,8 @@ protected:
     cMessage* connectAndStartTrigger; /**< self-message scheduled for when to connect to TraCI server and start running */
     cMessage* executeOneTimestepTrigger; /**< self-message scheduled for when to next call executeOneTimestep */
 
-    virtual void init_traci();
-    virtual void processSubcriptionResult(TraCIBuffer& buf);
+    virtual void init_traci(); // override it!
+    virtual void processSubcriptionResult(TraCIBuffer& buf); // override it!
 
     void executeOneTimestep(); /**< read and execute all commands for the next timestep */
 

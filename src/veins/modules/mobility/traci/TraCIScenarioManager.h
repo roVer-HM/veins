@@ -71,10 +71,6 @@ class VEINS_API TraCIScenarioManager : public TraCIGenericScenarioManager {
 public:
     TraCIScenarioManager();
     ~TraCIScenarioManager() override;
-    int numInitStages() const override
-    {
-        return std::max(cSimpleModule::numInitStages(), 2);
-    }
     void initialize(int stage) override;
     void finish() override;
 
