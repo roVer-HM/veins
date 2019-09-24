@@ -73,6 +73,7 @@ void TraCIScenarioManager::initialize(int stage)
     std::istringstream filterstream(par("trafficLightFilter").stdstringValue());
     std::copy(std::istream_iterator<std::string>(filterstream), std::istream_iterator<std::string>(), std::back_inserter(trafficLightModuleIds));
 
+    penetrationRate = par("penetrationRate").doubleValue();
 
     annotations = AnnotationManagerAccess().getIfExists();
 

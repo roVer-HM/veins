@@ -65,7 +65,6 @@ simple TraCIGenericScenarioManager
         int seed = default(-1); // seed value to set in launch configuration, if missing (-1: current run number)
         bool autoShutdown = default(true);  // Shutdown module as soon as no more vehicles are in the simulation
         int margin = default(25);  // margin to add to all received vehicle positions
-        double penetrationRate = default(1); //the probability of a vehicle being equipped with Car2X technology
         bool ignoreGuiCommands = default(false); // whether to ignore all TraCI commands that only make sense when the server has a graphical user interface
         
 }

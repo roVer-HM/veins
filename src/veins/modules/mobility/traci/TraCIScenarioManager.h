@@ -94,6 +94,8 @@ protected:
     TraCIRegionOfInterest roi; /**< Can return whether a given position lies within the simulation's region of interest. Modules are destroyed and re-created as managed vehicles leave and re-enter the ROI */
     double areaSum;
 
+    double penetrationRate;
+
     AnnotationManager* annotations;
 
     size_t nextNodeVectorIndex; /**< next OMNeT++ module vector index to use */

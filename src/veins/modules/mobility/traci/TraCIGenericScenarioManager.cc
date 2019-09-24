@@ -61,7 +61,7 @@ void TraCIGenericScenarioManager::initialize(int stage) {
     updateInterval = par("updateInterval");
     if (firstStepAt == -1) firstStepAt = connectAt + updateInterval;
     parseModuleTypes();
-    penetrationRate = par("penetrationRate").doubleValue();
+
     ignoreGuiCommands = par("ignoreGuiCommands");
     host = par("host").stdstringValue();
     port = getPortNumber();

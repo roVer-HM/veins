@@ -94,7 +94,6 @@ protected:
     bool autoShutdown; /**< Shutdown module as soon as no more vehicles are in the simulation */
     bool autoShutdownTriggered;
 
-    double penetrationRate;
     bool ignoreGuiCommands; /**< whether to ignore all TraCI commands that only make sense when the server has a graphical user interface */
 
 
