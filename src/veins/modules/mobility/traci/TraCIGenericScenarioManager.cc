@@ -90,9 +90,52 @@ void TraCIGenericScenarioManager::handleMessage(cMessage* msg)
 
 void TraCIGenericScenarioManager::handleSelfMsg(cMessage* msg)
 {
-    throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use one of its child classes.");
+    if (msg == connectAndStartTrigger) {
+        connection.reset(TraCIConnection::connect(this, host.c_str(), port));
+        commandIfc.reset(new TraCICommandInterface(this, *connection, ignoreGuiCommands));
+        init_traci();
+        return;
+    }
+    if (msg == executeOneTimestepTrigger) {
+        executeOneTimestep();
+        return;
+    }
+    throw cRuntimeError("TraCIScenarioManager received unknown self-message");
 }
 
+void TraCIGenericScenarioManager::executeOneTimestep()
+{
+
+    EV_DEBUG << "Triggering TraCI server simulation advance to t=" << simTime() << endl;
+
+    simtime_t targetTime = simTime();
+
+    emit(traciTimestepBeginSignal, targetTime);
+
+    if (isConnected()) {
+        TraCIBuffer buf = connection->query(CMD_SIMSTEP2, TraCIBuffer() << targetTime);
+
+        uint32_t count;
+        buf >> count;
+        EV_DEBUG << "Getting " << count << " subscription results" << endl;
+        for (uint32_t i = 0; i < count; ++i) {
+            processSubcriptionResult(buf);
+        }
+    }
+
+    emit(traciTimestepEndSignal, targetTime);
+
+    if (!autoShutdownTriggered) scheduleAt(simTime() + updateInterval, executeOneTimestepTrigger);
+}
+
+
+void TraCIGenericScenarioManager::init_traci(){
+    throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
+}
+
+void TraCIGenericScenarioManager::processSubcriptionResult(TraCIBuffer& buf){
+    throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
+}
 
 namespace {
 

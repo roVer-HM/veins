@@ -77,31 +77,10 @@ public:
     }
     void initialize(int stage) override;
     void finish() override;
-    virtual void handleSelfMsg(cMessage* msg) override;
-
-    bool isConnected() const
-    {
-        return static_cast<bool>(connection);
-    }
-
-    bool getAutoShutdownTriggered()
-    {
-        return autoShutdownTriggered;
-    }
 
     const std::map<std::string, cModule*>& getManagedHosts()
     {
         return hosts;
-    }
-
-    /**
-     * Predicate indicating a successful connection to the TraCI server.
-     *
-     * @note Once the connection has been established, this will return true even when the connection has been torn down again.
-     */
-    bool isUsable() const
-    {
-        return traciInitialized;
     }
 
 protected:
@@ -130,9 +109,10 @@ protected:
     std::map<const BaseMobility*, const MobileHostObstacle*> vehicleObstacles;
     VehicleObstacleControl* vehicleObstacleControl;
 
-    void executeOneTimestep(); /**< read and execute all commands for the next timestep */
 
-    virtual void init_traci();
+
+    virtual void init_traci() override;
+    void processSubcriptionResult(TraCIBuffer& buf) override;
 
     virtual void preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent);
     virtual void preInitializeModule(cModule* mod, const std::string& nodeId, const Coord& position, const std::string& road_id, double speed, Heading heading, VehicleSignalSet signals);
@@ -148,7 +128,7 @@ protected:
     void unsubscribeFromVehicleVariables(std::string vehicleId);
     void processSimSubscription(std::string objectId, TraCIBuffer& buf);
     void processVehicleSubscription(std::string objectId, TraCIBuffer& buf);
-    void processSubcriptionResult(TraCIBuffer& buf);
+
 
     void subscribeToTrafficLightVariables(std::string tlId);
     void unsubscribeFromTrafficLightVariables(std::string tlId);

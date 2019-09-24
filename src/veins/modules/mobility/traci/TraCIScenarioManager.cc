@@ -250,20 +250,7 @@ void TraCIScenarioManager::finish()
 
 
 
-void TraCIScenarioManager::handleSelfMsg(cMessage* msg)
-{
-    if (msg == connectAndStartTrigger) {
-        connection.reset(TraCIConnection::connect(this, host.c_str(), port));
-        commandIfc.reset(new TraCICommandInterface(this, *connection, ignoreGuiCommands));
-        init_traci();
-        return;
-    }
-    if (msg == executeOneTimestepTrigger) {
-        executeOneTimestep();
-        return;
-    }
-    throw cRuntimeError("TraCIScenarioManager received unknown self-message");
-}
+
 
 void TraCIScenarioManager::preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent)
 {
@@ -399,30 +386,7 @@ void TraCIScenarioManager::deleteManagedModule(std::string nodeId)
     mod->deleteModule();
 }
 
-void TraCIScenarioManager::executeOneTimestep()
-{
 
-    EV_DEBUG << "Triggering TraCI server simulation advance to t=" << simTime() << endl;
-
-    simtime_t targetTime = simTime();
-
-    emit(traciTimestepBeginSignal, targetTime);
-
-    if (isConnected()) {
-        TraCIBuffer buf = connection->query(CMD_SIMSTEP2, TraCIBuffer() << targetTime);
-
-        uint32_t count;
-        buf >> count;
-        EV_DEBUG << "Getting " << count << " subscription results" << endl;
-        for (uint32_t i = 0; i < count; ++i) {
-            processSubcriptionResult(buf);
-        }
-    }
-
-    emit(traciTimestepEndSignal, targetTime);
-
-    if (!autoShutdownTriggered) scheduleAt(simTime() + updateInterval, executeOneTimestepTrigger);
-}
 
 void TraCIScenarioManager::subscribeToVehicleVariables(std::string vehicleId)
 {

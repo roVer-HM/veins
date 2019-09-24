@@ -47,6 +47,11 @@ public:
     void handleMessage(cMessage* msg) override;
     virtual void handleSelfMsg(cMessage* msg);
 
+    bool isConnected() const
+    {
+        return static_cast<bool>(connection);
+    }
+
     TraCICommandInterface* getCommandInterface() const
     {
         return commandIfc.get();
@@ -55,6 +60,21 @@ public:
     TraCIConnection* getConnection() const
     {
         return connection.get();
+    }
+
+    bool getAutoShutdownTriggered()
+    {
+        return autoShutdownTriggered;
+    }
+
+    /**
+     * Predicate indicating a successful connection to the TraCI server.
+     *
+     * @note Once the connection has been established, this will return true even when the connection has been torn down again.
+     */
+    bool isUsable() const
+    {
+        return traciInitialized;
     }
 
 protected:
@@ -72,10 +92,12 @@ protected:
     TypeMapping moduleDisplayString; /**< module displayString to be used in the simulation for each managed vehicle */
 
     bool autoShutdown; /**< Shutdown module as soon as no more vehicles are in the simulation */
+    bool autoShutdownTriggered;
+
     double penetrationRate;
     bool ignoreGuiCommands; /**< whether to ignore all TraCI commands that only make sense when the server has a graphical user interface */
 
-    bool autoShutdownTriggered;
+
 
     std::unique_ptr<TraCIConnection> connection;
     std::unique_ptr<TraCICommandInterface> commandIfc;
@@ -83,6 +105,10 @@ protected:
     cMessage* connectAndStartTrigger; /**< self-message scheduled for when to connect to TraCI server and start running */
     cMessage* executeOneTimestepTrigger; /**< self-message scheduled for when to next call executeOneTimestep */
 
+    virtual void init_traci();
+    virtual void processSubcriptionResult(TraCIBuffer& buf);
+
+    void executeOneTimestep(); /**< read and execute all commands for the next timestep */
 
     /**
      * parses the vector of module types in ini file
