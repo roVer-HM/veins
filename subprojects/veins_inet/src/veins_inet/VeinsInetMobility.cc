@@ -31,6 +31,11 @@
 #include "inet/common/Units.h"
 #include "inet/common/geometry/common/GeographicCoordinateSystem.h"
 
+#include "veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h"
+#include "veins/modules/mobility/traci/subscriptionManagement/SumoVehicle.h"
+
+using namespace veins::TraCISubscriptionManagement;
+
 namespace veins {
 
 using namespace inet::units::values;
@@ -44,6 +49,12 @@ VeinsInetMobility::VeinsInetMobility()
 VeinsInetMobility::~VeinsInetMobility()
 {
     delete vehicleCommandInterface;
+}
+
+void VeinsInetMobility::preInitialize(std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    std::shared_ptr<SumoVehicle> v = IMobileAgent::get<SumoVehicle>(mobileAgent);
+    preInitialize(v->getId(), inet::Coord(v->getPosition().x, v->getPosition().y) , v->getRoadId(), v->getSpeed(), v->getHeading().getRad());
 }
 
 void VeinsInetMobility::preInitialize(std::string external_id, const inet::Coord& position, std::string road_id, double speed, double angle)
@@ -61,6 +72,12 @@ void VeinsInetMobility::initialize(int stage)
 
     // We patch the OMNeT++ Display String to set the initial position. Make sure this works.
     ASSERT(hasPar("initFromDisplayString") && par("initFromDisplayString"));
+}
+
+void VeinsInetMobility::nextPosition(std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    std::shared_ptr<SumoVehicle> v = IMobileAgent::get<SumoVehicle>(mobileAgent);
+    nextPosition(inet::Coord(v->getPosition().x, v->getPosition().y), v->getRoadId(), v->getSpeed(), v->getHeading().getRad());
 }
 
 void VeinsInetMobility::nextPosition(const inet::Coord& position, std::string road_id, double speed, double angle)

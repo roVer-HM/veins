@@ -37,7 +37,9 @@ using namespace omnetpp;
 
 #include "veins/modules/mobility/traci/TraCIScenarioManager.h"
 #include "veins/modules/mobility/traci/TraCICommandInterface.h"
+#include "veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h"
 
+using veins::TraCISubscriptionManagement::IMobileAgent;
 namespace veins {
 
 class VEINS_INET_API VeinsInetMobility : public inet::MobilityBase {
@@ -47,11 +49,13 @@ public:
     virtual ~VeinsInetMobility();
 
     /** @brief called by class VeinsInetManager */
+    virtual void preInitialize(std::shared_ptr<IMobileAgent> mobileAgent);
     virtual void preInitialize(std::string external_id, const inet::Coord& position, std::string road_id, double speed, double angle);
 
     virtual void initialize(int stage) override;
 
     /** @brief called by class VeinsInetManager */
+    virtual void nextPosition(std::shared_ptr<IMobileAgent> mobileAgent);
     virtual void nextPosition(const inet::Coord& position, std::string road_id, double speed, double angle);
 
     virtual inet::Coord getCurrentPosition() override;

@@ -33,12 +33,30 @@ VeinsInetManager::~VeinsInetManager()
 {
 }
 
+void VeinsInetManager::preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    // pre-initialize VeinsInetMobility
+    auto mobilityModules = getSubmodulesOfType<VeinsInetMobility>(mod);
+    for (auto inetmm : mobilityModules) {
+        inetmm->preInitialize(mobileAgent);
+    }
+}
+
 void VeinsInetManager::preInitializeModule(cModule* mod, const std::string& nodeId, const Coord& position, const std::string& road_id, double speed, Heading heading, VehicleSignalSet signals)
 {
     // pre-initialize VeinsInetMobility
     auto mobilityModules = getSubmodulesOfType<VeinsInetMobility>(mod);
     for (auto inetmm : mobilityModules) {
         inetmm->preInitialize(nodeId, inet::Coord(position.x, position.y), road_id, speed, heading.getRad());
+    }
+}
+
+void VeinsInetManager::updateModulePosition(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    // update position in VeinsInetMobility
+    auto mobilityModules = getSubmodulesOfType<VeinsInetMobility>(mod);
+    for (auto inetmm : mobilityModules) {
+        inetmm->nextPosition(mobileAgent);
     }
 }
 
