@@ -265,12 +265,30 @@ void TraCIScenarioManager::handleSelfMsg(cMessage* msg)
     throw cRuntimeError("TraCIScenarioManager received unknown self-message");
 }
 
+void TraCIScenarioManager::preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    // pre-initialize TraCIMobility
+    auto mobilityModules = getSubmodulesOfType<TraCIMobility>(mod);
+    for (auto mm : mobilityModules) {
+        mm->preInitialize(mobileAgent);
+    }
+}
+
 void TraCIScenarioManager::preInitializeModule(cModule* mod, const std::string& nodeId, const Coord& position, const std::string& road_id, double speed, Heading heading, VehicleSignalSet signals)
 {
     // pre-initialize TraCIMobility
     auto mobilityModules = getSubmodulesOfType<TraCIMobility>(mod);
     for (auto mm : mobilityModules) {
         mm->preInitialize(nodeId, position, road_id, speed, heading);
+    }
+}
+
+void TraCIScenarioManager::updateModulePosition(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    // update position in TraCIMobility
+    auto mobilityModules = getSubmodulesOfType<TraCIMobility>(mod);
+    for (auto mm : mobilityModules) {
+        mm->nextPosition(mobileAgent);
     }
 }
 

@@ -29,10 +29,14 @@
 
 #include "veins/base/modules/BaseMobility.h"
 #include "veins/base/utils/FindModule.h"
+#include "veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h"
 #include "veins/modules/mobility/traci/TraCIScenarioManager.h"
 #include "veins/modules/mobility/traci/TraCICommandInterface.h"
 #include "veins/modules/mobility/traci/VehicleSignal.h"
 #include "veins/base/utils/Heading.h"
+
+
+using veins::TraCISubscriptionManagement::IMobileAgent;
 
 namespace veins {
 
@@ -92,7 +96,9 @@ public:
     void finish() override;
 
     void handleSelfMsg(cMessage* msg) override;
+    virtual void preInitialize(std::shared_ptr<IMobileAgent> mobileAgent);
     virtual void preInitialize(std::string external_id, const Coord& position, std::string road_id = "", double speed = -1, Heading heading = Heading::nan);
+    virtual void nextPosition(std::shared_ptr<IMobileAgent> mobileAgent);
     virtual void nextPosition(const Coord& position, std::string road_id = "", double speed = -1, Heading heading = Heading::nan, VehicleSignalSet signals = {VehicleSignal::undefined});
     virtual void changePosition();
     virtual void changeParkingState(bool);

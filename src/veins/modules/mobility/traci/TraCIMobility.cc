@@ -25,8 +25,10 @@
 #include <sstream>
 
 #include "veins/modules/mobility/traci/TraCIMobility.h"
+#include "veins/modules/mobility/traci/subscriptionManagement/SumoVehicle.h"
 
 using namespace veins;
+using namespace veins::TraCISubscriptionManagement;
 
 using veins::TraCIMobility;
 
@@ -148,6 +150,12 @@ void TraCIMobility::handleSelfMsg(cMessage* msg)
     }
 }
 
+void TraCIMobility::preInitialize(std::shared_ptr<IMobileAgent> mobileAgent){
+    std::shared_ptr<SumoVehicle> v = IMobileAgent::get<SumoVehicle>(mobileAgent);
+    preInitialize(v->getId(), v->getPosition(), v->getRoadId(), v->getSpeed(), v->getHeading());
+}
+
+
 void TraCIMobility::preInitialize(std::string external_id, const Coord& position, std::string road_id, double speed, Heading heading)
 {
     this->external_id = external_id;
@@ -170,6 +178,12 @@ void TraCIMobility::preInitialize(std::string external_id, const Coord& position
     }
 
     isPreInitialized = true;
+}
+
+void TraCIMobility::nextPosition(std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    std::shared_ptr<SumoVehicle> v = IMobileAgent::get<SumoVehicle>(mobileAgent);
+    nextPosition(v->getPosition(), v->getRoadId(), v->getSpeed(), v->getHeading(), VehicleSignalSet(v->getSignals()));
 }
 
 void TraCIMobility::nextPosition(const Coord& position, std::string road_id, double speed, Heading heading, VehicleSignalSet signals)

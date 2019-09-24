@@ -35,13 +35,16 @@
 #include "veins/base/utils/FindModule.h"
 #include "veins/modules/obstacle/ObstacleControl.h"
 #include "veins/modules/obstacle/VehicleObstacleControl.h"
+#include "veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h"
 #include "veins/modules/mobility/traci/TraCIBuffer.h"
 #include "veins/modules/mobility/traci/TraCIColor.h"
 #include "veins/modules/mobility/traci/TraCIConnection.h"
 #include "veins/modules/mobility/traci/TraCICoord.h"
 #include "veins/modules/mobility/traci/VehicleSignal.h"
 #include "veins/modules/mobility/traci/TraCIRegionOfInterest.h"
+#include "veins/modules/mobility/traci/TraCIGenericScenarioManager.h"
 
+using veins::TraCISubscriptionManagement::IMobileAgent;
 namespace veins {
 
 class TraCICommandInterface;
@@ -131,7 +134,9 @@ protected:
 
     virtual void init_traci();
 
+    virtual void preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent);
     virtual void preInitializeModule(cModule* mod, const std::string& nodeId, const Coord& position, const std::string& road_id, double speed, Heading heading, VehicleSignalSet signals);
+    virtual void updateModulePosition(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent);
     virtual void updateModulePosition(cModule* mod, const Coord& p, const std::string& edge, double speed, Heading heading, VehicleSignalSet signals);
     void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, const Coord& position, std::string road_id = "", double speed = -1, Heading heading = Heading::nan, VehicleSignalSet signals = {VehicleSignal::undefined}, double length = 0, double height = 0, double width = 0);
     cModule* getManagedModule(std::string nodeId); /**< returns a pointer to the managed module named moduleName, or 0 if no module can be found */
