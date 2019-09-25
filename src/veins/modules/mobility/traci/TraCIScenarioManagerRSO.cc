@@ -14,6 +14,7 @@
 // 
 
 #include <veins/modules/mobility/traci/TraCIScenarioManagerRSO.h>
+#include "veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h"
 
 using namespace veins::TraCIConstants;
 using veins::TraCIScenarioManagerRSO;
@@ -27,33 +28,41 @@ TraCIScenarioManagerRSO::TraCIScenarioManagerRSO()
     : TraCIGenericScenarioManager()
     , subscriptionMgrType()
 {
-    // TODO Auto-generated constructor stub
-
 }
 
 TraCIScenarioManagerRSO::~TraCIScenarioManagerRSO() {
-    // TODO Auto-generated destructor stub
+
 }
 
-std::pair<std::string, std::vector<std::string>> parseSubscriptionData(std::string data, std::string parameterName, std::string defaultKey){
+std::pair<std::string, std::vector<std::uint8_t>> parseSubscriptionData(std::string data, std::string parameterName, std::string defaultKey){
     if (data.compare("") == 0){
         EV_DEBUG << parameterName << "not used in simulation" << endl;
-        return std::pair<std::string, std::vector<std::string>>(defaultKey, {});
+        return std::pair<std::string, std::vector<uint8_t>>(defaultKey, {});
     }
 
     cStringTokenizer stk(data.c_str(), " ");
     std::vector<std::string> values = stk.asVector();
     ASSERT(values.size() == 2);
-    std::pair<std::string, std::vector<std::string>> ret;
+    std::pair<std::string, std::vector<uint8_t>> ret;
     for (std::string val : values){
 
         if (val.substr(0, 5).compare("name=") == 0){
             ret.first=val.substr(5, std::string::npos );
         } else if(val.substr(0, 5).compare("vars=") == 0){
             cStringTokenizer stk2(val.substr(5, std::string::npos).c_str(), ",");
-            ret.second=stk2.asVector();
+            std::vector<std::string> varStrings = stk2.asVector();
+            std::vector<uint8_t> varCodes;
+            for (const auto &var : varStrings ){
+                auto iter = TraCISubscriptionManagement::RemoteSimulationObject::varLookup.find(var);
+                if (iter == TraCISubscriptionManagement::RemoteSimulationObject::varLookup.end()){
+                    throw cRuntimeError("Variable string '%s' from paramter '%s' does not correspond to a known variable", var.c_str(), parameterName.c_str());
+                } else {
+                    varCodes.push_back(iter->second);
+                }
+            }
+            ret.second=varCodes;
         } else {
-            throw cRuntimeError("string must contains be field name= and vars= but it contains: '%s'", data);
+            throw cRuntimeError("string must contains be field name= and vars= but it contains: '%s'", data.c_str());
         }
     }
 
@@ -70,9 +79,9 @@ void TraCIScenarioManagerRSO::initialize(int stage)
 
     moduleAPI = parseMappings(par("moduleAPI").stdstringValue(), "moduleAPI", false);
     subscriptionMgrType.insert(parseSubscriptionData(par("VehicleRSO").stdstringValue(), "VehicleRSO", "defaultKey"));
-    subscriptionMgrType.insert(parseSubscriptionData(par("SimulationRSO").stdstringValue(), "VehicleRSO", "defaultKey"));
-    subscriptionMgrType.insert(parseSubscriptionData(par("TrafficLightRSO").stdstringValue(), "VehicleRSO", "defaultKey"));
-    subscriptionMgrType.insert(parseSubscriptionData(par("PedestrianRSO").stdstringValue(), "VehicleRSO", "defaultKey"));
+    subscriptionMgrType.insert(parseSubscriptionData(par("SimulationRSO").stdstringValue(), "SimulationRSO", "defaultKey"));
+    subscriptionMgrType.insert(parseSubscriptionData(par("TrafficLightRSO").stdstringValue(), "TrafficLightRSO", "defaultKey"));
+    subscriptionMgrType.insert(parseSubscriptionData(par("PedestrianRSO").stdstringValue(), "PedestrianRSO", "defaultKey"));
     subscriptionMgrType.erase("defaultKey");
 }
 

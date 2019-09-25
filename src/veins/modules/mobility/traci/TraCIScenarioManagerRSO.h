@@ -35,7 +35,7 @@ protected:
     virtual void init_traci() override; // override it!
     virtual void processSubcriptionResult(TraCIBuffer& buf) override; // override it!
 
-    typedef std::map<std::string, std::vector<std::string>> SubMgrVarMapping;
+    typedef std::map<std::string, std::vector<uint8_t>> SubMgrVarMapping;
     SubMgrVarMapping subscriptionMgrType;
     TypeMapping moduleAPI;
 };

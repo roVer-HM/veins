@@ -70,6 +70,8 @@ public:
     RemoteSimulationObject(std::shared_ptr<TraCIConnection> connection, std::shared_ptr<TraCICommandInterface> commandInterface, std::string remoteSimulationObjectType, TraCICmdTypes cmdTypes);
     virtual ~RemoteSimulationObject();
 
+    const static std::map<std::string, uint8_t> varLookup;
+
     template<typename T>
     T getVar(uint8_t varId){
         auto mIter = variableMap.find(varId);
