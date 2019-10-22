@@ -59,11 +59,13 @@ void VeinsInetApplicationBase::initialize(int stage)
     }
 }
 
+void VeinsInetApplicationBase::initializeFromMobilityModule(){
+    throw cRuntimeError("override this method and initialize the correct TraCICommandInterface");
+}
+
 void VeinsInetApplicationBase::handleStartOperation(LifecycleOperation* operation)
 {
-    mobility = veins::VeinsInetMobilityAccess().get(getParentModule());
-    traci = mobility->getCommandInterface();
-    traciVehicle = mobility->getVehicleCommandInterface();
+    initializeFromMobilityModule(); // retrieve Mobility Module and setup necessary TraCICommandInterface
 
     L3AddressResolver().tryResolve("224.0.0.1", destAddress);
     ASSERT(!destAddress.isUnspecified());

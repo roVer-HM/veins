@@ -3,8 +3,6 @@
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
-// SPDX-License-Identifier: GPL-2.0-or-later
-//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -24,13 +22,25 @@ package org.car2x.veins.subprojects.veins_inet.example;
 
 import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetCar;
-import org.car2x.veins.subprojects.veins_inet.VeinsInetManager;
+import org.car2x.veins.subprojects.veins_inet.VeinsInetPerson;
 import org.car2x.veins.subprojects.veins_inet.TraCIScenarioManagerRSO;
 
-network Scenario2
+
+network ScenarioPedestrians
 {
+    //    parameters:
+    //        @display("bgb=1684,885;bgi=veins/background/hochschule_muenchenBGI");
     submodules:
-        radioMedium: Ieee80211ScalarRadioMedium;
-        manager: TraCIScenarioManagerRSO;
-        node[0]: VeinsInetCar;
+        radioMedium: Ieee80211ScalarRadioMedium {
+            @display("p=580,275");
+        }
+        manager: TraCIScenarioManagerRSO {
+            @display("p=244.976,64.256");
+        }
+        carNode[0]: VeinsInetCar {
+            @display("p=192.65999,839.93");
+        }
+        personNode[0]: VeinsInetPerson {
+            @display("p=96.329994,839.93");
+        }
 }

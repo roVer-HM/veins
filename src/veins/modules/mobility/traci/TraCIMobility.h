@@ -142,7 +142,7 @@ public:
         if (heading.isNan()) throw cRuntimeError("TraCIMobility::getHeading called with no heading set yet");
         return heading;
     }
-    virtual TraCIScenarioManager* getManager() const
+    virtual TraCIGenericScenarioManager* getManager() const
     {
         if (!manager) manager = TraCIScenarioManagerAccess().get();
         return manager;
@@ -192,7 +192,7 @@ protected:
 
     cMessage* startAccidentMsg;
     cMessage* stopAccidentMsg;
-    mutable TraCIScenarioManager* manager;
+    mutable TraCIGenericScenarioManager* manager;
     mutable TraCICommandInterface* commandInterface;
     mutable TraCICommandInterface::Vehicle* vehicleCommandInterface;
     double last_speed;

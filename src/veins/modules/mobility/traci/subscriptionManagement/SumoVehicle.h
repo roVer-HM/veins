@@ -47,7 +47,7 @@ public:
     std::set<std::string> getIdList();
     int getIdCount();
     const std::string& getId() const override; // RemoteSimulationObject|IMobileAgent
-    double getAngel() const;
+    double getAngel() const override; // IMobileAgent
     const std::string& getRoadId() const;
     Heading getHeading() const;
     double getHeight() const;
@@ -55,7 +55,7 @@ public:
     const Coord& getPosition() const override; // IMobileAgent
 
     int getSignals() const;
-    double getSpeed() const;
+    double getSpeed() const override; // IMobileAgent
     const std::string& getTypeId() const override; // IMobileAgent
     double getWidth() const;
     double getX() const override;    // IMobileAgent

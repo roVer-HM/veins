@@ -57,7 +57,7 @@ void TraCIVehicleInserter::initialize(int stage)
     }
 
     // internal 1
-    manager = TraCIScenarioManagerAccess().get();
+    manager = TraCIScenarioManagerAccess().get<TraCIScenarioManager*>();
 
     // signals
     manager->subscribe(TraCIScenarioManager::traciModuleAddedSignal, this);
@@ -129,7 +129,7 @@ void TraCIVehicleInserter::receiveSignal(cComponent* source, simsignal_t signalI
                     routeIds.push_back(routeId);
                 }
             }
-            for (int i = manager->getManagedHosts().size() + queuedVehicles.size(); i < numVehicles; i++) {
+            for (int i = manager->getManagedVehicleHosts().size() + queuedVehicles.size(); i < numVehicles; i++) {
                 insertNewVehicle();
             }
         }

@@ -40,20 +40,6 @@ simple TraCIScenarioManager extends TraCIGenericScenarioManager
         @display("i=block/network2");
         @class(veins::TraCIScenarioManager);
 
-//        string moduleType = default("org.car2x.veins.nodes.Car");  // module type to be used in the simulation for each managed vehicle
-//        string moduleName = default("node");  // module name to be used in the simulation for each managed vehicle
-//        // module displayString to be used in the simulation for each managed vehicle
-//        // display strings key-value pairs needs to be protected with single quotes, as they use an = sign as the type mappings. For example
-//        // <pre>
-//        // *.manager.moduleDisplayString = "'i=block/process'"
-//        // *.manager.moduleDisplayString = "a='i=block/process' b='i=misc/sun'"
-//        // </pre>
-//        //
-//        // moduleDisplayString can also be left empty:
-//        // <pre>
-//        // *.manager.moduleDisplayString = ""
-//        // </pre>
-//        string moduleDisplayString = default("*='i=veins/node/car;is=vs'");
         string trafficLightModuleType = default("");  // module type to be used in the simulation for each managed traffic light
         string trafficLightModuleName = default("tls");  // module name to be used in the simulation for each managed traffic light
         string trafficLightFilter = default("");  // filter string to select which tls shall be subscribed, list sumo IDs separated by spaces

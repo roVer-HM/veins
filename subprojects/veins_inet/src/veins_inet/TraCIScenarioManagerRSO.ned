@@ -20,7 +20,9 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-package org.car2x.veins.modules.mobility.traci;
+package org.car2x.veins.subprojects.veins_inet;
+
+import org.car2x.veins.modules.mobility.traci.TraCIGenericScenarioManager;
 
 //
 // RemoteSimulationObject based ScenarioManager which allows dynamic selection of variables which will be subscribed. 
@@ -40,9 +42,10 @@ simple TraCIScenarioManagerRSO extends TraCIGenericScenarioManager
         // name: Is a key which is used to create the correct SubscriptionManager for the type (e.g.SubscriptionManager<SumoVehicle>)
         // vars: List of varibales which shold be subscribed to. (Names correspond to TraCIConstant::)
         string VehicleRSO = default("name=SumoVehicle vars=ID_LIST,VAR_POSITION,VAR_ROAD_ID,VAR_SPEED,VAR_ANGLE,VAR_SIGNALS,VAR_LENGTH,VAR_HEIGHT,VAR_WIDTH,VAR_TYPE");
-        string SimulationRSO = default("name=SumoSimulation vars=VAR_TIME_STEP");
+        string SimulationRSO = default("name=SumoSimulation vars=VAR_TIME");
         string TrafficLightRSO = default("");
         string PedestrianRSO = default("");
         string moduleAPI = default("node=SumoVehicle");
+        xml launchConfig; // launch configuration to send to sumo-launchd.py
 }
 

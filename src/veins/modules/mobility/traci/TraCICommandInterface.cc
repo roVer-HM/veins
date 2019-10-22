@@ -410,6 +410,22 @@ double TraCICommandInterface::Vehicle::getAccumulatedWaitingTime() const
     return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_WAITING_TIME_ACCUMULATED, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
+std::string TraCICommandInterface::Person::getTypeId()
+{
+    return traci->genericGetString(CMD_GET_PERSON_VARIABLE, nodeId, VAR_TYPE, RESPONSE_GET_PERSON_VARIABLE);
+}
+
+int TraCICommandInterface::Person::getCount()
+{
+    return traci->genericGetInt(CMD_GET_PERSON_VARIABLE, nodeId, ID_COUNT, RESPONSE_GET_PERSON_VARIABLE);
+}
+
+std::list<std::string> TraCICommandInterface::Person::getIdList()
+{
+    return traci->genericGetStringList(CMD_GET_PERSON_VARIABLE, nodeId, ID_LIST, RESPONSE_GET_PERSON_VARIABLE);
+}
+
+
 double TraCICommandInterface::getDistance(const Coord& p1, const Coord& p2, bool returnDrivingDistance)
 {
     uint8_t variable = DISTANCE_REQUEST;

@@ -11,6 +11,7 @@ doc/neddoc
 /run
 
 /out
+/.computed/
 
 examples/**/results
 examples/**/.tkenvrc
@@ -54,6 +55,7 @@ subprojects/veins_inet/examples/**/.tkenvrc
 subprojects/veins_inet/examples/**/.qtenvrc
 subprojects/veins_inet/examples/**/.cmdenv-log
 subprojects/veins_inet/examples/**/valgrind.out
+subprojects/veins_inet/examples/**/*.anf
 
 subprojects/veins_testsims/src/Makefile
 subprojects/veins_testsims/src/*.so

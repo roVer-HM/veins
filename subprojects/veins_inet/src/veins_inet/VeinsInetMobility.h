@@ -31,9 +31,8 @@ namespace omnetpp {
 }
 using namespace omnetpp;
 
-#include "inet/mobility/base/MobilityBase.h"
-
 #include "veins_inet/veins_inet.h"
+#include "veins_inet/VeinsInetMobilityBase.h"
 
 #include "veins/modules/mobility/traci/TraCIScenarioManager.h"
 #include "veins/modules/mobility/traci/TraCICommandInterface.h"
@@ -42,52 +41,26 @@ using namespace omnetpp;
 using veins::TraCISubscriptionManagement::IMobileAgent;
 namespace veins {
 
-class VEINS_INET_API VeinsInetMobility : public inet::MobilityBase {
+class VEINS_INET_API VeinsInetMobility : public VeinsInetMobilityBase {
 public:
     VeinsInetMobility();
 
     virtual ~VeinsInetMobility();
 
     /** @brief called by class VeinsInetManager */
-    virtual void preInitialize(std::shared_ptr<IMobileAgent> mobileAgent);
+    virtual void preInitialize(std::shared_ptr<IMobileAgent> mobileAgent) override;
     virtual void preInitialize(std::string external_id, const inet::Coord& position, std::string road_id, double speed, double angle);
 
-    virtual void initialize(int stage) override;
-
     /** @brief called by class VeinsInetManager */
-    virtual void nextPosition(std::shared_ptr<IMobileAgent> mobileAgent);
+    virtual void nextPosition(std::shared_ptr<IMobileAgent> mobileAgent) override;
     virtual void nextPosition(const inet::Coord& position, std::string road_id, double speed, double angle);
 
-    virtual inet::Coord getCurrentPosition() override;
-    virtual inet::Coord getCurrentVelocity() override;
-    virtual inet::Coord getCurrentAcceleration() override;
 
-    virtual inet::Quaternion getCurrentAngularPosition() override;
-    virtual inet::Quaternion getCurrentAngularVelocity() override;
-    virtual inet::Quaternion getCurrentAngularAcceleration() override;
-
-    virtual std::string getExternalId() const;
-    virtual TraCIScenarioManager* getManager() const;
-    virtual TraCICommandInterface* getCommandInterface() const;
     virtual TraCICommandInterface::Vehicle* getVehicleCommandInterface() const;
 
 protected:
-    /** @brief The last velocity that was set by nextPosition(). */
-    inet::Coord lastVelocity;
-
-    /** @brief The last angular velocity that was set by nextPosition(). */
-    inet::Quaternion lastAngularVelocity;
-
-    mutable TraCIScenarioManager* manager = nullptr; /**< cached value */
-    mutable TraCICommandInterface* commandInterface = nullptr; /**< cached value */
     mutable TraCICommandInterface::Vehicle* vehicleCommandInterface = nullptr; /**< cached value */
 
-    std::string external_id; /**< identifier used by TraCI server to refer to this node */
-
-protected:
-    virtual void setInitialPosition() override;
-
-    virtual void handleSelfMessage(cMessage* message) override;
 };
 
 } // namespace veins
@@ -95,11 +68,13 @@ protected:
 namespace veins {
 class VEINS_INET_API VeinsInetMobilityAccess {
 public:
-    VeinsInetMobility* get(cModule* host)
+    template<typename T>
+    T get(cModule* host)
     {
-        VeinsInetMobility* m = FindModule<VeinsInetMobility*>::findSubModule(host);
+        T m = FindModule<T>::findSubModule(host);
         ASSERT(m);
         return m;
     };
 };
 } // namespace veins
+

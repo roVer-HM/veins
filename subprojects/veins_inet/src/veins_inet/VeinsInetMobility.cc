@@ -66,14 +66,6 @@ void VeinsInetMobility::preInitialize(std::string external_id, const inet::Coord
     lastOrientation = inet::Quaternion(inet::EulerAngles(rad(-angle), rad(0.0), rad(0.0)));
 }
 
-void VeinsInetMobility::initialize(int stage)
-{
-    MobilityBase::initialize(stage);
-
-    // We patch the OMNeT++ Display String to set the initial position. Make sure this works.
-    ASSERT(hasPar("initFromDisplayString") && par("initFromDisplayString"));
-}
-
 void VeinsInetMobility::nextPosition(std::shared_ptr<IMobileAgent> mobileAgent)
 {
     std::shared_ptr<SumoVehicle> v = IMobileAgent::get<SumoVehicle>(mobileAgent);
@@ -98,65 +90,6 @@ void VeinsInetMobility::nextPosition(const inet::Coord& position, std::string ro
     }
 
     emitMobilityStateChangedSignal();
-}
-
-inet::Coord VeinsInetMobility::getCurrentPosition()
-{
-    return lastPosition;
-}
-
-inet::Coord VeinsInetMobility::getCurrentVelocity()
-{
-    return lastVelocity;
-}
-
-inet::Coord VeinsInetMobility::getCurrentAcceleration()
-{
-    throw cRuntimeError("Invalid operation");
-}
-
-inet::Quaternion VeinsInetMobility::getCurrentAngularPosition()
-{
-    return lastOrientation;
-}
-
-inet::Quaternion VeinsInetMobility::getCurrentAngularVelocity()
-{
-    return lastAngularVelocity;
-}
-
-inet::Quaternion VeinsInetMobility::getCurrentAngularAcceleration()
-{
-    throw cRuntimeError("Invalid operation");
-}
-
-void VeinsInetMobility::setInitialPosition()
-{
-    subjectModule->getDisplayString().setTagArg("p", 0, lastPosition.x);
-    subjectModule->getDisplayString().setTagArg("p", 1, lastPosition.y);
-    MobilityBase::setInitialPosition();
-}
-
-void VeinsInetMobility::handleSelfMessage(cMessage* message)
-{
-}
-
-std::string VeinsInetMobility::getExternalId() const
-{
-    if (external_id == "") throw cRuntimeError("TraCIMobility::getExternalId called with no external_id set yet");
-    return external_id;
-}
-
-TraCIScenarioManager* VeinsInetMobility::getManager() const
-{
-    if (!manager) manager = TraCIScenarioManagerAccess().get();
-    return manager;
-}
-
-TraCICommandInterface* VeinsInetMobility::getCommandInterface() const
-{
-    if (!commandInterface) commandInterface = getManager()->getCommandInterface();
-    return commandInterface;
 }
 
 TraCICommandInterface::Vehicle* VeinsInetMobility::getVehicleCommandInterface() const

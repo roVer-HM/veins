@@ -140,6 +140,8 @@ public:
     virtual const Coord& getPosition() const = 0;
     virtual double getX() const = 0;
     virtual double getY() const = 0;
+    virtual double getSpeed() const = 0;
+    virtual double getAngel() const = 0;
     virtual  const std::string& getTypeId() const = 0;
 
     virtual void setTypeId(TraCIBuffer& buffer) = 0;
@@ -159,19 +161,15 @@ public:
 template <class T>
 class RSOFactory {
 public:
-    RSOFactory() : subscribeList(), connection(nullptr), commandInterface(nullptr) {}
-    RSOFactory(std::shared_ptr<TraCIConnection> connection, std::shared_ptr<TraCICommandInterface> commandInterface, std::vector<std::pair<int, access_t>> subscribeMap)
-        : subscribeList(subscribeMap), connection(connection), commandInterface(commandInterface){}
-    RSOFactory(std::shared_ptr<TraCIConnection> connection, std::shared_ptr<TraCICommandInterface> commandInterface, std::vector<int> subscribeMap)
-        : subscribeList(), connection(connection), commandInterface(commandInterface)
+    RSOFactory() : connection(nullptr), commandInterface(nullptr), subscribeList() {}
+    RSOFactory(std::vector<std::pair<int, access_t>> subscribeMap) : connection(nullptr), commandInterface(nullptr), subscribeList(subscribeMap){}
+    RSOFactory(std::vector<uint8_t> subscribeMap) : RSOFactory()
     {
         subscribeList.clear();
-        for (const int& var : subscribeMap){
+        for (const uint8_t& var : subscribeMap){
             subscribeList.push_back(std::pair<int, access_t>(var, access_t::subscribe));
         }
     }
-    RSOFactory(std::vector<int> subscribeMap) : RSOFactory(nullptr, nullptr, subscribeMap) {}
-    RSOFactory(std::vector<std::pair<int, access_t>> subscribeMap) : RSOFactory(nullptr, nullptr, subscribeMap) {}
 
     ~RSOFactory() = default;
 
@@ -206,6 +204,8 @@ public:
             return o;
         }
 
+
+
     std::shared_ptr<TraCICommandInterface>& getCommandInterface() {
         return commandInterface;
     }
@@ -224,7 +224,6 @@ public:
     }
 
 private:
-    std::list<std::pair<int, access_t>> subscribeList;
     /**
      * Stores the connection to TraCI server.
      */
@@ -234,6 +233,8 @@ private:
      * Stores the command interface to TraCI server.
      */
     std::shared_ptr<TraCICommandInterface> commandInterface;
+
+    std::list<std::pair<uint8_t, access_t>> subscribeList;
 };
 
 } // end namespace TraCISubscriptionManagement

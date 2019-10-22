@@ -55,20 +55,34 @@ public:
 
     virtual bool update(TraCIBuffer& bufer) = 0;
     virtual void initializeSubscription() = 0;
+    virtual void subscribeToId(std::string id) = 0;
     virtual void clearAPI() = 0;
+    virtual std::vector<uint8_t> getManagedReturnCodes() const  = 0;
+
+    static std::shared_ptr<ISubscriptionManager> create(std::string subscriptionId, std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc);
+
+    typedef std::function<std::shared_ptr<ISubscriptionManager>(std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc)> SubscriptionManagerFactory_m;
+    const static std::map<std::string, SubscriptionManagerFactory_m> factoryMap;
+protected:
 
 };
 
 template<class T> // T = RSO (e.g. SumoVehicle)
 class SubscriptionManager : public ISubscriptionManager {
-public:
+private:
     SubscriptionManager(std::shared_ptr<TraCIConnection>& connection, std::shared_ptr<TraCICommandInterface>& commandInterface)
         : connection(connection)
         , commandInterface(commandInterface)
         , subscribedRSO()
         , subscriptionInterval(0, SimTime::getMaxTime())
     {}
+public:
     ~SubscriptionManager(){}
+
+    // only activate varCodes
+    static std::shared_ptr<SubscriptionManager<T>> build(std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& connection, std::shared_ptr<TraCICommandInterface>& commandInterface);
+    // activate all variables
+    static std::shared_ptr<SubscriptionManager<T>> build(std::shared_ptr<TraCIConnection>& connection, std::shared_ptr<TraCICommandInterface>& commandInterface);
 
     void addRSOFactory(RSOFactory<T> factory);
 
@@ -80,9 +94,9 @@ public:
 
     std::map<std::string, std::shared_ptr<T>> getSubscribedRSO() const;
     std::vector<std::shared_ptr<T>> getRSOVector() const;
+    std::set<std::string> getDeletedRSOs() const;
 
-
-    void subscribeToId(std::string id);
+    virtual void subscribeToId(std::string id) override;
 
     std::shared_ptr<T> getGlobalRSO();
 
@@ -92,6 +106,8 @@ public:
      * to be implemented by each manager.
      */
     void clearAPI() override;
+
+    std::vector<uint8_t> getManagedReturnCodes() const override;
 protected:
     /**
      * @brief Execute given command and check if response code match cmd.retCode.
@@ -142,10 +158,32 @@ private:
 
     std::map<std::string, std::shared_ptr<T>> subscribedRSO;
     std::set<std::string> newSubscriptions;
+    std::set<std::string> eraseNodes;
 
     std::pair<simtime_t, simtime_t> subscriptionInterval;
 
 };
+
+template<class T>
+std::shared_ptr<SubscriptionManager<T>> SubscriptionManager<T>::build(std::vector<std::uint8_t> varCodes
+                                                , std::shared_ptr<TraCIConnection>& connection
+                                                , std::shared_ptr<TraCICommandInterface>& commandInterface){
+    std::shared_ptr<SubscriptionManager<T>> ret (new SubscriptionManager<T>(connection, commandInterface));
+    RSOFactory<T> factory (varCodes);
+    ret -> addRSOFactory(factory);
+
+    return ret;
+}
+
+template<class T>
+std::shared_ptr<SubscriptionManager<T>>  SubscriptionManager<T>::build(std::shared_ptr<TraCIConnection>& connection, std::shared_ptr<TraCICommandInterface>& commandInterface){
+    std::shared_ptr<SubscriptionManager<T>> ret (new SubscriptionManager<T> (connection, commandInterface));
+    RSOFactory<T> factory (connection, commandInterface);
+    ret -> addRSOFactory(factory);
+
+    return ret;
+}
+
 
 template<class T>
 void SubscriptionManager<T>::initializeSubscription(){
@@ -186,6 +224,11 @@ std::vector<std::shared_ptr<T>> SubscriptionManager<T>::getRSOVector() const{
 }
 
 template<class T>
+std::set<std::string> SubscriptionManager<T>::getDeletedRSOs() const{
+    return eraseNodes;
+}
+
+template<class T>
 std::shared_ptr<T> SubscriptionManager<T>::getGlobalRSO(){
     return globalRSO;
 }
@@ -193,6 +236,15 @@ std::shared_ptr<T> SubscriptionManager<T>::getGlobalRSO(){
 template<class T>
 void SubscriptionManager<T>::clearAPI(){
     newSubscriptions.clear();
+    eraseNodes.clear();
+}
+
+template<class T>
+std::vector<uint8_t> SubscriptionManager<T>::getManagedReturnCodes() const{
+    const TraCICmdTypes cmdTypes = globalRSO->getCmdTypes();
+    std::vector<uint8_t> ret;
+    ret.push_back(cmdTypes.subscriptionVarRET);
+    return ret;
 }
 
 template<class T>
@@ -240,7 +292,7 @@ void SubscriptionManager<T>::setSubscriptionInterval(simtime_t start, simtime_t 
 
 template<class T>
 bool SubscriptionManager<T>::update(TraCIBuffer& buf){
-    clearAPI();
+//    clearAPI();
     bool idListUpdateReceived = false;
 
     // this is the object id that this subscription result contains
@@ -271,16 +323,6 @@ bool SubscriptionManager<T>::update(TraCIBuffer& buf){
             parseObjectVarSubscriptio(currRSO, buf, numberOfResponseVariables);
         }
 
-//        if (numberOfResponseVariables == 1){
-//            std::set<std::string> ids = parseGlobalVarSubscription(buf);
-//            processIDList(ids);
-//            idListUpdateReceived = true;
-//        } else if (numberOfResponseVariables == expectedVars.size()){
-//           if (isSubscribed(responseObjectID)) {
-//               std::shared_ptr<T> currRSO = subscribedRSO.at(responseObjectID);
-//               parseVariableSubscription(currRSO, buf, numberOfResponseVariables);
-//           }
-//        }
     } else {
         throw cRuntimeError("Subscription for remote simulation object with Id: '0x%2x' is not tracked by the SubscriptionManager ");
     }
@@ -357,7 +399,7 @@ bool SubscriptionManager<T>::parseGlobalVarSubscription(std::shared_ptr<T>& curr
 
 template<class T>
 void SubscriptionManager<T>::subscribeToId(std::string id){
-    if (subscribedRSO.find(id) != subscribedRSO.end()){
+    if (subscribedRSO.find(id) == subscribedRSO.end()){
         // not subscribed.
         std::shared_ptr<T> newRSO = remoteSimObjectFactory.create();
         newRSO->setId(id);
@@ -395,7 +437,9 @@ void SubscriptionManager<T>::processIDList(std::set<std::string>& idSet){
         auto nIt = idSet.find(subIter->first);
         if (nIt == idSet.end() && subIter->first != ""){ // do not remove globalRSO (with empty string as id)
             // existing RSO at subIter not returned remote simulator (remove)
-            unsubscribeFromObjectVariables(subIter->second);
+//            unsubscribeFromObjectVariables(subIter->second);
+
+            eraseNodes.insert(subIter->second->getId());
             subIter = subscribedRSO.erase(subIter);
         } else {
             subIter++;

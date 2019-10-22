@@ -44,7 +44,8 @@
 #include "veins/modules/mobility/traci/TraCIRegionOfInterest.h"
 #include "veins/modules/mobility/traci/TraCIGenericScenarioManager.h"
 
-using veins::TraCISubscriptionManagement::IMobileAgent;
+using namespace veins::TraCISubscriptionManagement;
+
 namespace veins {
 
 class TraCICommandInterface;
@@ -74,7 +75,7 @@ public:
     void initialize(int stage) override;
     void finish() override;
 
-    const std::map<std::string, cModule*>& getManagedHosts()
+    const std::map<std::string, cModule*>& getManagedVehicleHosts()
     {
         return hosts;
     }
@@ -103,22 +104,23 @@ protected:
     uint32_t parkingVehicleCount; /**< number of parking vehicles, derived from parking start/end events */
     uint32_t drivingVehicleCount; /**< number of driving, as reported by sumo */
 
-    BaseWorldUtility* world;
+
     std::map<const BaseMobility*, const MobileHostObstacle*> vehicleObstacles;
     VehicleObstacleControl* vehicleObstacleControl;
 
-
-
+    virtual void executeOneTimestep() override;
     virtual void init_traci() override;
-    void processSubcriptionResult(TraCIBuffer& buf) override;
+    virtual void processSubcriptionResult(TraCIBuffer& buf);
 
-    virtual void preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent);
+    virtual void preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent) override;
     virtual void preInitializeModule(cModule* mod, const std::string& nodeId, const Coord& position, const std::string& road_id, double speed, Heading heading, VehicleSignalSet signals);
-    virtual void updateModulePosition(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent);
+    virtual void updateModulePosition(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent) override;
     virtual void updateModulePosition(cModule* mod, const Coord& p, const std::string& edge, double speed, Heading heading, VehicleSignalSet signals);
+
+    void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, std::shared_ptr<IMobileAgent> mobileAgent) override;
     void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, const Coord& position, std::string road_id = "", double speed = -1, Heading heading = Heading::nan, VehicleSignalSet signals = {VehicleSignal::undefined}, double length = 0, double height = 0, double width = 0);
-    cModule* getManagedModule(std::string nodeId); /**< returns a pointer to the managed module named moduleName, or 0 if no module can be found */
-    void deleteManagedModule(std::string nodeId);
+    virtual cModule* getManagedModule(std::string nodeId); /**< returns a pointer to the managed module named moduleName, or 0 if no module can be found */
+    virtual void deleteManagedModule(std::string nodeId) override;
 
     bool isModuleUnequipped(std::string nodeId); /**< returns true if this vehicle is Unequipped */
 
@@ -136,10 +138,12 @@ protected:
 
 class VEINS_API TraCIScenarioManagerAccess {
 public:
-    TraCIScenarioManager* get()
+    template<typename T=TraCIGenericScenarioManager*>
+    T get()
     {
-        return FindModule<TraCIScenarioManager*>::findGlobalModule();
+        return FindModule<T>::findGlobalModule();
     };
+
 };
 
 } // namespace veins

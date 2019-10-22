@@ -21,7 +21,6 @@
 #pragma once
 
 #include <memory>
-#include <veins/modules/mobility/traci/subscriptionManagement/SumoVehicle.h>
 #include "veins/veins.h"
 
 #include "veins/modules/mobility/traci/subscriptionManagement/SubscriptionManager.h"
@@ -64,7 +63,7 @@ public:
      *
      * @param buffer TraCIBuffer containing subscriptions.
      */
-    void processSubscriptionResult(TraCIBuffer& buffer);
+    void processSubscriptionResultBuffer(TraCIBuffer& buffer);
 
 
 
@@ -78,12 +77,11 @@ public:
      */
     void clearAPI();
 
-    template<typename T>
-    void addSubscriptionManager(uint8_t responseCommandIdentifer, T& manager){
-        std::shared_ptr<ISubscriptionManager> tmpMgr = std::dynamic_pointer_cast<ISubscriptionManager>(std::make_shared<T>(manager));
-        subscriptionManagers.insert(std::make_pair(responseCommandIdentifer, tmpMgr));
-    }
+    void addSubscriptionManager(std::shared_ptr<ISubscriptionManager> mgr);
+
     std::shared_ptr<ISubscriptionManager> getSubscriptionManager(uint8_t responseCode);
+
+    bool has(uint8_t retCode) const;
 
     template<typename T>
     std::shared_ptr<T> get(uint8_t retCode){
@@ -95,6 +93,8 @@ public:
     }
 
 private:
+
+    void doExplicitUpdateIfIdListSubscriptionUnavailable(std::shared_ptr<ISubscriptionManager> mgr);
 
     /**
      * The command interface to the TraCI server.

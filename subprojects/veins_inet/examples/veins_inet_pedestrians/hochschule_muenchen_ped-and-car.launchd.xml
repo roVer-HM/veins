@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <copy file="hochschule_muenchen.net.xml" />
+    <copy file="hochschule_muenchen_ped-and-car.rou.xml" />
+    <copy file="hochschule_muenchen.poly.xml" />
+    <copy file="hochschule_muenchen_ped-and-car.sumocfg" type="config" />
+</launch>

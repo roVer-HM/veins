@@ -34,8 +34,11 @@
 #include "veins/modules/mobility/traci/TraCIMobility.h"
 #include "veins/modules/obstacle/ObstacleControl.h"
 #include "veins/modules/world/traci/trafficLight/TraCITrafficLightInterface.h"
+#include "veins/modules/mobility/traci/subscriptionManagement/SumoVehicle.h"
+#include "veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h"
 
 using namespace veins::TraCIConstants;
+using namespace veins::TraCISubscriptionManagement;
 
 using veins::AnnotationManagerAccess;
 using veins::TraCIBuffer;
@@ -49,7 +52,6 @@ Define_Module(veins::TraCIScenarioManager);
 
 TraCIScenarioManager::TraCIScenarioManager()
     :TraCIGenericScenarioManager()
-    , world(nullptr)
 {
 }
 
@@ -96,6 +98,30 @@ void TraCIScenarioManager::initialize(int stage)
     vehicleObstacleControl = FindModule<VehicleObstacleControl*>::findGlobalModule();
 
     EV_DEBUG << "initialized TraCIScenarioManager" << endl;
+}
+
+void TraCIScenarioManager::executeOneTimestep()
+{
+    EV_DEBUG << "Triggering TraCI server simulation advance to t=" << simTime() << endl;
+
+    simtime_t targetTime = simTime();
+
+    emit(traciTimestepBeginSignal, targetTime);
+
+    if (isConnected()) {
+        TraCIBuffer buf = connection->query(CMD_SIMSTEP2, TraCIBuffer() << targetTime);
+
+        uint32_t count;
+        buf >> count;
+        EV_DEBUG << "Getting " << count << " subscription results" << endl;
+        for (uint32_t i = 0; i < count; ++i) {
+            processSubcriptionResult(buf);
+        }
+    }
+
+    emit(traciTimestepEndSignal, targetTime);
+
+    if (!autoShutdownTriggered) scheduleAt(simTime() + updateInterval, executeOneTimestepTrigger);
 }
 
 void TraCIScenarioManager::init_traci()
@@ -240,6 +266,10 @@ void TraCIScenarioManager::init_traci()
     }
 }
 
+
+
+
+
 void TraCIScenarioManager::finish()
 {
     while (hosts.begin() != hosts.end()) {
@@ -287,6 +317,11 @@ void TraCIScenarioManager::updateModulePosition(cModule* mod, const Coord& p, co
     for (auto mm : mobilityModules) {
         mm->nextPosition(p, edge, speed, heading, signals);
     }
+}
+
+void TraCIScenarioManager::addModule(std::string nodeId, std::string type, std::string name, std::string displayString, std::shared_ptr<IMobileAgent> mobileAgent){
+    std::shared_ptr<SumoVehicle> v = IMobileAgent::get<SumoVehicle>(mobileAgent);
+    addModule(nodeId, type, name, displayString, v->getPosition(), v->getRoadId(), v->getSpeed(), v->getHeading(), VehicleSignalSet(v->getSignals()), v->getLength(), v->getHeight(), v->getWidth());
 }
 
 // name: host;Car;i=vehicle.gif
@@ -818,38 +853,11 @@ void TraCIScenarioManager::processVehicleSubscription(std::string objectId, TraC
 
     if (!mod) {
         // no such module - need to create
-        std::string vType = commandIfc->vehicle(objectId).getTypeId();
-        std::string mType, mName, mDisplayString;
-        TypeMapping::iterator iType, iName, iDisplayString;
+        TypeMappingTripel m = getTypeMapping(commandIfc->vehicle(objectId).getTypeId());
 
-        TypeMapping::iterator i;
-        iType = moduleType.find(vType);
-        if (iType == moduleType.end()) {
-            iType = moduleType.find("*");
-            if (iType == moduleType.end()) throw cRuntimeError("cannot find a module type for vehicle type \"%s\"", vType.c_str());
-        }
-        mType = iType->second;
-        // search for module name
-        iName = moduleName.find(vType);
-        if (iName == moduleName.end()) {
-            iName = moduleName.find(std::string("*"));
-            if (iName == moduleName.end()) throw cRuntimeError("cannot find a module name for vehicle type \"%s\"", vType.c_str());
-        }
-        mName = iName->second;
-        if (moduleDisplayString.size() != 0) {
-            iDisplayString = moduleDisplayString.find(vType);
-            if (iDisplayString == moduleDisplayString.end()) {
-                iDisplayString = moduleDisplayString.find("*");
-                if (iDisplayString == moduleDisplayString.end()) throw cRuntimeError("cannot find a module display string for vehicle type \"%s\"", vType.c_str());
-            }
-            mDisplayString = iDisplayString->second;
-        }
-        else {
-            mDisplayString = "";
-        }
 
-        if (mType != "0") {
-            addModule(objectId, mType, mName, mDisplayString, p, edge, speed, heading, VehicleSignalSet(signals), length, height, width);
+        if (m.mType != "0") {
+            addModule(objectId, m.mType, m.mName, m.mDisplayString, p, edge, speed, heading, VehicleSignalSet(signals), length, height, width);
             EV_DEBUG << "Added vehicle #" << objectId << endl;
         }
     }
@@ -859,6 +867,8 @@ void TraCIScenarioManager::processVehicleSubscription(std::string objectId, TraC
         updateModulePosition(mod, p, edge, speed, heading, VehicleSignalSet(signals));
     }
 }
+
+
 
 void TraCIScenarioManager::processSubcriptionResult(TraCIBuffer& buf)
 {

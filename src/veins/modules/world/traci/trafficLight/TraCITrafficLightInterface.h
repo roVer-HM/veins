@@ -47,7 +47,7 @@ public:
         if (external_id == "") throw cRuntimeError("TraCITrafficLightInterface::getExternalId called with no external_id set yet");
         return external_id;
     }
-    virtual TraCIScenarioManager* getManager() const
+    virtual TraCIGenericScenarioManager* getManager() const
     {
         if (!manager) {
             manager = TraCIScenarioManagerAccess().get();
@@ -97,7 +97,7 @@ protected:
     bool isPreInitialized; /**< true if preInitialize() has been called immediately before initialize() */
     simtime_t updateInterval; /**< ScenarioManager's update interval */
     /** reference to the simulations ScenarioManager */
-    mutable TraCIScenarioManager* manager;
+    mutable TraCIGenericScenarioManager* manager;
     /** reference to the simulations traffic light-specific TraCI command interface */
     mutable TraCICommandInterface* commandInterface;
     /** reference to the simulations traffic light-specific TraCI command interface */

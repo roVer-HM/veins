@@ -137,8 +137,8 @@ void TraCITestApp::handlePositionUpdate()
             assertTrue("(TraCICommandInterface::addVehicle) command reports success", r);
         }
         if (t == 30) {
-            std::map<std::string, cModule*>::const_iterator i = mobility->getManager()->getManagedHosts().find("testVehicle0");
-            bool r = (i != mobility->getManager()->getManagedHosts().end());
+            std::map<std::string, cModule*>::const_iterator i = mobility->getManager()->getManagedVehicleHosts().find("testVehicle0");
+            bool r = (i != mobility->getManager()->getManagedVehicleHosts().end());
             assertTrue("(TraCICommandInterface::addVehicle) vehicle now driving", r);
             const cModule* mod = i->second;
             const TraCIMobility* traci2 = FindModule<TraCIMobility*>::findSubModule(const_cast<cModule*>(mod));

@@ -309,7 +309,7 @@ void AnnotationManager::show(const Annotation* annotation)
             // no corresponding TkEnv representation
         }
 
-        TraCIScenarioManager* traci = TraCIScenarioManagerAccess().get();
+        TraCIGenericScenarioManager* traci = TraCIScenarioManagerAccess().get();
         if (traci && traci->isConnected()) {
             std::stringstream nameBuilder;
             nameBuilder << o->text << " " << getEnvir()->getUniqueNumber();
@@ -328,7 +328,7 @@ void AnnotationManager::show(const Annotation* annotation)
             annotationLayer->addFigure(annotation->figure);
         }
 
-        TraCIScenarioManager* traci = TraCIScenarioManagerAccess().get();
+        TraCIGenericScenarioManager* traci = TraCIScenarioManagerAccess().get();
         if (traci && traci->isConnected()) {
             std::list<Coord> coords;
             coords.push_back(l->p1);
@@ -356,7 +356,7 @@ void AnnotationManager::show(const Annotation* annotation)
             annotationLayer->addFigure(annotation->figure);
         }
 
-        TraCIScenarioManager* traci = TraCIScenarioManagerAccess().get();
+        TraCIGenericScenarioManager* traci = TraCIScenarioManagerAccess().get();
         if (traci && traci->isConnected()) {
             std::stringstream nameBuilder;
             nameBuilder << "Annotation" << getEnvir()->getUniqueNumber();
@@ -376,7 +376,7 @@ void AnnotationManager::hide(const Annotation* annotation)
         annotation->figure = nullptr;
     }
 
-    TraCIScenarioManager* traci = TraCIScenarioManagerAccess().get();
+    TraCIGenericScenarioManager* traci = TraCIScenarioManagerAccess().get();
     if (traci && traci->isConnected()) {
         for (std::list<std::string>::const_iterator i = annotation->traciPolygonsIds.begin(); i != annotation->traciPolygonsIds.end(); ++i) {
             std::string id = *i;

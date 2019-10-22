@@ -28,9 +28,22 @@
 #include "veins/modules/mobility/traci/TraCIRegionOfInterest.h"
 #include "veins/modules/mobility/traci/TraCIGenericScenarioManager.h"
 #include "veins/modules/mobility/traci/TraCICommandInterface.h"
+#include "veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h"
 
+using namespace veins::TraCISubscriptionManagement;
 namespace veins {
 
+/**
+ * @brief
+ * Creates and moves nodes controlled by a TraCI server.
+ *
+ * Do not use this generic class directly but one of its sub classes.
+ *
+ * Conventions: a agent is any moving element provided by the server, may it be a Vehicle, Pedestrian or what not.
+ *
+ * This generic class is agnostic to the type and number of different agents the server provides. The sub classes
+ * must provide a way to handle Vehicles or Pedestrian or both.
+ */
 class VEINS_API TraCIGenericScenarioManager : public cSimpleModule {
 public:
     static const simsignal_t traciInitializedSignal;
@@ -86,32 +99,44 @@ protected:
     simtime_t connectAt; /**< when to connect to TraCI server (must be the initial timestep of the server) */
     simtime_t firstStepAt; /**< when to start synchronizing with the TraCI server (-1: immediately after connecting) */
     simtime_t updateInterval; /**< time interval of hosts' position updates */
-    // maps from vehicle type to moduleType, moduleName, and moduleDisplayString
     std::string host;
     int port;
 
+    // maps from vehicle type to moduleType, moduleName, and moduleDisplayString
     typedef std::map<std::string, std::string> TypeMapping;
     TypeMapping moduleType; /**< module type to be used in the simulation for each managed vehicle */
     TypeMapping moduleName; /**< module name to be used in the simulation for each managed vehicle */
     TypeMapping moduleDisplayString; /**< module displayString to be used in the simulation for each managed vehicle */
 
-    bool autoShutdown; /**< Shutdown module as soon as no more vehicles are in the simulation */
+    bool autoShutdown; /**< Shutdown module as soon as no more agents are in the simulation */
     bool autoShutdownTriggered;
 
     bool ignoreGuiCommands; /**< whether to ignore all TraCI commands that only make sense when the server has a graphical user interface */
 
+    BaseWorldUtility* world;
 
-
-    std::unique_ptr<TraCIConnection> connection;
-    std::unique_ptr<TraCICommandInterface> commandIfc;
+    std::shared_ptr<TraCIConnection> connection;
+    std::shared_ptr<TraCICommandInterface> commandIfc;
 
     cMessage* connectAndStartTrigger; /**< self-message scheduled for when to connect to TraCI server and start running */
     cMessage* executeOneTimestepTrigger; /**< self-message scheduled for when to next call executeOneTimestep */
 
     virtual void init_traci(); // override it!
-    virtual void processSubcriptionResult(TraCIBuffer& buf); // override it!
+    virtual void executeOneTimestep(); // override it!
 
-    void executeOneTimestep(); /**< read and execute all commands for the next timestep */
+    virtual void preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent); // override it!
+    virtual void updateModulePosition(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent); // override it!
+    virtual void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, std::shared_ptr<IMobileAgent> mobileAgent);
+
+    virtual cModule* getManagedModule(std::string identifer);
+    virtual void deleteManagedModule(std::string identifer);
+//    bool isModuleUnequipped(std::string nodeId) const; /**< returns true if this vehicle is Unequipped */
+
+
+    struct TypeMappingTripel{
+        std::string mType, mName, mDisplayString;
+    };
+    virtual TypeMappingTripel getTypeMapping(std::string typeId);
 
     /**
      * parses the vector of module types in ini file

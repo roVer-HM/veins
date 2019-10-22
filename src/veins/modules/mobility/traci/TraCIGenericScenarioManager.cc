@@ -34,7 +34,8 @@ const simsignal_t TraCIGenericScenarioManager::traciTimestepEndSignal = register
 namespace veins {
 
 TraCIGenericScenarioManager::TraCIGenericScenarioManager()
-    : connection(nullptr)
+    : world(nullptr)
+    , connection(nullptr)
     , commandIfc(nullptr)
     , connectAndStartTrigger(nullptr)
     , executeOneTimestepTrigger(nullptr)
@@ -103,38 +104,70 @@ void TraCIGenericScenarioManager::handleSelfMsg(cMessage* msg)
     throw cRuntimeError("TraCIScenarioManager received unknown self-message");
 }
 
-void TraCIGenericScenarioManager::executeOneTimestep()
-{
-
-    EV_DEBUG << "Triggering TraCI server simulation advance to t=" << simTime() << endl;
-
-    simtime_t targetTime = simTime();
-
-    emit(traciTimestepBeginSignal, targetTime);
-
-    if (isConnected()) {
-        TraCIBuffer buf = connection->query(CMD_SIMSTEP2, TraCIBuffer() << targetTime);
-
-        uint32_t count;
-        buf >> count;
-        EV_DEBUG << "Getting " << count << " subscription results" << endl;
-        for (uint32_t i = 0; i < count; ++i) {
-            processSubcriptionResult(buf);
-        }
-    }
-
-    emit(traciTimestepEndSignal, targetTime);
-
-    if (!autoShutdownTriggered) scheduleAt(simTime() + updateInterval, executeOneTimestepTrigger);
-}
-
-
 void TraCIGenericScenarioManager::init_traci(){
     throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
 }
 
-void TraCIGenericScenarioManager::processSubcriptionResult(TraCIBuffer& buf){
+void TraCIGenericScenarioManager::executeOneTimestep()
+{
     throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
+}
+
+void TraCIGenericScenarioManager::preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
+}
+void TraCIGenericScenarioManager::updateModulePosition(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
+}
+void TraCIGenericScenarioManager::addModule(std::string nodeId, std::string type, std::string name, std::string displayString, std::shared_ptr<IMobileAgent> mobileAgent)
+{
+    throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
+}
+
+cModule* TraCIGenericScenarioManager::getManagedModule(std::string identifer){
+    throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
+}
+
+void TraCIGenericScenarioManager::deleteManagedModule(std::string identifer){
+    throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
+}
+
+TraCIGenericScenarioManager::TypeMappingTripel TraCIGenericScenarioManager::getTypeMapping(std::string typeId){
+
+    std::string vType = typeId;
+    TraCIGenericScenarioManager::TypeMappingTripel mapping;
+
+    TypeMapping::iterator iType, iName, iDisplayString;
+
+    TypeMapping::iterator i;
+    iType = moduleType.find(vType);
+    if (iType == moduleType.end()) {
+        iType = moduleType.find("*");
+        if (iType == moduleType.end()) throw cRuntimeError("cannot find a module type for mobile agent type \"%s\"", vType.c_str());
+    }
+    mapping.mType = iType->second;
+    // search for module name
+    iName = moduleName.find(vType);
+    if (iName == moduleName.end()) {
+        iName = moduleName.find(std::string("*"));
+        if (iName == moduleName.end()) throw cRuntimeError("cannot find a module name for mobile agent type \"%s\"", vType.c_str());
+    }
+    mapping.mName = iName->second;
+    if (moduleDisplayString.size() != 0) {
+        iDisplayString = moduleDisplayString.find(vType);
+        if (iDisplayString == moduleDisplayString.end()) {
+            iDisplayString = moduleDisplayString.find("*");
+            if (iDisplayString == moduleDisplayString.end()) throw cRuntimeError("cannot find a module display string for mobile agent type \"%s\"", vType.c_str());
+        }
+        mapping.mDisplayString = iDisplayString->second;
+    }
+    else {
+        mapping.mDisplayString = "";
+    }
+
+    return mapping;
 }
 
 namespace {
