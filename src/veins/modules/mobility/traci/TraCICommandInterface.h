@@ -111,6 +111,17 @@ public:
      */
     double getDistance(const Coord& position1, const Coord& position2, bool returnDrivingDistance);
 
+    class VEINS_API TraCIObjectIterface {
+    public:
+        TraCIObjectIterface(TraCICommandInterface* traci)
+            : traci(traci) {
+            connection = &traci->connection;
+        }
+    protected:
+        TraCICommandInterface* traci;
+        TraCIConnection* connection;
+    };
+
     // Vehicle methods
     /**
      * @brief Adds a vehicle to the simulation.
@@ -126,14 +137,11 @@ public:
      * @return Success indication
      */
     bool addVehicle(std::string vehicleId, std::string vehicleTypeId, std::string routeId, simtime_t emitTime_st = DEPART_TIME_TRIGGERED, double emitPosition = DEPART_POSITION_BASE, double emitSpeed = DEPART_SPEED_MAX, int8_t emitLane = DEPART_LANE_BEST);
-    class VEINS_API Vehicle {
+    class VEINS_API Vehicle : public TraCIObjectIterface {
     public:
         Vehicle(TraCICommandInterface* traci, std::string nodeId)
-            : traci(traci)
-            , nodeId(nodeId)
-        {
-            connection = &traci->connection;
-        }
+            : TraCIObjectIterface(traci)
+            , nodeId(nodeId) { }
 
         void setSpeedMode(int32_t bitset);
         void setSpeed(double speed);
@@ -247,8 +255,6 @@ public:
         double getAccumulatedWaitingTime() const;
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string nodeId;
     };
     Vehicle vehicle(std::string nodeId)
@@ -270,7 +276,7 @@ public:
      *
      * Note: This does not include all values given in the lists above.
      */
-    class VEINS_API Person  {
+    class VEINS_API Person : public TraCIObjectIterface {
     public:
         /**
          * Default constructor for the person.
@@ -279,12 +285,8 @@ public:
          * @nodeId The id of the person that is being represented.
          */
         Person(TraCICommandInterface* traci, std::string nodeId)
-            : traci(traci)
-            , nodeId(nodeId)
-        {
-            connection = &traci->connection;
-        }
-
+            : TraCIObjectIterface(traci)
+            , nodeId(nodeId) { }
         /**
          * Get the type id of the person.
          *
@@ -309,8 +311,6 @@ public:
         std::list<std::string> getIdList();
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string nodeId;
     };
 
@@ -321,21 +321,16 @@ public:
 
     // Road methods
     std::list<std::string> getRoadIds();
-    class VEINS_API Road {
+    class VEINS_API Road : public TraCIObjectIterface {
     public:
         Road(TraCICommandInterface* traci, std::string roadId)
-            : traci(traci)
-            , roadId(roadId)
-        {
-            connection = &traci->connection;
-        }
+            : TraCIObjectIterface(traci)
+            , roadId(roadId) { }
 
         double getCurrentTravelTime();
         double getMeanSpeed();
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string roadId;
     };
     Road road(std::string roadId)
@@ -345,14 +340,11 @@ public:
 
     // Lane methods
     std::list<std::string> getLaneIds();
-    class VEINS_API Lane {
+    class VEINS_API Lane : public TraCIObjectIterface {
     public:
         Lane(TraCICommandInterface* traci, std::string laneId)
-            : traci(traci)
-            , laneId(laneId)
-        {
-            connection = &traci->connection;
-        }
+            : TraCIObjectIterface(traci)
+            , laneId(laneId) { }
 
         std::list<Coord> getShape();
         std::string getRoadId();
@@ -361,8 +353,6 @@ public:
         double getMeanSpeed();
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string laneId;
     };
     Lane lane(std::string laneId)
@@ -372,14 +362,11 @@ public:
 
     // Trafficlight methods
     std::list<std::string> getTrafficlightIds();
-    class VEINS_API Trafficlight {
+    class VEINS_API Trafficlight : public TraCIObjectIterface {
     public:
         Trafficlight(TraCICommandInterface* traci, std::string trafficLightId)
-            : traci(traci)
-            , trafficLightId(trafficLightId)
-        {
-            connection = &traci->connection;
-        }
+            : TraCIObjectIterface(traci)
+            , trafficLightId(trafficLightId) { }
 
         std::string getCurrentState() const;
         simtime_t getDefaultCurrentPhaseDuration() const;
@@ -397,8 +384,6 @@ public:
         void setProgramDefinition(TraCITrafficLightProgram::Logic program, int32_t programNr);
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string trafficLightId;
     };
     Trafficlight trafficlight(std::string trafficLightId)
@@ -408,20 +393,15 @@ public:
 
     // LaneAreaDetector methods
     std::list<std::string> getLaneAreaDetectorIds();
-    class VEINS_API LaneAreaDetector {
+    class VEINS_API LaneAreaDetector : public TraCIObjectIterface {
     public:
         LaneAreaDetector(TraCICommandInterface* traci, std::string laneAreaDetectorId)
-            : traci(traci)
-            , laneAreaDetectorId(laneAreaDetectorId)
-        {
-            connection = &traci->connection;
-        }
+            : TraCIObjectIterface(traci)
+            , laneAreaDetectorId(laneAreaDetectorId) { }
 
         int getLastStepVehicleNumber();
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string laneAreaDetectorId;
     };
     LaneAreaDetector laneAreaDetector(std::string laneAreaDetectorId)
@@ -432,14 +412,11 @@ public:
     // Polygon methods
     std::list<std::string> getPolygonIds();
     void addPolygon(std::string polyId, std::string polyType, const TraCIColor& color, bool filled, int32_t layer, const std::list<Coord>& points);
-    class VEINS_API Polygon {
+    class VEINS_API Polygon : public TraCIObjectIterface {
     public:
         Polygon(TraCICommandInterface* traci, std::string polyId)
-            : traci(traci)
-            , polyId(polyId)
-        {
-            connection = &traci->connection;
-        }
+            : TraCIObjectIterface(traci)
+            , polyId(polyId) { }
 
         std::string getTypeId();
         std::list<Coord> getShape();
@@ -447,8 +424,6 @@ public:
         void remove(int32_t layer);
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string polyId;
     };
     Polygon polygon(std::string polyId)
@@ -459,20 +434,15 @@ public:
     // Poi methods
     std::list<std::string> getPoiIds();
     void addPoi(std::string poiId, std::string poiType, const TraCIColor& color, int32_t layer, const Coord& pos);
-    class VEINS_API Poi {
+    class VEINS_API Poi : public TraCIObjectIterface {
     public:
         Poi(TraCICommandInterface* traci, std::string poiId)
-            : traci(traci)
-            , poiId(poiId)
-        {
-            connection = &traci->connection;
-        }
+            : TraCIObjectIterface(traci)
+            , poiId(poiId) { }
 
         void remove(int32_t layer);
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string poiId;
     };
     Poi poi(std::string poiId)
@@ -482,20 +452,15 @@ public:
 
     // Junction methods
     std::list<std::string> getJunctionIds();
-    class VEINS_API Junction {
+    class VEINS_API Junction : public TraCIObjectIterface {
     public:
         Junction(TraCICommandInterface* traci, std::string junctionId)
-            : traci(traci)
-            , junctionId(junctionId)
-        {
-            connection = &traci->connection;
-        }
+            : TraCIObjectIterface(traci)
+            , junctionId(junctionId) { }
 
         Coord getPosition();
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string junctionId;
     };
     Junction junction(std::string junctionId)
@@ -505,20 +470,15 @@ public:
 
     // Route methods
     std::list<std::string> getRouteIds();
-    class VEINS_API Route {
+    class VEINS_API Route : public TraCIObjectIterface {
     public:
         Route(TraCICommandInterface* traci, std::string routeId)
-            : traci(traci)
-            , routeId(routeId)
-        {
-            connection = &traci->connection;
-        }
+            : TraCIObjectIterface(traci)
+            , routeId(routeId) { }
 
         std::list<std::string> getRoadIds();
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string routeId;
     };
     Route route(std::string routeId)
@@ -531,15 +491,12 @@ public:
 
     // GuiView methods
     std::list<std::string> getGuiViewIds();
-    class VEINS_API GuiView : public HasLogProxy {
+    class VEINS_API GuiView : public HasLogProxy, TraCIObjectIterface {
     public:
         GuiView(TraCICommandInterface* traci, std::string viewId)
             : HasLogProxy(traci->owner)
-            , traci(traci)
-            , viewId(viewId)
-        {
-            connection = &traci->connection;
-        }
+            , TraCIObjectIterface(traci)
+            , viewId(viewId) { }
 
         std::string getScheme();
         void setScheme(std::string name);
@@ -554,8 +511,6 @@ public:
         void trackVehicle(std::string vehicleId);
 
     protected:
-        TraCICommandInterface* traci;
-        TraCIConnection* connection;
         std::string viewId;
     };
     GuiView guiView(std::string viewId)
