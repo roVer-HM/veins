@@ -199,11 +199,6 @@ std::shared_ptr<SubscriptionManager<T>>  SubscriptionManager<T>::build(std::shar
 
 template<class T>
 void SubscriptionManager<T>::initializeSubscription(){
-    // check for ID List Subscription and subscribe
-//    TraCIcmd cmd = createIDListSubscription();
-//    executeTraCICmd(cmd);
-
-    // check for global subscriptions and subscribe (e.g. ID_LIST)
     TraCIcmd cmd = createGlobalVarSubscription();
     executeTraCICmd(cmd);
 }
@@ -449,7 +444,6 @@ void SubscriptionManager<T>::processIDList(std::set<std::string>& idSet){
         auto nIt = idSet.find(subIter->first);
         if (nIt == idSet.end() && subIter->first != ""){ // do not remove globalRSO (with empty string as id)
             // existing RSO at subIter not returned remote simulator (remove)
-//            unsubscribeFromObjectVariables(subIter->second);
 
             eraseNodes.insert(subIter->second->getId());
             subIter = subscribedRSO.erase(subIter);
