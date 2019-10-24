@@ -1,3 +1,4 @@
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -105,27 +106,7 @@ void TraCIScenarioManagerRSO::initialize(int stage)
 
     launchConfig = par("launchConfig").xmlValue();
     seed = par("seed");
-    cXMLElementList basedir_nodes = launchConfig->getElementsByTagName("basedir");
-    if (basedir_nodes.size() == 0) {
-        // default basedir is where current network file was loaded from
-        std::string basedir = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getConfigEntry("network").getBaseDirectory();
-        cXMLElement* basedir_node = new cXMLElement("basedir", __FILE__, launchConfig);
-        basedir_node->setAttribute("path", basedir.c_str());
-        launchConfig->appendChild(basedir_node);
-    }
-    cXMLElementList seed_nodes = launchConfig->getElementsByTagName("seed");
-    if (seed_nodes.size() == 0) {
-        if (seed == -1) {
-            // default seed is current repetition
-            const char* seed_s = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_RUNNUMBER);
-            seed = atoi(seed_s);
-        }
-        std::stringstream ss;
-        ss << seed;
-        cXMLElement* seed_node = new cXMLElement("seed", __FILE__, launchConfig);
-        seed_node->setAttribute("value", ss.str().c_str());
-        launchConfig->appendChild(seed_node);
-    }
+
 }
 
 void TraCIScenarioManagerRSO::finish()
@@ -142,6 +123,30 @@ void TraCIScenarioManagerRSO::finish()
 }
 
 void TraCIScenarioManagerRSO::init_traci(){
+
+    {
+        cXMLElementList basedir_nodes = launchConfig->getElementsByTagName("basedir");
+        if (basedir_nodes.size() == 0) {
+            // default basedir is where current network file was loaded from
+            std::string basedir = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getConfigEntry("network").getBaseDirectory();
+            cXMLElement* basedir_node = new cXMLElement("basedir", __FILE__, launchConfig);
+            basedir_node->setAttribute("path", basedir.c_str());
+            launchConfig->appendChild(basedir_node);
+        }
+        cXMLElementList seed_nodes = launchConfig->getElementsByTagName("seed");
+        if (seed_nodes.size() == 0) {
+            if (seed == -1) {
+                // default seed is current repetition
+                const char* seed_s = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_RUNNUMBER);
+                seed = atoi(seed_s);
+            }
+            std::stringstream ss;
+            ss << seed;
+            cXMLElement* seed_node = new cXMLElement("seed", __FILE__, launchConfig);
+            seed_node->setAttribute("value", ss.str().c_str());
+            launchConfig->appendChild(seed_node);
+        }
+    }
 
     {
         std::pair<uint32_t, std::string> version = commandIfc->getVersion();
