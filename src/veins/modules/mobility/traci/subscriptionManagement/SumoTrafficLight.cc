@@ -24,6 +24,14 @@ using namespace veins::TraCIConstants;
 namespace veins {
 namespace TraCISubscriptionManagement {
 
+Register_Class(SumoTrafficLightSubFactory)
+
+std::shared_ptr<ISubscriptionManager> SumoTrafficLightSubFactory::createSubscriptionManager(std::vector<std::uint8_t> varCodes,
+                                                                            std::shared_ptr<TraCIConnection>& c,
+                                                                            std::shared_ptr<TraCICommandInterface>& cIfc) const {
+    return SubscriptionManager<SumoTrafficLight>::build(varCodes, c, cIfc);
+}
+
 SumoTrafficLight::SumoTrafficLight(std::shared_ptr<TraCIConnection> connection, std::shared_ptr<TraCICommandInterface> commandInterface)
     : RemoteSimulationObject(connection, commandInterface, "SumoTrafficLight", TraCICmdTypes{CMD_SUBSCRIBE_TL_VARIABLE,
                                                                          RESPONSE_SUBSCRIBE_TL_VARIABLE,

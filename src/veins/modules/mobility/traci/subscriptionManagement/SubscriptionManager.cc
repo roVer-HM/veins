@@ -40,35 +40,39 @@ using namespace veins::TraCISubscriptionManagement;
 namespace veins {
 namespace TraCISubscriptionManagement {
 
+Register_Abstract_Class(SubscriptionManagerFactory)
 
-std::shared_ptr<ISubscriptionManager> ISubscriptionManager::create(std::string subscriptionId
-                        , std::vector<std::uint8_t> varCodes
-                        , std::shared_ptr<TraCIConnection>& c
-                        , std::shared_ptr<TraCICommandInterface>& cIfc){
 
-    auto iter = ISubscriptionManager::factoryMap.find(subscriptionId);
-    if (iter == ISubscriptionManager::factoryMap.end()){
-        throw cRuntimeError("No Subscription found for given id: '%s'", subscriptionId.c_str());
-    }
 
-    return iter->second(varCodes, c, cIfc);
-
-}
-
-const std::map<std::string, ISubscriptionManager::SubscriptionManagerFactory_m> ISubscriptionManager::factoryMap = {
-        {"SumoVehicle", [](std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc) {
-            return SubscriptionManager<SumoVehicle>::build(varCodes, c, cIfc);
-                } },
-        {"SumoPerson", [](std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc) {
-            return SubscriptionManager<SumoPerson>::build(varCodes, c, cIfc);
-            } },
-        {"SumoSimulation", [](std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc) {
-            return SubscriptionManager<SumoSimulation>::build(varCodes, c, cIfc);
-            } },
-        {"SumoTrafficLight", [](std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc) {
-            return SubscriptionManager<SumoTrafficLight>::build(varCodes, c, cIfc);
-            } },
-};
+//
+//std::shared_ptr<ISubscriptionManager> ISubscriptionManager::create(std::string subscriptionId
+//                        , std::vector<std::uint8_t> varCodes
+//                        , std::shared_ptr<TraCIConnection>& c
+//                        , std::shared_ptr<TraCICommandInterface>& cIfc){
+//
+//    auto iter = ISubscriptionManager::factoryMap.find(subscriptionId);
+//    if (iter == ISubscriptionManager::factoryMap.end()){
+//        throw cRuntimeError("No Subscription found for given id: '%s'", subscriptionId.c_str());
+//    }
+//
+//    return iter->second(varCodes, c, cIfc);
+//
+//}
+//
+//const std::map<std::string, ISubscriptionManager::SubscriptionManagerFactory_m> ISubscriptionManager::factoryMap = {
+//        {"SumoVehicle", [](std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc) {
+//            return SubscriptionManager<SumoVehicle>::build(varCodes, c, cIfc);
+//                } },
+//        {"SumoPerson", [](std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc) {
+//            return SubscriptionManager<SumoPerson>::build(varCodes, c, cIfc);
+//            } },
+//        {"SumoSimulation", [](std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc) {
+//            return SubscriptionManager<SumoSimulation>::build(varCodes, c, cIfc);
+//            } },
+//        {"SumoTrafficLight", [](std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc) {
+//            return SubscriptionManager<SumoTrafficLight>::build(varCodes, c, cIfc);
+//            } },
+//};
 
 
 

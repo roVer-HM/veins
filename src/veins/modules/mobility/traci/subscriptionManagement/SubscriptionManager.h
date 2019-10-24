@@ -59,13 +59,25 @@ public:
     virtual void clearAPI() = 0;
     virtual std::vector<uint8_t> getManagedReturnCodes() const  = 0;
 
-    static std::shared_ptr<ISubscriptionManager> create(std::string subscriptionId, std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc);
-
-    typedef std::function<std::shared_ptr<ISubscriptionManager>(std::vector<std::uint8_t> varCodes, std::shared_ptr<TraCIConnection>& c, std::shared_ptr<TraCICommandInterface>& cIfc)> SubscriptionManagerFactory_m;
-    const static std::map<std::string, SubscriptionManagerFactory_m> factoryMap;
 protected:
 
 };
+
+
+/**
+ * @brief Abstract factory class to create SubscriptionManagers for specific remote simulation objects.
+ *        The class uses the factory facilities provided by \opp over the RegisterClass() macro and the
+ *        createOne function. See each RSO for implementation.
+ */
+class SubscriptionManagerFactory: public cObject{
+public:
+    SubscriptionManagerFactory(): cObject(){};
+    virtual ~SubscriptionManagerFactory(){};
+    virtual std::shared_ptr<ISubscriptionManager> createSubscriptionManager(std::vector<std::uint8_t> varCodes,
+                                                                            std::shared_ptr<TraCIConnection>& c,
+                                                                            std::shared_ptr<TraCICommandInterface>& cIfc) const = 0;
+};
+
 
 template<class T> // T = RSO (e.g. SumoVehicle)
 class SubscriptionManager : public ISubscriptionManager {

@@ -33,15 +33,7 @@ using veins::TraCIBuffer;
 
 Define_Module(veins::TraCIScenarioManagerRSO);
 
-namespace veins {
 
-namespace TraCIConstants {
-
-const uint8_t CMD_FILE_SEND = 0x75;
-
-} // namespace TraCIConstants
-
-} // namespace veins
 
 namespace veins {
 
@@ -204,9 +196,16 @@ void TraCIScenarioManagerRSO::init_traci(){
 
     // create new executive manager.
     subscriptionManager.reset(new ExecutiveSubscriptionManager(connection, commandIfc, true));
-    // add configured RSO SubscriptionManagers
     for (auto & sub : subscriptionMgrType){
-        subscriptionManager->addSubscriptionManager(ISubscriptionManager::create(sub.first, sub.second, connection, commandIfc));
+        // build subscriptionfactory class name from remote simulation object name given in config.
+        std::string cls = sub.first + "SubFactory";
+        cObject* obj = createOneIfClassIsKnown(cls.c_str());
+        if (!obj){
+            throw cRuntimeError("SubscriptionFactory \'%s\' not found for given RemoteSimulationObject \'%s\'", cls.c_str(), sub.first.c_str());
+        }
+        SubscriptionManagerFactory* f = check_and_cast<SubscriptionManagerFactory*>(obj);
+        subscriptionManager->addSubscriptionManager(f->createSubscriptionManager(sub.second, connection, commandIfc));
+
     }
     subscriptionManager->initialize();
 

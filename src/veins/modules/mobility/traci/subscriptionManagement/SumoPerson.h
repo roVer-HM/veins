@@ -16,12 +16,19 @@
 #pragma once
 
 #include <veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h>
+#include <veins/modules/mobility/traci/subscriptionManagement/SubscriptionManager.h>
 #include "veins/veins.h"
 #include "veins/base/utils/Coord.h"
 #include "veins/base/utils/Heading.h"
 
 namespace veins {
 namespace TraCISubscriptionManagement {
+
+class SumoPersonSubFactory : public SubscriptionManagerFactory {
+    virtual std::shared_ptr<ISubscriptionManager> createSubscriptionManager(std::vector<std::uint8_t> varCodes,
+                                                                            std::shared_ptr<TraCIConnection>& c,
+                                                                            std::shared_ptr<TraCICommandInterface>& cIfc) const override;
+};
 
 class SumoPerson : public RemoteSimulationObject, public IMobileAgent {
 public:

@@ -41,8 +41,8 @@ simple TraCIScenarioManagerRSO extends TraCIGenericScenarioManager
         @class(veins::TraCIScenarioManagerRSO);
         // name: Is a key which is used to create the correct SubscriptionManager for the type (e.g.SubscriptionManager<SumoVehicle>)
         // vars: List of varibales which shold be subscribed to. (Names correspond to TraCIConstant::)
-        string VehicleRSO = default("name=SumoVehicle vars=ID_LIST,VAR_POSITION,VAR_ROAD_ID,VAR_SPEED,VAR_ANGLE,VAR_SIGNALS,VAR_LENGTH,VAR_HEIGHT,VAR_WIDTH,VAR_TYPE");
-        string SimulationRSO = default("name=SumoSimulation vars=VAR_TIME");
+        string VehicleRSO = default("name=veins::TraCISubscriptionManagement::SumoVehicle vars=ID_LIST,VAR_POSITION,VAR_ROAD_ID,VAR_SPEED,VAR_ANGLE,VAR_SIGNALS,VAR_LENGTH,VAR_HEIGHT,VAR_WIDTH,VAR_TYPE");
+        string SimulationRSO = default("name=veins::TraCISubscriptionManagement::SumoSimulation vars=VAR_TIME");
         string TrafficLightRSO = default("");
         string PedestrianRSO = default("");
         string moduleAPI = default("node=SumoVehicle");

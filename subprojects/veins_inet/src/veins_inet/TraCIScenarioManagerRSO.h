@@ -26,7 +26,13 @@
 #include "veins/modules/mobility/traci/subscriptionManagement/ExecutiveSubscriptionManager.h"
 #include "veins/modules/mobility/traci/subscriptionManagement/SubscriptionManager.h"
 
+namespace veins {
+namespace TraCIConstants {
 
+const uint8_t CMD_FILE_SEND = 0x75;
+
+} // namespace TraCIConstants
+} // namespace veins
 
 using namespace veins::TraCISubscriptionManagement;
 
