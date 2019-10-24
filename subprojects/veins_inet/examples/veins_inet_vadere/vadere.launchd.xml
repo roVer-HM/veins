@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <scenario path="vadere_project/scenarios/roVerTest002.scenario" />
+    <cache path="vadere_project/scenarios/__cache__/roVerTest002/"
+    	   hash="54ee8c5698d44e61ddcd9f2fcaaa23f93d23f794" />
+</launch>
+

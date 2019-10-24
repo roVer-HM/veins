@@ -56,6 +56,8 @@ subprojects/veins_inet/examples/**/.qtenvrc
 subprojects/veins_inet/examples/**/.cmdenv-log
 subprojects/veins_inet/examples/**/valgrind.out
 subprojects/veins_inet/examples/**/*.anf
+subprojects/veins_inet/examples/**/__cache__
+subprojects/veins_inet/examples/**/outputs
 
 subprojects/veins_testsims/src/Makefile
 subprojects/veins_testsims/src/*.so
