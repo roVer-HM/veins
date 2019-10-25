@@ -61,9 +61,9 @@ void VaderePersonMobility::nextPosition(std::shared_ptr<IMobileAgent> mobileAgen
     emitMobilityStateChangedSignal();
 }
 
-TraCICommandInterface::Person* VaderePersonMobility::getPersonCommandInterface() const
+VaderePersonItfc* VaderePersonMobility::getPersonCommandInterface() const
 {
-    if (!personCommandInterface) personCommandInterface = new TraCICommandInterface::Person(getCommandInterface()->person(getExternalId()));
+    if (!personCommandInterface) personCommandInterface = new VaderePersonItfc(getCommandInterface(), getExternalId());
     return personCommandInterface;
 }
 

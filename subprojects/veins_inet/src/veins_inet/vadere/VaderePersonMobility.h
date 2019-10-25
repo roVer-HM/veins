@@ -17,6 +17,7 @@
 #include "inet/mobility/base/MobilityBase.h"
 #include "veins_inet/VeinsInetMobilityBase.h"
 #include "veins_inet/veins_inet.h"
+#include "VadereCommandInterface.h"
 
 namespace veins {
 
@@ -31,9 +32,9 @@ public:
     /** @brief called by class VeinsInetManager */
     virtual void nextPosition(std::shared_ptr<IMobileAgent> mobileAgent) override;
 
-    virtual TraCICommandInterface::Person* getPersonCommandInterface() const;
+    virtual VaderePersonItfc*  getPersonCommandInterface() const;
 protected:
-    mutable TraCICommandInterface::Person* personCommandInterface = nullptr; /**< cached value */
+    mutable VaderePersonItfc* personCommandInterface = nullptr; /**< cached value */
 
 };
 

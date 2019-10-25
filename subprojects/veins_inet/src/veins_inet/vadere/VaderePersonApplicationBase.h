@@ -33,7 +33,7 @@ protected:
 
     virtual void initializeFromMobilityModule() override;
 
-    veins::TraCICommandInterface::Person* traciPerson;
+    veins::VaderePersonItfc*  traciPerson;
     veins::VaderePersonMobility* mobility;
     veins::TraCICommandInterface* traci;
 
