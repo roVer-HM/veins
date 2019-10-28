@@ -111,6 +111,11 @@ public:
      */
     double getDistance(const Coord& position1, const Coord& position2, bool returnDrivingDistance);
 
+    /**
+     * Base class for specific remote simulation object interface such as Vehicle, Road or Person.
+     *
+     * Use this class to create new or derived TraCIICommandnterfaces for new or derived remote simulation interfaces.
+     */
     class VEINS_API TraCIObjectIterface {
     public:
         TraCIObjectIterface(TraCICommandInterface* traci)
@@ -120,6 +125,17 @@ public:
     protected:
         TraCICommandInterface* traci;
         TraCIConnection* connection;
+
+        // generic acces methods which delegate to the TraCICommndInterface implementation.
+        // This allows child classes of TraCIObjectIterface, not implemented as inner classes of TraCICommandInterface,
+        // to access these generic methods without weakening the private access rights on these methods.
+        std::string genericGetString(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr) const;
+        Coord genericGetCoord(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr) const;
+        double genericGetDouble(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr) const;
+        simtime_t genericGetTime(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr) const;
+        int32_t genericGetInt(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr) const;
+        std::list<std::string> genericGetStringList(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr) const;
+        std::list<Coord> genericGetCoordList(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr) const;
     };
 
     // Vehicle methods
