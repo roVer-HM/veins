@@ -42,13 +42,13 @@ std::list<std::string> VaderePersonItfc::getIdList()
 }
 std::vector<std::string> VaderePersonItfc::getTargetList()
 {
-    std::list<std::string> ret = traci->genericGetStringList(CMD_GET_PERSON_VARIABLE, nodeId, VAR_TARGET_LIST, RESPONSE_GET_PERSON_VARIABLE);
+    std::list<std::string> ret = genericGetStringList(CMD_GET_PERSON_VARIABLE, nodeId, VAR_TARGET_LIST, RESPONSE_GET_PERSON_VARIABLE);
     return std::vector<std::string> (ret.begin(), ret.end());
 }
 
 std::vector<std::string> VaderePersonItfc::getAllTargetIDs()
 {
-    std::list<std::string> ret = traci->genericGetStringList(CMD_GET_PERSON_VARIABLE, "-1", VAR_TARGET_LIST, RESPONSE_GET_PERSON_VARIABLE);
+    std::list<std::string> ret = genericGetStringList(CMD_GET_PERSON_VARIABLE, "-1", VAR_TARGET_LIST, RESPONSE_GET_PERSON_VARIABLE);
     return std::vector<std::string> (ret.begin(), ret.end());
 }
 
