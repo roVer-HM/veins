@@ -199,6 +199,8 @@ void TraCIScenarioManagerRSO::init_traci(){
         }
     }
 
+    init_obstacles();
+
     // create new executive manager.
     subscriptionManager.reset(new ExecutiveSubscriptionManager(connection, commandIfc, true));
     for (auto & sub : subscriptionMgrType){

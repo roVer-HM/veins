@@ -21,6 +21,8 @@
 package org.car2x.veins.subprojects.veins_inet.example;
 
 import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
+import org.car2x.veins.modules.obstacle.ObstacleControl;
+import org.car2x.veins.modules.world.annotations.AnnotationManager;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetCar;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetPerson;
 import org.car2x.veins.subprojects.veins_inet.vadere.TraCIScenarioManagerVadere;
@@ -33,6 +35,12 @@ network ScenarioPedestriansVadere
     submodules:
         radioMedium: Ieee80211ScalarRadioMedium {
             @display("p=580,275");
+        }
+        obstacles: ObstacleControl {
+            @display("p=240,50");
+        }
+        annotations: AnnotationManager {
+            @display("p=260,50");
         }
         manager: TraCIScenarioManagerVadere {
             @display("p=244.976,64.256");

@@ -125,6 +125,8 @@ void TraCIScenarioManagerVadere::init_traci(){
         }
     }
 
+    init_obstacles();
+
     // create new executive manager.
     subscriptionManager.reset(new ExecutiveSubscriptionManager(connection, commandIfc, true));
     // add configured RSO SubscriptionManagers

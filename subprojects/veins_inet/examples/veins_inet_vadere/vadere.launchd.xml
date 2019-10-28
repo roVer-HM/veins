@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-    <scenario path="vadere_project/scenarios/scenario003.scenario" />
-    <cache path="vadere_project/scenarios/__cache__/scenario003/"
-    	   hash="90261add722e4cceccdd9de20c95ec10379d8cda" />
-</launch>
-

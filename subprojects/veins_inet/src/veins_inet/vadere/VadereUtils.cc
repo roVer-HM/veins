@@ -30,15 +30,12 @@ std::vector<VadereCache> getCachePaths(const cXMLElement* xmlConfig, const std::
 
     std::vector<VadereCache> cachePaths;
     std::string cacheLocation;
-    cXMLElementList cache = xmlConfig->getElementsByTagName("cache");
-    if (cache.size() == 0){
-        return cachePaths;
-    } else {
-        std::string path = cache[0]->getAttribute("path") == nullptr ? std::string() : std::string(cache[0]->getAttribute("path"));
-        std::string hash = cache[0]->getAttribute("hash") == nullptr ? std::string() : std::string(cache[0]->getAttribute("hash"));
-        assert(!path.empty());
-        assert(!hash.empty());
+    std::string path = xmlConfig->getAttribute("cache-path") == nullptr ? std::string() : std::string(xmlConfig->getAttribute("cache-path"));
+    std::string hash = xmlConfig->getAttribute("cache-hash") == nullptr ? std::string() : std::string(xmlConfig->getAttribute("cache-hash"));
+    if (!path.empty() && !hash.empty()){
         cacheLocation = basedir + path + hash + "*";
+    } else {
+        return cachePaths;
     }
 
     glob_t glob_res;
@@ -64,12 +61,10 @@ std::vector<VadereCache> getCachePaths(const cXMLElement* xmlConfig, const std::
 VadereScenario getScenarioContent(const cXMLElement* xmlConfig, const std::string basedir)
 {
     VadereScenario ret;
-    cXMLElementList scenario = xmlConfig->getElementsByTagName("scenario");
-    if (scenario.size() == 0){
+    std::string path = xmlConfig->getAttribute("path") == nullptr ? std::string() : std::string(xmlConfig->getAttribute("path"));
+    if (path.empty()){
         throw cRuntimeError("launchConfig does not have scenario element");
     } else {
-        std::string path = scenario[0]->getAttribute("path") == nullptr ? std::string() : std::string(scenario[0]->getAttribute("path"));
-        assert(!path.empty());
         ret.first = basedir + path;
     }
 
