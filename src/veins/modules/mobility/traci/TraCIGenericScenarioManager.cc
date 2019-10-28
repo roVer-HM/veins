@@ -71,6 +71,8 @@ void TraCIGenericScenarioManager::initialize(int stage) {
     }
     autoShutdown = par("autoShutdown");
 
+    annotations = AnnotationManagerAccess().getIfExists();
+
     ASSERT(firstStepAt > connectAt);
     connectAndStartTrigger = new cMessage("connect");
     scheduleAt(connectAt, connectAndStartTrigger);
@@ -102,6 +104,25 @@ void TraCIGenericScenarioManager::handleSelfMsg(cMessage* msg)
         return;
     }
     throw cRuntimeError("TraCIScenarioManager received unknown self-message");
+}
+
+void TraCIGenericScenarioManager::init_obstacles(){
+    ObstacleControl* obstacles = ObstacleControlAccess().getIfExists();
+    if (obstacles) {
+        {
+            // get list of polygons
+            std::list<std::string> ids = commandIfc->getPolygonIds();
+            for (std::list<std::string>::iterator i = ids.begin(); i != ids.end(); ++i) {
+                std::string id = *i;
+                std::string typeId = commandIfc->polygon(id).getTypeId();
+                if (!obstacles->isTypeSupported(typeId)) continue;
+                std::list<Coord> coords = commandIfc->polygon(id).getShape();
+                std::vector<Coord> shape;
+                std::copy(coords.begin(), coords.end(), std::back_inserter(shape));
+                obstacles->addFromTypeAndShape(id, typeId, shape);
+            }
+        }
+    }
 }
 
 void TraCIGenericScenarioManager::init_traci(){

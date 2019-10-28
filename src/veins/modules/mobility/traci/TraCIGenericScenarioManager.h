@@ -102,6 +102,8 @@ protected:
     std::string host;
     int port;
 
+    AnnotationManager* annotations;
+
     // maps from vehicle type to moduleType, moduleName, and moduleDisplayString
     typedef std::map<std::string, std::string> TypeMapping;
     TypeMapping moduleType; /**< module type to be used in the simulation for each managed vehicle */
@@ -122,6 +124,7 @@ protected:
     cMessage* executeOneTimestepTrigger; /**< self-message scheduled for when to next call executeOneTimestep */
 
     virtual void init_traci(); // override it!
+    virtual void init_obstacles(); /** if a ObstacleControl is present initialize it. Must be called from init_traci*/
     virtual void executeOneTimestep(); // override it!
 
     virtual void preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent); // override it!

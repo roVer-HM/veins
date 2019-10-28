@@ -77,8 +77,6 @@ void TraCIScenarioManager::initialize(int stage)
 
     penetrationRate = par("penetrationRate").doubleValue();
 
-    annotations = AnnotationManagerAccess().getIfExists();
-
     roi.clear();
     roi.addRoads(par("roiRoads"));
     roi.addRectangles(par("roiRects"));
@@ -216,22 +214,8 @@ void TraCIScenarioManager::init_traci()
         }
     }
 
-    ObstacleControl* obstacles = ObstacleControlAccess().getIfExists();
-    if (obstacles) {
-        {
-            // get list of polygons
-            std::list<std::string> ids = commandInterface->getPolygonIds();
-            for (std::list<std::string>::iterator i = ids.begin(); i != ids.end(); ++i) {
-                std::string id = *i;
-                std::string typeId = commandInterface->polygon(id).getTypeId();
-                if (!obstacles->isTypeSupported(typeId)) continue;
-                std::list<Coord> coords = commandInterface->polygon(id).getShape();
-                std::vector<Coord> shape;
-                std::copy(coords.begin(), coords.end(), std::back_inserter(shape));
-                obstacles->addFromTypeAndShape(id, typeId, shape);
-            }
-        }
-    }
+    init_obstacles();
+
 
     traciInitialized = true;
     emit(traciInitializedSignal, true);
