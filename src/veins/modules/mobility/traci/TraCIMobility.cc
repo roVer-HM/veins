@@ -71,9 +71,8 @@ void TraCIMobility::Statistics::recordScalars(cSimpleModule& module)
 void TraCIMobility::initialize(int stage)
 {
     if (stage == 0) {
-        BaseMobility::initialize(stage);
+        TraCIMobilityBase::initialize(stage);
 
-        hostPositionOffset = par("hostPositionOffset");
         setHostSpeed = par("setHostSpeed");
         accidentCount = par("accidentCount");
 
@@ -86,25 +85,10 @@ void TraCIMobility::initialize(int stage)
         statistics.initialize();
         statistics.watch(*this);
 
-        ASSERT(isPreInitialized);
-        isPreInitialized = false;
-
-        Coord nextPos = calculateHostPosition(roadPosition);
-        nextPos.z = move.getStartPosition().z;
-
-        move.setStart(nextPos);
-        move.setDirectionByVector(heading.toCoord());
-        move.setOrientationByVector(heading.toCoord());
-        if (this->setHostSpeed) {
-            move.setSpeed(speed);
-        }
-
         isParking = false;
 
         startAccidentMsg = nullptr;
         stopAccidentMsg = nullptr;
-        manager = nullptr;
-        last_speed = -1;
 
         if (accidentCount > 0) {
             simtime_t accidentStart = par("accidentStart");
@@ -117,7 +101,7 @@ void TraCIMobility::initialize(int stage)
         // don't call BaseMobility::initialize(stage) -- our parent will take care to call changePosition later
     }
     else {
-        BaseMobility::initialize(stage);
+        TraCIMobilityBase::initialize(stage);
     }
 }
 
@@ -130,7 +114,7 @@ void TraCIMobility::finish()
     cancelAndDelete(startAccidentMsg);
     cancelAndDelete(stopAccidentMsg);
 
-    isPreInitialized = false;
+    TraCIMobilityBase::finish();
 }
 
 void TraCIMobility::handleSelfMsg(cMessage* msg)
@@ -265,22 +249,6 @@ void TraCIMobility::changeParkingState(bool newState)
     emit(parkingStateChangedSignal, this);
 }
 
-void TraCIMobility::fixIfHostGetsOutside()
-{
-    Coord pos = move.getStartPos();
-    Coord dummy = Coord::ZERO;
-    double dum;
-
-    bool outsideX = (pos.x < 0) || (pos.x >= playgroundSizeX());
-    bool outsideY = (pos.y < 0) || (pos.y >= playgroundSizeY());
-    bool outsideZ = (!world->use2D()) && ((pos.z < 0) || (pos.z >= playgroundSizeZ()));
-    if (outsideX || outsideY || outsideZ) {
-        throw cRuntimeError("Tried moving host to (%f, %f) which is outside the playground", pos.x, pos.y);
-    }
-
-    handleIfOutside(RAISEERROR, pos, dummy, dummy, dum);
-}
-
 double TraCIMobility::calculateCO2emission(double v, double a) const
 {
     // Calculate CO2 emission parameters according to:
@@ -314,15 +282,3 @@ double TraCIMobility::calculateCO2emission(double v, double a) const
     return alpha + beta * v * 3.6 + delta * v * v * v * (3.6 * 3.6 * 3.6) + zeta * a * v;
 }
 
-Coord TraCIMobility::calculateHostPosition(const Coord& vehiclePos) const
-{
-    Coord corPos;
-    if (hostPositionOffset >= 0.001) {
-        // calculate antenna position of vehicle according to antenna offset
-        corPos = vehiclePos - (heading.toCoord() * hostPositionOffset);
-    }
-    else {
-        corPos = vehiclePos;
-    }
-    return corPos;
-}

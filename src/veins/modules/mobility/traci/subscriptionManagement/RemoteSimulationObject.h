@@ -142,6 +142,7 @@ public:
     virtual double getY() const = 0;
     virtual double getSpeed() const = 0;
     virtual double getAngel() const = 0;
+    virtual Heading getHeading() const = 0;
     virtual  const std::string& getTypeId() const = 0;
 
     virtual void setTypeId(TraCIBuffer& buffer) = 0;
