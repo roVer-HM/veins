@@ -19,6 +19,7 @@
 #include "veins/veins.h"
 #include "veins/base/utils/Coord.h"
 #include "veins/modules/mobility/traci/TraCIBuffer.h"
+#include "veins/base/utils/Heading.h"
 
 using veins::TraCIBuffer;
 
@@ -58,6 +59,8 @@ public:
     double getY() const override; // IMobileAgent
     std::vector<std::string> getTargetList() const;
 
+    Heading getHeading() const override; // IMobileAgent
+
 protected:
     void initVariableMap() override;
 
@@ -86,6 +89,7 @@ private:
     double speed;
     std::string typeID;
     std::vector<std::string> targetList;
+    Heading heading;
 };
 
 } /* namesapce TraCISubscriptionManagement */

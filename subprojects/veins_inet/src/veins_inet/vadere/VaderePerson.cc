@@ -96,6 +96,11 @@ const std::string& VaderePerson::getTypeId() const {
     return typeID;
 }
 
+Heading VaderePerson::getHeading() const {
+    ensureActive(VAR_ANGLE);
+    return heading;
+}
+
 double VaderePerson::getX() const {
     ensureActive(VAR_POSITION);
     return x;
@@ -123,6 +128,7 @@ void VaderePerson::setIdCount(TraCIBuffer& buffer) {
 
 void VaderePerson::setAngel(TraCIBuffer& buffer) {
     buffer >> angel;
+    heading = getConnection()->traci2omnetHeading(angel);
 }
 
 void VaderePerson::setTypeId(TraCIBuffer& buffer) {
