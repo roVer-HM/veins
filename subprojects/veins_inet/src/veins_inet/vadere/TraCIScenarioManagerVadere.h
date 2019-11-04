@@ -29,6 +29,7 @@ public:
 
 protected:
     virtual void init_traci() override;
+//    virtual void init_obstacles() override;
 
     virtual void processSubcriptionResults() override;
 

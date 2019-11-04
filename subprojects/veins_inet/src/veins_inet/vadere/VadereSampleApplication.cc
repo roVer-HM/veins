@@ -63,7 +63,7 @@ bool VadereSampleApplication::startApplication()
                 std::cout << "subway entrance " << targetLists[0] << " blocked";
             }
         };
-        timerManager.create(veins::TimerSpecification(callback).oneshotAt(SimTime(28, SIMTIME_S)));
+        timerManager.create(veins::TimerSpecification(callback).oneshotAt(SimTime(32, SIMTIME_S)));
     }
 
     return true;

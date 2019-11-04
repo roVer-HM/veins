@@ -143,6 +143,10 @@ void TraCIScenarioManagerVadere::init_traci(){
     subscriptionManager->initialize();
 }
 
+//void TraCIScenarioManagerVadere::init_obstacles(){
+//    Tra
+//}
+
 void TraCIScenarioManagerVadere::processSubcriptionResults(){
 
     if (subscriptionManager->has(TraCIConstants::RESPONSE_SUBSCRIBE_PERSON_VARIABLE)){
