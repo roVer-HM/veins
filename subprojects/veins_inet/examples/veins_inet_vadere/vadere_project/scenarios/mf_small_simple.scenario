@@ -75,8 +75,8 @@
         "potentialFieldResolution" : 0.3,
         "obstacleGridPenalty" : 0.1,
         "targetAttractionStrength" : 1.0,
-        "cacheType" : "NO_CACHE",
-        "cacheDir" : "",
+        "cacheType" : "BIN_CACHE",
+        "cacheDir" : "mf_small_simple",
         "timeCostAttributes" : {
           "standardDeviation" : 0.7,
           "type" : "UNIT",

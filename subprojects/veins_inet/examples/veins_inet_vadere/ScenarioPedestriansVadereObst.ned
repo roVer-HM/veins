@@ -20,7 +20,9 @@
 
 package org.car2x.veins.subprojects.veins_inet.example;
 
+import inet.environment.common.PhysicalEnvironment;
 import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
+import inet.visualizer.contract.IIntegratedVisualizer;
 import org.car2x.veins.modules.obstacle.ObstacleControl;
 import org.car2x.veins.modules.world.annotations.AnnotationManager;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetCar;
@@ -28,19 +30,34 @@ import org.car2x.veins.subprojects.veins_inet.VeinsInetPerson;
 import org.car2x.veins.subprojects.veins_inet.vadere.TraCIScenarioManagerVadere;
 
 
-network ScenarioPedestriansVadere
+network ScenarioPedestriansVadereObst
 {
     //    parameters:
     //        @display("bgb=1684,885;bgi=veins/background/hochschule_muenchenBGI");
     submodules:
         radioMedium: Ieee80211ScalarRadioMedium {
-            @display("p=580,275");
+            parameters:
+                @display("p=580,275");
+                physicalEnvironmentModule = "physicalEnvironment";
+            
         }
-                
+                obstacles: ObstacleControl {
+            @display("p=240,50");
+        }
+        annotations: AnnotationManager {
+            @display("p=260,50");
+        }
+        visualization:<default("IntegratedCanvasVisualizer")> like IIntegratedVisualizer if hasVisualizer() {
+        	@display("p=680,275");
+        }
         manager: TraCIScenarioManagerVadere {
             @display("p=244.976,64.256");
         }
+        physicalEnvironment: PhysicalEnvironment {
+
+        };        
         personNode[0]: VeinsInetPerson {
             @display("p=96.329994,839.93");
         }
 }
+
