@@ -76,7 +76,7 @@
         "obstacleGridPenalty" : 0.1,
         "targetAttractionStrength" : 1.0,
         "cacheType" : "BIN_CACHE",
-        "cacheDir" : "mf_small_simple",
+        "cacheDir" : "veins-test",
         "timeCostAttributes" : {
           "standardDeviation" : 0.7,
           "type" : "UNIT",
