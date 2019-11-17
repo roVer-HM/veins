@@ -27,6 +27,7 @@ using namespace veins::TraCIConstants;
 
 namespace veins {
 
+/* VaderePersonItfc */
 
 std::string VaderePersonItfc::getTypeId()
 {
@@ -66,5 +67,45 @@ void VaderePersonItfc::setTargetList(std::vector<std::string> targetList)
     ASSERT(obuf.eof());
 
 }
+
+/* VadereSimulationItfc */
+
+std::string VadereSimulationItfc::getHash(std::string scenario){
+    uint8_t variableId = VAR_CACHE_HASH;
+    uint8_t variableType = TYPE_STRING;
+    TraCIBuffer cmdBuf;
+    cmdBuf << variableId << nodeId << variableType << scenario;
+    TraCIConnection::Result result;
+
+
+    TraCIBuffer buf = connection->query(CMD_GET_SIM_VARIABLE, cmdBuf, nullptr);
+
+    uint8_t cmdLength;
+    buf >> cmdLength;
+    if (cmdLength == 0) {
+        uint32_t cmdLengthX;
+        buf >> cmdLengthX;
+    }
+    uint8_t commandId_r;
+    buf >> commandId_r;
+    ASSERT(commandId_r == RESPONSE_GET_SIM_VARIABLE);
+    uint8_t varId;
+    buf >> varId;
+    ASSERT(varId == variableId);
+    std::string objectId_r;
+    buf >> objectId_r;
+    ASSERT(objectId_r == nodeId);
+    uint8_t resType_r;
+    buf >> resType_r;
+    ASSERT(resType_r == TYPE_STRING);
+    std::string res;
+    buf >> res;
+
+    ASSERT(buf.eof());
+
+    return res;
+
+}
+
 } /* namespace veins */
 

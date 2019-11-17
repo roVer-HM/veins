@@ -28,4 +28,6 @@ simple TraCIScenarioManagerVadere extends TraCIScenarioManagerRSO
         SimulationRSO = "";
         TrafficLightRSO = "";
         PedestrianRSO = default("name=veins::TraCISubscriptionManagement::VaderePerson vars=ID_LIST,VAR_POSITION,VAR_TYPE,VAR_ANGLE,VAR_SPEED");
+        string vadereScenarioPath;
+        string vadereCachePath = default("");
 }

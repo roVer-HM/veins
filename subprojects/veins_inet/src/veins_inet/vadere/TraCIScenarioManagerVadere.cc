@@ -37,14 +37,7 @@ TraCIScenarioManagerVadere::~TraCIScenarioManagerVadere() {}
 
 void TraCIScenarioManagerVadere::init_traci(){
 
-    // default basedir is where current network file was loaded from
-    std::string basedir = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getConfigEntry("network").getBaseDirectory();
-
-    vadere::VadereScenario scenario = vadere::getScenarioContent(launchConfig, basedir);
-    std::vector<vadere::VadereCache> cachePaths;
-    cachePaths = vadere::getCachePaths(launchConfig, basedir);
-
-
+    // check traci server version.
     std::pair<uint32_t, std::string> version = commandIfc->getVersion();
     uint32_t apiVersion = version.first;
     vadere::vadereVersion serverVersion(version.second);
@@ -57,6 +50,25 @@ void TraCIScenarioManagerVadere::init_traci(){
     else {
         throw cRuntimeError("TraCI server \"%s\" reports API version %d, which is unsupported. We recommend using the version of sumo-launchd that ships with Veins.", version.second, apiVersion);
     }
+
+
+
+    // default basedir is where current network file was loaded from
+    std::string basedir = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getConfigEntry("network").getBaseDirectory();
+    std::string vadereScenarioPath = par("vadereScenarioPath").stdstringValue();
+    std::string vadereCachePath = par("vadereCachePath").stdstringValue();
+
+    vadere::VadereScenario scenario = vadere::getScenarioContent(basedir, vadereScenarioPath);
+
+    std::string scenarioHash;
+    {
+        VadereSimulationItfc* simItfc = new VadereSimulationItfc(commandIfc.get());
+        scenarioHash = simItfc->getHash(scenario.second);
+        delete simItfc;
+    }
+    std::vector<vadere::VadereCache> cachePaths;
+    cachePaths = vadere::getCachePaths(basedir, vadereCachePath, scenarioHash);
+
 
     TraCIBuffer buf;
     // if vadere version supports cache data and cache was found.

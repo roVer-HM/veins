@@ -47,4 +47,18 @@ private:
 };
 
 
+class VadereSimulationItfc : public TraCICommandInterface::TraCIObjectIterface {
+public:
+    VadereSimulationItfc(TraCICommandInterface* traci)
+        : TraCICommandInterface::TraCIObjectIterface(traci),
+          nodeId("-1"){
+
+    }
+
+    std::string getHash(std::string scenario);
+private:
+    std::string nodeId;
+
+};
+
 } /* namespace veins */

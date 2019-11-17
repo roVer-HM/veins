@@ -76,9 +76,9 @@ namespace vadere {
     std::pair<std::string, std::string> typedef VadereCache; // (cacheId / cachePath) map for transferal
     std::pair<std::string, std::string> typedef VadereScenario; // (scenarioPath / scenarioContent)
     // read list of cachId->cachePath pairs from configuration xml.
-    std::vector<VadereCache> getCachePaths(const cXMLElement* xmlConfig, const std::string basedir);
+    std::vector<VadereCache> getCachePaths(const std::string basedir, const std::string vadereCachePath, const std::string hash);
     // read scenarioPath->scenarioContent from configuration xml.
-    VadereScenario getScenarioContent(const cXMLElement* xmlConfig, const std::string basedir);
+    VadereScenario getScenarioContent(const std::string basedir, const std::string vadereScenarioPath);
 
 }
 

@@ -23,7 +23,7 @@ namespace veins {
 namespace TraCIConstants {
 
 const uint8_t VAR_TARGET_LIST = 0xfe;
-
+const uint8_t VAR_CACHE_HASH = 0x7d;
 }
 }
 

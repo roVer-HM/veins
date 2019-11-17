@@ -17,7 +17,7 @@
 #include "veins/veins.h"
 
 #include "veins_inet/TraCIScenarioManagerRSO.h"
-
+#include "VadereCommandInterface.h"
 
 
 namespace veins{
