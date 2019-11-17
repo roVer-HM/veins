@@ -58,6 +58,7 @@ subprojects/veins_inet/examples/**/valgrind.out
 subprojects/veins_inet/examples/**/*.anf
 subprojects/veins_inet/examples/**/__cache__
 subprojects/veins_inet/examples/**/output
+subprojects/veins_inet/examples/**/legacy
 
 subprojects/veins_testsims/src/Makefile
 subprojects/veins_testsims/src/*.so
