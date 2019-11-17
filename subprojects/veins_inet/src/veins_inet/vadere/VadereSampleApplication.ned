@@ -22,5 +22,6 @@ simple VadereSampleApplication extends VaderePersonApplicationBase
 {
     parameters:
         @class(VadereSampleApplication);
+        int start_app;
     gates:
 }
