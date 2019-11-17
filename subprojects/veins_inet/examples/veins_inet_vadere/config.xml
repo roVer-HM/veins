@@ -27,44 +27,38 @@
 -->
 
 <root>
-    <AnalogueModels>
-        <AnalogueModel type="SimplePathlossModel" thresholding="true">
-            <parameter name="alpha" type="double" value="2.0"/>
-        </AnalogueModel>
-        <AnalogueModel type="SimpleObstacleShadowing" thresholding="true">
-            <obstacles>
-                <type id="building" db-per-cut="999" db-per-meter="0.4" />
-            </obstacles>
-        </AnalogueModel>
-    </AnalogueModels>
-    <Decider type="Decider80211p">
-        <!-- The center frequency on which the phy listens-->
-        <parameter name="centerFrequency" type="double" value="5.890e9"/>
-    </Decider>
     <VadereProject>
     	<scenario 	name="scenario001"
-					path="vadere_project/scenarios/scenario001.scenario" 
+					path="vadere_project/scenarios/scenario001.scenario"
 					cache-path="vadere_project/scenarios/__cache__/scenario001/"
 					cache-hash="c849fb3c9e4895d9fa3644bdf1702233f848de7b"/>
     	<scenario 	name="scenario002"
-					path="vadere_project/scenarios/scenario002.scenario" 
+					path="vadere_project/scenarios/scenario002.scenario"
 					cache-path="vadere_project/scenarios/__cache__/scenario002/"
 					cache-hash="b022d2f6c78795fe4deffd14a8c4afaa5b47eacc"/>
     	<scenario 	name="scenario003"
-    				path="vadere_project/scenarios/scenario003.scenario" 
+    				path="vadere_project/scenarios/scenario003.scenario"
     				cache-path="vadere_project/scenarios/__cache__/scenario003/"
-    				cache-hash="90261add722e4cceccdd9de20c95ec10379d8cda"/>
+    				cache-hash="eb7512e9a379682964935136b782104eff2004e9"/>
     	<scenario 	name="roVerTest001"
-    				path="vadere_project/scenarios/roVerTest001.scenario" 
+    				path="vadere_project/scenarios/roVerTest001.scenario"
     				cache-path="vadere_project/scenarios/__cache__/roVerTest002/"
     				cache-hash="efcb2fc6a834501ef7c58b718bc4bfc56c552f26"/>
     	<scenario 	name="roVerTest002"
-    				path="vadere_project/scenarios/roVerTest002.scenario" 
+    				path="vadere_project/scenarios/roVerTest002.scenario"
     				cache-path="vadere_project/scenarios/__cache__/roVerTest002/"
     				cache-hash="54ee8c5698d44e61ddcd9f2fcaaa23f93d23f794"/>
-    	<scenario 	name="map_mf_small_2"
-    				path="vadere_project/scenarios/map_mf_small_2.scenario" 
+       <scenario 	name="map_mf_small_3"
+    				path="vadere_project/scenarios/map_mf_small_3.scenario" 
     				cache-path="vadere_project/scenarios/__cache__/map-mf-small-2/"
-    				cache-hash="818f188eebebeaf877db0978c8e99ba25d78196e"/>
-    </VadereProject>   
+    				cache-hash="f998c3b808b5eaa95c42f9d81a5b61cb9867f47b"/>
+    	<scenario 	name="map_mf_small_2"
+    				path="vadere_project/scenarios/map_mf_small_2.scenario"
+    				cache-path="vadere_project/scenarios/__cache__/map-mf-small-2/"
+    				cache-hash="f998c3b808b5eaa95c42f9d81a5b61cb9867f47b"/>
+    	<scenario 	name="mf_underground"
+    				path="vadere_project/scenarios/mf_underground.scenario"
+    				cache-path="vadere_project/scenarios/__cache__/mf_underground/"
+    				cache-hash="f998c3b808b5eaa95c42f9d81a5b61cb9867f47b"/>
+    </VadereProject>
 </root>
