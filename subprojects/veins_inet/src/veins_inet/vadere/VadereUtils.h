@@ -28,17 +28,17 @@ namespace vadere {
      */
     struct vadereVersion{
         int traci;
-        int major;
-        int minor;
+        int majorVersion;
+        int minorVersion;
         friend bool operator==(const vadereVersion& lhs, const vadereVersion& rhs)
         {
-            return (lhs.traci == rhs.traci) && (lhs.major == rhs.major) && (lhs.minor == rhs.minor);
+            return (lhs.traci == rhs.traci) && (lhs.majorVersion == rhs.majorVersion) && (lhs.minorVersion == rhs.minorVersion);
         }
         friend bool operator>=(const vadereVersion& lhs, const vadereVersion& rhs)
         {
-            return (lhs.traci >= rhs.traci) && (lhs.major >= rhs.major) && (lhs.minor >= rhs.minor);
+            return (lhs.traci >= rhs.traci) && (lhs.majorVersion >= rhs.majorVersion) && (lhs.minorVersion >= rhs.minorVersion);
         }
-        vadereVersion(int traci, int major, int minor):traci(traci),major(major),minor(minor){}
+        vadereVersion(int traci, int majorVersion, int minorVersion):traci(traci),majorVersion(majorVersion),minorVersion(minorVersion){}
         vadereVersion(std::string versionString){
 
             std::string  vadereTraCiVersion;
@@ -61,8 +61,8 @@ namespace vadere {
             size_t p3 = vadereTraCiVersion.length();
             try{
             traci = std::stoi(vadereTraCiVersion.substr(0, p1)); // (2-0 = 2) 0-1
-            major = std::stoi(vadereTraCiVersion.substr(p1 + 1, p2 - p1 + 1)); // (4-3 = 1) 3
-            minor = std::stoi(vadereTraCiVersion.substr(p2 + 1, p3 - p2 + 1)); // (6-5 - 1) 5
+            majorVersion = std::stoi(vadereTraCiVersion.substr(p1 + 1, p2 - p1 + 1)); // (4-3 = 1) 3
+            minorVersion = std::stoi(vadereTraCiVersion.substr(p2 + 1, p3 - p2 + 1)); // (6-5 - 1) 5
             } catch (const std::invalid_argument &err){
                 throw new cRuntimeError("Cannot parse vadere version string \"%s\"", versionString.c_str());
             } catch (const std::out_of_range &err ){

@@ -163,7 +163,7 @@ template <class T>
 class RSOFactory {
 public:
     RSOFactory() : connection(nullptr), commandInterface(nullptr), subscribeList() {}
-    RSOFactory(std::vector<std::pair<int, access_t>> subscribeMap) : connection(nullptr), commandInterface(nullptr), subscribeList(subscribeMap){}
+    // RSOFactory(std::vector<const std::pair<uint8_t, access_t>> subscribeMap) : connection(nullptr), commandInterface(nullptr), subscribeList(subscribeMap){}
     RSOFactory(std::vector<uint8_t> subscribeMap) : RSOFactory()
     {
         subscribeList.clear();

@@ -360,10 +360,10 @@ void SubscriptionManager<T>::parseObjectVarSubscriptio(std::shared_ptr<T>& currR
              buffer >> errormsg;
              if (isSubscribed(currRSO->getId())) {
                  if (variableStatus == TraCIConstants::RTYPE_NOTIMPLEMENTED) {
-                     throw cRuntimeError("TraCI server reported subscribing to %s variable 0x%2x not implemented (\"%s\"). Might need newer version.", currRSO->getRemoteSimulationObjectType(), responseVariableID, errormsg.c_str());
+                     throw cRuntimeError("TraCI server reported subscribing to %s variable 0x%2x not implemented (\"%s\"). Might need newer version.", currRSO->getRemoteSimulationObjectType().c_str(), responseVariableID, errormsg.c_str());
                  }
 
-                 throw cRuntimeError("TraCI server reported error subscribing to %s variable 0x%2x (\"%s\").", currRSO->getRemoteSimulationObjectType(), responseVariableID, errormsg.c_str());
+                 throw cRuntimeError("TraCI server reported error subscribing to %s variable 0x%2x (\"%s\").", currRSO->getRemoteSimulationObjectType().c_str(), responseVariableID, errormsg.c_str());
              }
          }
     }
@@ -393,10 +393,11 @@ bool SubscriptionManager<T>::parseGlobalVarSubscription(std::shared_ptr<T>& curr
              buffer >> errormsg;
              if (isSubscribed(currRSO->getId())) {
                  if (variableStatus == TraCIConstants::RTYPE_NOTIMPLEMENTED) {
-                     throw cRuntimeError("TraCI server reported subscribing to %s variable 0x%2x not implemented (\"%s\"). Might need newer version.", currRSO->getRemoteSimulationObjectType(), responseVariableID, errormsg.c_str());
+                     throw cRuntimeError("TraCI server reported subscribing to %s variable 0x%2x not implemented (\"%s\"). Might need newer version.",
+                             currRSO->getRemoteSimulationObjectType().c_str(), responseVariableID, errormsg.c_str());
                  }
 
-                 throw cRuntimeError("TraCI server reported error subscribing to %s variable 0x%2x (\"%s\").", currRSO->getRemoteSimulationObjectType(), responseVariableID, errormsg.c_str());
+                 throw cRuntimeError("TraCI server reported error subscribing to %s variable 0x%2x (\"%s\").", currRSO->getRemoteSimulationObjectType().c_str(), responseVariableID, errormsg.c_str());
              }
          }
     }

@@ -48,7 +48,7 @@ void TraCIScenarioManagerVadere::init_traci(){
         EV_DEBUG << "TraCI server \"" << version.second << "\" reports API version " << apiVersion << endl;
     }
     else {
-        throw cRuntimeError("TraCI server \"%s\" reports API version %d, which is unsupported. We recommend using the version of sumo-launchd that ships with Veins.", version.second, apiVersion);
+        throw cRuntimeError("TraCI server \"%s\" reports API version %d, which is unsupported. We recommend using the version of sumo-launchd that ships with Veins.", version.second.c_str(), apiVersion);
     }
 
 
