@@ -119,7 +119,7 @@ protected:
 
     void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, std::shared_ptr<IMobileAgent> mobileAgent) override;
     void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, const Coord& position, std::string road_id = "", double speed = -1, Heading heading = Heading::nan, VehicleSignalSet signals = {VehicleSignal::undefined}, double length = 0, double height = 0, double width = 0);
-    virtual cModule* getManagedModule(std::string nodeId); /**< returns a pointer to the managed module named moduleName, or 0 if no module can be found */
+    virtual cModule* getManagedModule(std::string nodeId) override; /**< returns a pointer to the managed module named moduleName, or 0 if no module can be found */
     virtual void deleteManagedModule(std::string nodeId) override;
 
     bool isModuleUnequipped(std::string nodeId); /**< returns true if this vehicle is Unequipped */

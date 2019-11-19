@@ -50,7 +50,7 @@ public:
     double getX() const override; // IMobileAgent
     double getY() const override; // IMobileAgent
 
-    Heading getHeading() const;
+    Heading getHeading() const override;
 
 protected:
     void initVariableMap() override;
