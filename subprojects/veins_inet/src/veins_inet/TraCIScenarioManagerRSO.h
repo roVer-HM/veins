@@ -63,6 +63,9 @@ protected:
     virtual cModule* getManagedModule(std::string moduleTupe, std::string nodeId);
     virtual void addManagedModule(std::string moduleTupe, std::string nodeId, cModule* mod);
 
+    virtual void registerNetworknodeInVisulizer(cModule* networkNode);
+    virtual void unregisterNetworknodeFromVisulizer(const cModule* networkNode);
+
     int32_t nextVectorIndex(std::string module);
     typedef std::map<std::string, std::map<std::string, cModule*>> ManagedHosts;
     /* todo: the nodeId right now must be unique over all hostTypes. */
@@ -78,6 +81,7 @@ protected:
 
     cXMLElement* launchConfig; /**< launch configuration to send to sumo-launchd */
     int seed; /**< seed value to set in launch configuration, if missing (-1: current run number) */
+    std::string visualizer; /** If set the module name of the visualizer module. This is used to register new elements */
 };
 
 } // end namepsace veins

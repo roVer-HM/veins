@@ -13,6 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+#include "inet/visualizer/scene/NetworkNodeCanvasVisualizer.h"
+
 #include <veins_inet/TraCIScenarioManagerRSO.h>
 #include "veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h"
 #include "veins/modules/mobility/traci/subscriptionManagement/SumoVehicle.h"
@@ -106,6 +108,7 @@ void TraCIScenarioManagerRSO::initialize(int stage)
 
     launchConfig = par("launchConfig").xmlValue();
     seed = par("seed");
+    visualizer = par("visualizer").stdstringValue();
 
 }
 
@@ -365,10 +368,41 @@ void TraCIScenarioManagerRSO::addModule(std::string nodeId, std::string type, st
 
     preInitializeModule(mod, mobileAgent);
 
+    // Register module in NetworkNodeCanvasVisualizer if present
+    registerNetworknodeInVisulizer(mod);
+
     mod->callInitialize();
     addManagedModule(type, nodeId, mod);
 
     emit(traciModuleAddedSignal, mod);
+}
+
+void TraCIScenarioManagerRSO::registerNetworknodeInVisulizer(cModule* networkNode){
+    if (!visualizer.empty()){
+        cModule* parentmod = getParentModule();
+        cModule* integratedVis =  parentmod->getSubmodule(visualizer.c_str());
+        if (integratedVis){
+            cModule* visNode =  integratedVis->getSubmodule("networkNodeVisualizer");
+            inet::visualizer::NetworkNodeCanvasVisualizer* netVis = dynamic_cast<inet::visualizer::NetworkNodeCanvasVisualizer*>(visNode);
+            if (netVis){
+                netVis->addNetworkNode(networkNode);
+            }
+        }
+    }
+}
+
+void TraCIScenarioManagerRSO::unregisterNetworknodeFromVisulizer(const cModule* networkNode){
+    if (!visualizer.empty()){
+        cModule* parentmod = getParentModule();
+        cModule* integratedVis =  parentmod->getSubmodule(visualizer.c_str());
+        if (integratedVis){
+            cModule* visNode =  integratedVis->getSubmodule("networkNodeVisualizer");
+            inet::visualizer::NetworkNodeCanvasVisualizer* netVis = dynamic_cast<inet::visualizer::NetworkNodeCanvasVisualizer*>(visNode);
+            if (netVis){
+                netVis->removeNetworkNode(networkNode);
+            }
+        }
+    }
 }
 
 void TraCIScenarioManagerRSO::deleteManagedModule(std::string nodeId)
@@ -390,6 +424,7 @@ void TraCIScenarioManagerRSO::deleteManagedModule(cModule * mod)
         connectionManager->unregisterNic(nic);
     }
 
+    unregisterNetworknodeFromVisulizer(mod);
     mod->callFinish();
     mod->deleteModule();
 }

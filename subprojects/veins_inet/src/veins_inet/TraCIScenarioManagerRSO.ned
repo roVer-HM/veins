@@ -27,7 +27,7 @@ import org.car2x.veins.modules.mobility.traci.TraCIGenericScenarioManager;
 //
 // See the Veins website <a href="http://veins.car2x.org/"> for a tutorial, documentation, and publications </a>.
 //
-// @author Stefan Schuhbäck
+// @author Stefan Schuhbaeck
 //
 // @see TraCIMobility
 // @see TraCIGenericScenarioManager
@@ -44,6 +44,7 @@ simple TraCIScenarioManagerRSO extends TraCIGenericScenarioManager
         string TrafficLightRSO = default("");
         string PedestrianRSO = default("");
         string moduleAPI = default("node=SumoVehicle");
+        string visualizer = default("");
         xml launchConfig = xml("<root/>"); // launch configuration to send to sumo-launchd.py (empty by default)
 }
 
