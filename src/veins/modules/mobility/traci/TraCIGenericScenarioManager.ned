@@ -34,7 +34,7 @@ package org.car2x.veins.modules.mobility.traci;
 // @see TraCIScenarioManager
 //
 
-simple TraCIGenericScenarioManager
+simple TraCIGenericScenarioManager like ITraCIManager
 {
     parameters:
         @signal[org_car2x_veins_modules_mobility_traciInitialized](type=bool);
