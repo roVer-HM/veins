@@ -45,6 +45,6 @@ simple TraCIScenarioManagerRSO extends TraCIGenericScenarioManager
         string PedestrianRSO = default("");
         string moduleAPI = default("node=SumoVehicle");
         string visualizer = default("");
-        xml launchConfig = xml("<root/>"); // launch configuration to send to sumo-launchd.py (empty by default)
+        xml launchConfig = default(xml("<launch/>")); // launch configuration to send to sumo-launchd.py (empty by default)
 }
 
