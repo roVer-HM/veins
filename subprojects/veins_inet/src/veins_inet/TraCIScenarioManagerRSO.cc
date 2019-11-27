@@ -204,6 +204,20 @@ void TraCIScenarioManagerRSO::init_traci(){
 
     init_obstacles();
 
+    if (annotations) {
+        {
+            // get list of polygons
+            std::list<std::string> ids = commandIfc->getPolygonIds();
+            for (std::list<std::string>::iterator i = ids.begin(); i != ids.end(); ++i) {
+                std::string id = *i;
+                std::string typeId = commandIfc->polygon(id).getTypeId();
+                if (typeId.compare("building") != 0) continue;
+                std::list<Coord> coords = commandIfc->polygon(id).getShape();
+                annotations->drawPolygon(coords, "black");
+            }
+        }
+    }
+
     // create new executive manager.
     subscriptionManager.reset(new ExecutiveSubscriptionManager(connection, commandIfc, true));
     for (auto & sub : subscriptionMgrType){
