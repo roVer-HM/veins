@@ -45,6 +45,7 @@ simple TraCIScenarioManagerRSO extends TraCIGenericScenarioManager
         string PedestrianRSO = default("");
         string moduleAPI = default("node=SumoVehicle");
         string visualizer = default("");
+        string sumoConfigDir = default(""); // place of sumo specific configuration files relative to omnetpp.ini file. (empty by default)
         xml launchConfig = default(xml("<launch/>")); // launch configuration to send to sumo-launchd.py (empty by default)
 }
 

@@ -132,6 +132,10 @@ void TraCIScenarioManagerRSO::init_traci(){
         if (basedir_nodes.size() == 0) {
             // default basedir is where current network file was loaded from
             std::string basedir = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getConfigEntry("network").getBaseDirectory();
+            std::string sumoConfigDir = par("sumoConfigDir").stdstringValue();
+            if (!sumoConfigDir.empty()){
+                basedir = basedir + sumoConfigDir + "/";
+            }
             cXMLElement* basedir_node = new cXMLElement("basedir", __FILE__, launchConfig);
             basedir_node->setAttribute("path", basedir.c_str());
             launchConfig->appendChild(basedir_node);
