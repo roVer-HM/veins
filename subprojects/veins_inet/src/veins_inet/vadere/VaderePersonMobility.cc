@@ -37,6 +37,8 @@ void VaderePersonMobility::preInitialize(std::shared_ptr<IMobileAgent> mobileAge
     double angle = mobileAgent->getAngel();
     this->lastVelocity = inet::Coord(cos(angle), -sin(angle)) * mobileAgent->getSpeed();
     this->lastOrientation = inet::Quaternion(inet::EulerAngles(rad(-angle), rad(0.0), rad(0.0)));
+    // todo add string ResultRecorder
+    // emit(mobility_pre_ini, mobileAgent->getId().c_str());
 }
 
 void VaderePersonMobility::nextPosition(std::shared_ptr<IMobileAgent> mobileAgent)

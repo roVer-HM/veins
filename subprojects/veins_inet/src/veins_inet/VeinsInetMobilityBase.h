@@ -45,6 +45,7 @@ public:
     virtual void setExternalId(std::string id);
     virtual std::string getExternalId() const;
 
+    static const simsignal_t mobility_pre_ini;
 
 protected:
 

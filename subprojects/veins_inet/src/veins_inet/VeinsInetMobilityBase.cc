@@ -10,6 +10,8 @@
 namespace veins {
 
 Register_Abstract_Class(VeinsInetMobilityBase);
+const simsignal_t VeinsInetMobilityBase::mobility_pre_ini = registerSignal("veins_inet_mobility_base_mobility_pre_init");
+
 
 VeinsInetMobilityBase::VeinsInetMobilityBase() {
     // TODO Auto-generated constructor stub

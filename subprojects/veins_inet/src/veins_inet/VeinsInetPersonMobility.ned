@@ -27,13 +27,11 @@
 
 package org.car2x.veins.subprojects.veins_inet;
 
-import inet.mobility.base.MobilityBase;
+import org.car2x.veins.subprojects.veins_inet.VeinsInetMobilityBase;
 
-simple VeinsInetPersonMobility extends MobilityBase
+simple VeinsInetPersonMobility extends VeinsInetMobilityBase
 {
     parameters:
         @class(veins::VeinsInetPersonMobility);
-        @display("i=block/cogwheel");
-        @signal[mobilityStateChanged](type=inet::MobilityBase);
-        bool initFromDisplayString = default(true); // do not change this to false
+
 }

@@ -13,13 +13,15 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package org.car2x.veins.subprojects.veins_inet.vadere;
-import org.car2x.veins.subprojects.veins_inet.VeinsInetMobilityBase;
-//
-// TODO auto-generated type
-//
-network VaderePersonMobility extends VeinsInetMobilityBase
+package org.car2x.veins.subprojects.veins_inet;
+import inet.mobility.base.MobilityBase;
+
+simple VeinsInetMobilityBase extends MobilityBase
 {
-    parameters:
-        @class(veins::VaderePersonMobility);
+    @display("i=block/cogwheel");
+    @signal[mobilityStateChanged](type=inet::MobilityBase);
+    @signal[veins_inet_mobility_base_mobility_pre_init](type=string);
+    @statistic[externalId](source=veins_inet_mobility_base_mobility_pre_init; record=last);
+    bool initFromDisplayString = default(true); // do not change this to false
 }
+    
