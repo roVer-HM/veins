@@ -22,6 +22,17 @@ VeinsInetMobilityBase::~VeinsInetMobilityBase() {
     // TODO Auto-generated destructor stub
 }
 
+void VeinsInetMobilityBase::emmitExternalId(const std::string id)
+{
+    try {
+        long longId = std::stol(id);
+        emit(mobility_pre_ini, longId);
+    } catch (std::invalid_argument const &e){
+        throw cRuntimeError("Cannot convert given id '%s' to long", id.c_str());
+    } catch (std::out_of_range const &e){
+        throw cRuntimeError("Given id '%s' out of range", id.c_str());
+    }
+}
 
 void VeinsInetMobilityBase::initialize(int stage)
 {

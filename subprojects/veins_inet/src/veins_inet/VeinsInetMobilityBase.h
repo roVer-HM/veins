@@ -49,6 +49,8 @@ public:
 
 protected:
 
+    virtual void emmitExternalId(const std::string id);
+
     virtual void handleSelfMessage(cMessage* message) override;
     virtual void setInitialPosition() override;
 
