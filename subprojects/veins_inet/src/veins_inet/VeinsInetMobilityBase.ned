@@ -20,7 +20,7 @@ simple VeinsInetMobilityBase extends MobilityBase
 {
     @display("i=block/cogwheel");
     @signal[mobilityStateChanged](type=inet::MobilityBase);
-    @signal[veins_inet_mobility_base_mobility_pre_init](type=long);
+    @signal[veins_inet_mobility_base_mobility_pre_init];
     @statistic[externalId](source=veins_inet_mobility_base_mobility_pre_init; record=last);
     bool initFromDisplayString = default(true); // do not change this to false
 }

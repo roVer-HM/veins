@@ -25,8 +25,8 @@ VeinsInetMobilityBase::~VeinsInetMobilityBase() {
 void VeinsInetMobilityBase::emmitExternalId(const std::string id)
 {
     try {
-        long longId = std::stol(id);
-        emit(mobility_pre_ini, longId);
+        double doubleId = std::stod(id);
+        emit(mobility_pre_ini, doubleId);
     } catch (std::invalid_argument const &e){
         throw cRuntimeError("Cannot convert given id '%s' to long", id.c_str());
     } catch (std::out_of_range const &e){
