@@ -76,7 +76,7 @@ void VeinsInetApplicationBase::handleStartOperation(LifecycleOperation* operatio
     const char* interface = par("interface");
     ASSERT(interface[0]);
     IInterfaceTable* ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
-    InterfaceEntry* ie = ift->getInterfaceByName(interface);
+    InterfaceEntry* ie = ift->findInterfaceByName(interface);
     ASSERT(ie);
     socket.setMulticastOutputInterface(ie->getInterfaceId());
 
