@@ -1,0 +1,8 @@
+<environment>
+<object id="6" orientation="0.000000 0.000000 0.000000" position="min -0.000100 29.499900 0.000000" shape="prism 5.000000 0.000000 0.500200 30.000200 0.500200 30.000200 0.000000 0.000000 0.000000" material="brick" fill-color="200 0 0" opacity="0.750000" texture="brick.jpg" />
+<object id="7" orientation="0.000000 0.000000 0.000000" position="min 29.499900 -0.000100 0.000000" shape="prism 5.000000 0.500200 30.000200 0.500200 0.000000 0.000000 0.000000 0.000000 30.000200" material="brick" fill-color="200 0 0" opacity="0.750000" texture="brick.jpg" />
+<object id="8" orientation="0.000000 0.000000 0.000000" position="min -0.000100 -0.000100 0.000000" shape="prism 5.000000 30.000200 0.000000 0.000000 0.000000 0.000000 0.500200 30.000200 0.500200" material="brick" fill-color="200 0 0" opacity="0.750000" texture="brick.jpg" />
+<object id="9" orientation="0.000000 0.000000 0.000000" position="min -0.000100 -0.000100 0.000000" shape="prism 5.000000 0.000000 0.000000 0.000000 30.000200 0.500200 30.000200 0.500200 0.000000" material="brick" fill-color="200 0 0" opacity="0.750000" texture="brick.jpg" />
+<object id="4" orientation="0.000000 0.000000 0.000000" position="min 5.000000 5.000000 0.000000" shape="prism 5.000000 21.000000 1.000000 21.000000 0.000000 0.000000 0.000000 0.000000 1.000000" material="brick" fill-color="200 0 0" opacity="0.750000" texture="brick.jpg" />
+<object id="5" orientation="0.000000 0.000000 0.000000" position="min 5.700000 8.500000 0.000000" shape="prism 5.000000 19.500000 19.000000 19.500000 0.000000 0.000000 0.000000 0.000000 19.000000" material="brick" fill-color="200 0 0" opacity="0.750000" texture="brick.jpg" />
+</environment>

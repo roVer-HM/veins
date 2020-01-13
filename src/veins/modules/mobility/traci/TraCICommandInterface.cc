@@ -247,57 +247,57 @@ std::list<std::string> TraCICommandInterface::getRoadIds()
 
 double TraCICommandInterface::Road::getCurrentTravelTime()
 {
-    return traci->genericGetDouble(CMD_GET_EDGE_VARIABLE, roadId, VAR_CURRENT_TRAVELTIME, RESPONSE_GET_EDGE_VARIABLE);
+    return genericGetDouble(CMD_GET_EDGE_VARIABLE, roadId, VAR_CURRENT_TRAVELTIME, RESPONSE_GET_EDGE_VARIABLE);
 }
 
 double TraCICommandInterface::Road::getMeanSpeed()
 {
-    return traci->genericGetDouble(CMD_GET_EDGE_VARIABLE, roadId, LAST_STEP_MEAN_SPEED, RESPONSE_GET_EDGE_VARIABLE);
+    return genericGetDouble(CMD_GET_EDGE_VARIABLE, roadId, LAST_STEP_MEAN_SPEED, RESPONSE_GET_EDGE_VARIABLE);
 }
 
 std::string TraCICommandInterface::Vehicle::getRoadId()
 {
-    return traci->genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_ROAD_ID, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_ROAD_ID, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 std::string TraCICommandInterface::Vehicle::getLaneId()
 {
-    return traci->genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_LANE_ID, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_LANE_ID, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 int32_t TraCICommandInterface::Vehicle::getLaneIndex()
 {
-    return traci->genericGetInt(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_LANE_INDEX, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetInt(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_LANE_INDEX, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 std::string TraCICommandInterface::Vehicle::getTypeId()
 {
-    return traci->genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_TYPE, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_TYPE, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getMaxSpeed()
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_MAXSPEED, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_MAXSPEED, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getLanePosition()
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_LANEPOSITION, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_LANEPOSITION, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 std::list<std::string> TraCICommandInterface::Vehicle::getPlannedRoadIds()
 {
-    return traci->genericGetStringList(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_EDGES, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetStringList(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_EDGES, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 std::string TraCICommandInterface::Vehicle::getRouteId()
 {
-    return traci->genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_ROUTE_ID, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_ROUTE_ID, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 std::list<std::string> TraCICommandInterface::Route::getRoadIds()
 {
-    return traci->genericGetStringList(CMD_GET_ROUTE_VARIABLE, routeId, VAR_EDGES, RESPONSE_GET_ROUTE_VARIABLE);
+    return genericGetStringList(CMD_GET_ROUTE_VARIABLE, routeId, VAR_EDGES, RESPONSE_GET_ROUTE_VARIABLE);
 }
 
 void TraCICommandInterface::Vehicle::changeRoute(std::string roadId, simtime_t travelTime)
@@ -333,72 +333,72 @@ void TraCICommandInterface::Vehicle::changeRoute(std::string roadId, simtime_t t
 
 double TraCICommandInterface::Vehicle::getLength()
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_LENGTH, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_LENGTH, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getWidth()
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_WIDTH, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_WIDTH, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getHeight()
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_HEIGHT, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_HEIGHT, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getAccel()
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_ACCEL, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_ACCEL, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getDeccel()
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_DECEL, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_DECEL, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getCO2Emissions() const
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_CO2EMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_CO2EMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getCOEmissions() const
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_COEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_COEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getHCEmissions() const
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_HCEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_HCEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getPMxEmissions() const
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_PMXEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_PMXEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getNOxEmissions() const
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_NOXEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_NOXEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getFuelConsumption() const
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_FUELCONSUMPTION, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_FUELCONSUMPTION, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getNoiseEmission() const
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_NOISEEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_NOISEEMISSION, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getElectricityConsumption() const
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_ELECTRICITYCONSUMPTION, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_ELECTRICITYCONSUMPTION, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getWaitingTime() const
 {
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_WAITING_TIME, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_WAITING_TIME, RESPONSE_GET_VEHICLE_VARIABLE);
 }
 
 double TraCICommandInterface::Vehicle::getAccumulatedWaitingTime() const
@@ -407,8 +407,24 @@ double TraCICommandInterface::Vehicle::getAccumulatedWaitingTime() const
     if (apiVersion <= 15) {
         throw cRuntimeError("TraCICommandInterface::Vehicle::getAccumulatedWaitingTime requires SUMO 0.31.0 or newer");
     }
-    return traci->genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_WAITING_TIME_ACCUMULATED, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetDouble(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_WAITING_TIME_ACCUMULATED, RESPONSE_GET_VEHICLE_VARIABLE);
 }
+
+std::string TraCICommandInterface::Person::getTypeId()
+{
+    return genericGetString(CMD_GET_PERSON_VARIABLE, nodeId, VAR_TYPE, RESPONSE_GET_PERSON_VARIABLE);
+}
+
+int TraCICommandInterface::Person::getCount()
+{
+    return genericGetInt(CMD_GET_PERSON_VARIABLE, nodeId, ID_COUNT, RESPONSE_GET_PERSON_VARIABLE);
+}
+
+std::list<std::string> TraCICommandInterface::Person::getIdList()
+{
+    return genericGetStringList(CMD_GET_PERSON_VARIABLE, nodeId, ID_LIST, RESPONSE_GET_PERSON_VARIABLE);
+}
+
 
 double TraCICommandInterface::getDistance(const Coord& p1, const Coord& p2, bool returnDrivingDistance)
 {
@@ -467,17 +483,17 @@ std::list<std::string> TraCICommandInterface::getTrafficlightIds()
 
 std::string TraCICommandInterface::Trafficlight::getCurrentState() const
 {
-    return traci->genericGetString(CMD_GET_TL_VARIABLE, trafficLightId, TL_RED_YELLOW_GREEN_STATE, RESPONSE_GET_TL_VARIABLE);
+    return genericGetString(CMD_GET_TL_VARIABLE, trafficLightId, TL_RED_YELLOW_GREEN_STATE, RESPONSE_GET_TL_VARIABLE);
 }
 
 simtime_t TraCICommandInterface::Trafficlight::getDefaultCurrentPhaseDuration() const
 {
-    return traci->genericGetTime(CMD_GET_TL_VARIABLE, trafficLightId, TL_PHASE_DURATION, RESPONSE_GET_TL_VARIABLE);
+    return genericGetTime(CMD_GET_TL_VARIABLE, trafficLightId, TL_PHASE_DURATION, RESPONSE_GET_TL_VARIABLE);
 }
 
 std::list<std::string> TraCICommandInterface::Trafficlight::getControlledLanes() const
 {
-    return traci->genericGetStringList(CMD_GET_TL_VARIABLE, trafficLightId, TL_CONTROLLED_LANES, RESPONSE_GET_TL_VARIABLE);
+    return genericGetStringList(CMD_GET_TL_VARIABLE, trafficLightId, TL_CONTROLLED_LANES, RESPONSE_GET_TL_VARIABLE);
 }
 
 std::list<std::list<TraCITrafficLightLink>> TraCICommandInterface::Trafficlight::getControlledLinks() const
@@ -536,12 +552,12 @@ std::list<std::list<TraCITrafficLightLink>> TraCICommandInterface::Trafficlight:
 
 int32_t TraCICommandInterface::Trafficlight::getCurrentPhaseIndex() const
 {
-    return traci->genericGetInt(CMD_GET_TL_VARIABLE, trafficLightId, TL_CURRENT_PHASE, RESPONSE_GET_TL_VARIABLE);
+    return genericGetInt(CMD_GET_TL_VARIABLE, trafficLightId, TL_CURRENT_PHASE, RESPONSE_GET_TL_VARIABLE);
 }
 
 std::string TraCICommandInterface::Trafficlight::getCurrentProgramID() const
 {
-    return traci->genericGetString(CMD_GET_TL_VARIABLE, trafficLightId, TL_CURRENT_PROGRAM, RESPONSE_GET_TL_VARIABLE);
+    return genericGetString(CMD_GET_TL_VARIABLE, trafficLightId, TL_CURRENT_PROGRAM, RESPONSE_GET_TL_VARIABLE);
 }
 
 TraCITrafficLightProgram TraCICommandInterface::Trafficlight::getProgramDefinition() const
@@ -683,7 +699,7 @@ TraCITrafficLightProgram TraCICommandInterface::Trafficlight::getProgramDefiniti
 
 simtime_t TraCICommandInterface::Trafficlight::getAssumedNextSwitchTime() const
 {
-    return traci->genericGetTime(CMD_GET_TL_VARIABLE, trafficLightId, TL_NEXT_SWITCH, RESPONSE_GET_TL_VARIABLE);
+    return genericGetTime(CMD_GET_TL_VARIABLE, trafficLightId, TL_NEXT_SWITCH, RESPONSE_GET_TL_VARIABLE);
 }
 
 void TraCICommandInterface::Trafficlight::setState(std::string state)
@@ -814,12 +830,12 @@ std::list<std::string> TraCICommandInterface::getPolygonIds()
 
 std::string TraCICommandInterface::Polygon::getTypeId()
 {
-    return traci->genericGetString(CMD_GET_POLYGON_VARIABLE, polyId, VAR_TYPE, RESPONSE_GET_POLYGON_VARIABLE);
+    return genericGetString(CMD_GET_POLYGON_VARIABLE, polyId, VAR_TYPE, RESPONSE_GET_POLYGON_VARIABLE);
 }
 
 std::list<Coord> TraCICommandInterface::Polygon::getShape()
 {
-    return traci->genericGetCoordList(CMD_GET_POLYGON_VARIABLE, polyId, VAR_SHAPE, RESPONSE_GET_POLYGON_VARIABLE);
+    return genericGetCoordList(CMD_GET_POLYGON_VARIABLE, polyId, VAR_SHAPE, RESPONSE_GET_POLYGON_VARIABLE);
 }
 
 void TraCICommandInterface::Polygon::setShape(const std::list<Coord>& points)
@@ -905,27 +921,27 @@ std::list<std::string> TraCICommandInterface::getLaneIds()
 
 std::list<Coord> TraCICommandInterface::Lane::getShape()
 {
-    return traci->genericGetCoordList(CMD_GET_LANE_VARIABLE, laneId, VAR_SHAPE, RESPONSE_GET_LANE_VARIABLE);
+    return genericGetCoordList(CMD_GET_LANE_VARIABLE, laneId, VAR_SHAPE, RESPONSE_GET_LANE_VARIABLE);
 }
 
 std::string TraCICommandInterface::Lane::getRoadId()
 {
-    return traci->genericGetString(CMD_GET_LANE_VARIABLE, laneId, LANE_EDGE_ID, RESPONSE_GET_LANE_VARIABLE);
+    return genericGetString(CMD_GET_LANE_VARIABLE, laneId, LANE_EDGE_ID, RESPONSE_GET_LANE_VARIABLE);
 }
 
 double TraCICommandInterface::Lane::getLength()
 {
-    return traci->genericGetDouble(CMD_GET_LANE_VARIABLE, laneId, VAR_LENGTH, RESPONSE_GET_LANE_VARIABLE);
+    return genericGetDouble(CMD_GET_LANE_VARIABLE, laneId, VAR_LENGTH, RESPONSE_GET_LANE_VARIABLE);
 }
 
 double TraCICommandInterface::Lane::getMaxSpeed()
 {
-    return traci->genericGetDouble(CMD_GET_LANE_VARIABLE, laneId, VAR_MAXSPEED, RESPONSE_GET_LANE_VARIABLE);
+    return genericGetDouble(CMD_GET_LANE_VARIABLE, laneId, VAR_MAXSPEED, RESPONSE_GET_LANE_VARIABLE);
 }
 
 double TraCICommandInterface::Lane::getMeanSpeed()
 {
-    return traci->genericGetDouble(CMD_GET_LANE_VARIABLE, laneId, LAST_STEP_MEAN_SPEED, RESPONSE_GET_LANE_VARIABLE);
+    return genericGetDouble(CMD_GET_LANE_VARIABLE, laneId, LAST_STEP_MEAN_SPEED, RESPONSE_GET_LANE_VARIABLE);
 }
 
 std::list<std::string> TraCICommandInterface::getLaneAreaDetectorIds()
@@ -935,7 +951,7 @@ std::list<std::string> TraCICommandInterface::getLaneAreaDetectorIds()
 
 int TraCICommandInterface::LaneAreaDetector::getLastStepVehicleNumber()
 {
-    return traci->genericGetInt(CMD_GET_LANEAREA_VARIABLE, laneAreaDetectorId, LAST_STEP_VEHICLE_NUMBER, RESPONSE_GET_LANEAREA_VARIABLE);
+    return genericGetInt(CMD_GET_LANEAREA_VARIABLE, laneAreaDetectorId, LAST_STEP_VEHICLE_NUMBER, RESPONSE_GET_LANEAREA_VARIABLE);
 }
 
 std::list<std::string> TraCICommandInterface::getJunctionIds()
@@ -945,7 +961,7 @@ std::list<std::string> TraCICommandInterface::getJunctionIds()
 
 Coord TraCICommandInterface::Junction::getPosition()
 {
-    return traci->genericGetCoord(CMD_GET_JUNCTION_VARIABLE, junctionId, VAR_POSITION, RESPONSE_GET_JUNCTION_VARIABLE);
+    return genericGetCoord(CMD_GET_JUNCTION_VARIABLE, junctionId, VAR_POSITION, RESPONSE_GET_JUNCTION_VARIABLE);
 }
 
 bool TraCICommandInterface::addVehicle(std::string vehicleId, std::string vehicleTypeId, std::string routeId, simtime_t emitTime_st, double emitPosition, double emitSpeed, int8_t emitLane)
@@ -1115,7 +1131,7 @@ std::string TraCICommandInterface::GuiView::getScheme()
         EV_DEBUG << "Ignoring TraCI GUI command (as instructed by ignoreGuiCommands)" << std::endl;
         return std::string();
     }
-    return traci->genericGetString(CMD_GET_GUI_VARIABLE, viewId, VAR_VIEW_SCHEMA, RESPONSE_GET_GUI_VARIABLE);
+    return genericGetString(CMD_GET_GUI_VARIABLE, viewId, VAR_VIEW_SCHEMA, RESPONSE_GET_GUI_VARIABLE);
 }
 
 void TraCICommandInterface::GuiView::setScheme(std::string name)
@@ -1134,7 +1150,7 @@ double TraCICommandInterface::GuiView::getZoom()
         EV_DEBUG << "Ignoring TraCI GUI command (as instructed by ignoreGuiCommands)" << std::endl;
         return 0;
     }
-    return traci->genericGetDouble(CMD_GET_GUI_VARIABLE, viewId, VAR_VIEW_ZOOM, RESPONSE_GET_GUI_VARIABLE);
+    return genericGetDouble(CMD_GET_GUI_VARIABLE, viewId, VAR_VIEW_ZOOM, RESPONSE_GET_GUI_VARIABLE);
 }
 void TraCICommandInterface::GuiView::setZoom(double zoom)
 {
@@ -1493,7 +1509,40 @@ std::list<Coord> TraCICommandInterface::genericGetCoordList(uint8_t commandId, s
 
 std::string TraCICommandInterface::Vehicle::getVType()
 {
-    return traci->genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_TYPE, RESPONSE_GET_VEHICLE_VARIABLE);
+    return genericGetString(CMD_GET_VEHICLE_VARIABLE, nodeId, VAR_TYPE, RESPONSE_GET_VEHICLE_VARIABLE);
+}
+
+/**
+ * TraCIObjectIterface delegates to TraCICommandInterface.
+ */
+
+std::string TraCICommandInterface::TraCIObjectIterface::genericGetString(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result) const
+{
+    return traci->genericGetString(commandId, objectId, variableId, responseId, result);
+}
+Coord TraCICommandInterface::TraCIObjectIterface::genericGetCoord(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result) const
+{
+    return traci->genericGetCoord(commandId, objectId, variableId, responseId, result);
+}
+double TraCICommandInterface::TraCIObjectIterface::genericGetDouble(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result) const
+{
+    return traci->genericGetDouble(commandId, objectId, variableId, responseId, result);
+}
+simtime_t TraCICommandInterface::TraCIObjectIterface::genericGetTime(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result) const
+{
+    return traci->genericGetTime(commandId, objectId, variableId, responseId, result);
+}
+int32_t TraCICommandInterface::TraCIObjectIterface::genericGetInt(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result) const
+{
+    return traci->genericGetInt(commandId, objectId, variableId, responseId, result);
+}
+std::list<std::string> TraCICommandInterface::TraCIObjectIterface::genericGetStringList(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result) const
+{
+    return traci->genericGetStringList(commandId, objectId, variableId, responseId, result);
+}
+std::list<Coord> TraCICommandInterface::TraCIObjectIterface::genericGetCoordList(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result) const
+{
+    return traci->genericGetCoordList(commandId, objectId, variableId, responseId, result);
 }
 
 } // namespace veins

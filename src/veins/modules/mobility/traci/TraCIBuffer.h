@@ -145,6 +145,11 @@ public:
         timeAsDouble = val == TraCIConstants::TYPE_DOUBLE;
     }
 
+    bool operator==(const TraCIBuffer& rhs) const
+    {
+        return buf.compare(rhs.buf) == 0;
+    }
+
 private:
     std::string buf;
     size_t buf_index;

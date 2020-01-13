@@ -86,7 +86,7 @@ void AnnotationManager::handleMessage(cMessage* msg)
         handleSelfMsg(msg);
         return;
     }
-    error("AnnotationManager doesn't handle messages from other modules");
+    throw cRuntimeError("AnnotationManager doesn't handle messages from other modules");
 }
 
 void AnnotationManager::handleSelfMsg(cMessage* msg)
@@ -103,7 +103,7 @@ void AnnotationManager::handleSelfMsg(cMessage* msg)
         return;
     }
 
-    error("unknown self message type");
+    throw cRuntimeError("unknown self message type");
 }
 
 void AnnotationManager::handleParameterChange(const char* parname)
@@ -187,7 +187,7 @@ void AnnotationManager::addFromXml(cXMLElement* xml)
             drawPolygon(coords, color);
         }
         else {
-            error("while reading annotations xml: expected 'line' or 'poly', but got '%s'", tag.c_str());
+            throw cRuntimeError("while reading annotations xml: expected 'line' or 'poly', but got '%s'", tag.c_str());
         }
     }
 }
@@ -309,7 +309,7 @@ void AnnotationManager::show(const Annotation* annotation)
             // no corresponding TkEnv representation
         }
 
-        TraCIScenarioManager* traci = TraCIScenarioManagerAccess().get();
+        TraCIGenericScenarioManager* traci = TraCIScenarioManagerAccess().get();
         if (traci && traci->isConnected()) {
             std::stringstream nameBuilder;
             nameBuilder << o->text << " " << getEnvir()->getUniqueNumber();
@@ -328,7 +328,7 @@ void AnnotationManager::show(const Annotation* annotation)
             annotationLayer->addFigure(annotation->figure);
         }
 
-        TraCIScenarioManager* traci = TraCIScenarioManagerAccess().get();
+        TraCIGenericScenarioManager* traci = TraCIScenarioManagerAccess().get();
         if (traci && traci->isConnected()) {
             std::list<Coord> coords;
             coords.push_back(l->p1);
@@ -356,7 +356,7 @@ void AnnotationManager::show(const Annotation* annotation)
             annotationLayer->addFigure(annotation->figure);
         }
 
-        TraCIScenarioManager* traci = TraCIScenarioManagerAccess().get();
+        TraCIGenericScenarioManager* traci = TraCIScenarioManagerAccess().get();
         if (traci && traci->isConnected()) {
             std::stringstream nameBuilder;
             nameBuilder << "Annotation" << getEnvir()->getUniqueNumber();
@@ -365,7 +365,7 @@ void AnnotationManager::show(const Annotation* annotation)
         }
     }
     else {
-        error("unknown Annotation type");
+        throw cRuntimeError("unknown Annotation type");
     }
 }
 
@@ -376,7 +376,7 @@ void AnnotationManager::hide(const Annotation* annotation)
         annotation->figure = nullptr;
     }
 
-    TraCIScenarioManager* traci = TraCIScenarioManagerAccess().get();
+    TraCIGenericScenarioManager* traci = TraCIScenarioManagerAccess().get();
     if (traci && traci->isConnected()) {
         for (std::list<std::string>::const_iterator i = annotation->traciPolygonsIds.begin(); i != annotation->traciPolygonsIds.end(); ++i) {
             std::string id = *i;

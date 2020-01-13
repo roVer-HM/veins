@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// -
+//
+// At your option, you can also redistribute and/or modify this file
+// under a
+// Creative Commons Attribution-ShareAlike 4.0 International License.
+//
+// You should have received a copy of the license along with this
+// work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+-->
+
+<root>
+    <VadereProject>
+    	<scenario 	name="scenario001"
+					path="vadere_project/scenarios/scenario001.scenario"
+					cache-path="vadere_project/scenarios/__cache__/scenario001/"
+					cache-hash="c849fb3c9e4895d9fa3644bdf1702233f848de7b"/>
+    	<scenario 	name="scenario002"
+					path="vadere_project/scenarios/scenario002.scenario"
+					cache-path="vadere_project/scenarios/__cache__/scenario002/"
+					cache-hash="b022d2f6c78795fe4deffd14a8c4afaa5b47eacc"/>
+    	<scenario 	name="scenario003"
+    				path="vadere_project/scenarios/scenario003.scenario"
+    				cache-path="vadere_project/scenarios/__cache__/scenario003/"
+    				cache-hash="eb7512e9a379682964935136b782104eff2004e9"/>
+    	<scenario 	name="roVerTest001"
+    				path="vadere_project/scenarios/roVerTest001.scenario"
+    				cache-path="vadere_project/scenarios/__cache__/roVerTest002/"
+    				cache-hash="efcb2fc6a834501ef7c58b718bc4bfc56c552f26"/>
+    	<scenario 	name="roVerTest002"
+    				path="vadere_project/scenarios/roVerTest002.scenario"
+    				cache-path="vadere_project/scenarios/__cache__/roVerTest002/"
+    				cache-hash="54ee8c5698d44e61ddcd9f2fcaaa23f93d23f794"/>
+       <scenario 	name="map_mf_small_3"
+    				path="vadere_project/scenarios/map_mf_small_3.scenario" 
+    				cache-path="vadere_project/scenarios/__cache__/map-mf-small-2/"
+    				cache-hash="f998c3b808b5eaa95c42f9d81a5b61cb9867f47b"/>
+    	<scenario 	name="map_mf_small_2"
+    				path="vadere_project/scenarios/map_mf_small_2.scenario"
+    				cache-path="vadere_project/scenarios/__cache__/map-mf-small-2/"
+    				cache-hash="f998c3b808b5eaa95c42f9d81a5b61cb9867f47b"/>
+    	<scenario 	name="mf_underground"
+    				path="vadere_project/scenarios/mf_underground.scenario"
+    				cache-path="vadere_project/scenarios/__cache__/mf_underground/"
+    				cache-hash="f998c3b808b5eaa95c42f9d81a5b61cb9867f47b"/>
+    </VadereProject>
+</root>

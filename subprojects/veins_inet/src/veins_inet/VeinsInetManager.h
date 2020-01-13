@@ -26,6 +26,7 @@
 
 #include "veins/modules/mobility/traci/TraCIScenarioManagerLaunchd.h"
 
+using veins::TraCISubscriptionManagement::IMobileAgent;
 namespace veins {
 
 /**
@@ -40,7 +41,9 @@ namespace veins {
 class VEINS_INET_API VeinsInetManager : public TraCIScenarioManagerLaunchd {
 public:
     virtual ~VeinsInetManager();
+    virtual void preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent) override;
     virtual void preInitializeModule(cModule* mod, const std::string& nodeId, const Coord& position, const std::string& road_id, double speed, Heading heading, VehicleSignalSet signals) override;
+    virtual void updateModulePosition(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent) override;
     virtual void updateModulePosition(cModule* mod, const Coord& p, const std::string& edge, double speed, Heading heading, VehicleSignalSet signals) override;
 
 protected:

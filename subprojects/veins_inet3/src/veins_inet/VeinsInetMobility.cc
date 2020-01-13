@@ -58,7 +58,7 @@ void VeinsInetMobility::preInitialize(std::string external_id, const inet::Coord
 {
     Enter_Method_Silent();
     lastPosition = position;
-    lastSpeed = Coord(cos(angle), -sin(angle));
+    lastSpeed = Coord(cos(angle), -sin(angle)) * speed;
     lastOrientation.alpha = -angle;
 }
 
@@ -66,7 +66,7 @@ void VeinsInetMobility::nextPosition(const inet::Coord& position, std::string ro
 {
     Enter_Method_Silent();
     lastPosition = position;
-    lastSpeed = Coord(cos(angle), -sin(angle));
+    lastSpeed = Coord(cos(angle), -sin(angle)) * speed;
     lastOrientation.alpha = -angle;
 
     // Update display string to show node is getting updates
@@ -125,11 +125,6 @@ void VeinsInetMobility::initialize(int stage)
         if (visualizeMobility) {
             visualRepresentation = inet::getModuleFromPar<cModule>(par("visualRepresentation"), this);
         }
-        WATCH(constraintAreaMin);
-        WATCH(constraintAreaMax);
-        WATCH(lastPosition);
-        WATCH(lastSpeed);
-        WATCH(lastOrientation);
     }
     else if (stage == inet::INITSTAGE_PHYSICAL_ENVIRONMENT_2) {
         if (visualRepresentation != nullptr) {

@@ -28,5 +28,6 @@ simple VeinsInetSampleApplication extends VeinsInetApplicationBase
 {
     parameters:
         @class(VeinsInetSampleApplication);
+        int start_send = default(32);
     gates:
 }
