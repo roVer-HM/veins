@@ -32,12 +32,7 @@ module VeinsInetCar extends AdhocHost
 {
     parameters:
         @display("i=device/cellphone");
-        ipv4.configurator.networkConfiguratorModule = "";
-
-    submodules:
-        ifConfig: HostAutoConfigurator {
-            @display("p=125,320;is=s");
-        }
-
+        ipv4.configurator.typename = "HostAutoConfigurator";
+		ipv4.configurator.interfaces = "wlan0";
 }
 

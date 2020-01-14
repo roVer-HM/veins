@@ -63,9 +63,6 @@ protected:
     virtual cModule* getManagedModule(std::string moduleTupe, std::string nodeId);
     virtual void addManagedModule(std::string moduleTupe, std::string nodeId, cModule* mod);
 
-    virtual void registerNetworknodeInVisulizer(cModule* networkNode);
-    virtual void unregisterNetworknodeFromVisulizer(const cModule* networkNode);
-
     int32_t nextVectorIndex(std::string module);
     typedef std::map<std::string, std::map<std::string, cModule*>> ManagedHosts;
     /* todo: the nodeId right now must be unique over all hostTypes. */
