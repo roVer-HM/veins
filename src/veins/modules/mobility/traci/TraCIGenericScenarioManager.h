@@ -15,6 +15,7 @@
 #include "veins/veins.h"
 
 #include "veins/base/utils/Coord.h"
+#include "veins/base/utils/MappingParser.h"
 #include "veins/base/modules/BaseWorldUtility.h"
 #include "veins/base/connectionManager/BaseConnectionManager.h"
 #include "veins/base/utils/FindModule.h"
@@ -105,10 +106,9 @@ protected:
     AnnotationManager* annotations;
 
     // maps from vehicle type to moduleType, moduleName, and moduleDisplayString
-    typedef std::map<std::string, std::string> TypeMapping;
-    TypeMapping moduleType; /**< module type to be used in the simulation for each managed vehicle */
-    TypeMapping moduleName; /**< module name to be used in the simulation for each managed vehicle */
-    TypeMapping moduleDisplayString; /**< module displayString to be used in the simulation for each managed vehicle */
+    MappingParser::TypeMapping moduleType; /**< module type to be used in the simulation for each managed vehicle */
+    MappingParser::TypeMapping moduleName; /**< module name to be used in the simulation for each managed vehicle */
+    MappingParser::TypeMapping moduleDisplayString; /**< module displayString to be used in the simulation for each managed vehicle */
 
     bool autoShutdown; /**< Shutdown module as soon as no more agents are in the simulation */
     bool autoShutdownTriggered;
@@ -136,10 +136,7 @@ protected:
 //    bool isModuleUnequipped(std::string nodeId) const; /**< returns true if this vehicle is Unequipped */
 
 
-    struct TypeMappingTripel{
-        std::string mType, mName, mDisplayString;
-    };
-    virtual TypeMappingTripel getTypeMapping(std::string typeId);
+    virtual MappingParser::TypeMappingTripel getTypeMapping(std::string typeId);
 
     /**
      * parses the vector of module types in ini file
@@ -147,11 +144,6 @@ protected:
      * in case of inconsistencies the function kills the simulation
      */
     void parseModuleTypes();
-
-    /**
-     * transforms a list of mappings of an omnetpp.ini parameter in a list
-     */
-    TypeMapping parseMappings(std::string parameter, std::string parameterName, bool allowEmpty = false);
 
     virtual int getPortNumber() const;
 };
