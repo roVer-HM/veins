@@ -3,15 +3,15 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 #pragma once
 
@@ -22,9 +22,12 @@
 
 #include "veins/veins.h"
 
+#include "veins/base/utils/MappingParser.h"
 #include "veins/modules/mobility/traci/TraCIGenericScenarioManager.h"
 #include "veins/modules/mobility/traci/subscriptionManagement/ExecutiveSubscriptionManager.h"
 #include "veins/modules/mobility/traci/subscriptionManagement/SubscriptionManager.h"
+
+#include "veins_inet/mapping/NodeMappingDistribution.h"
 
 namespace veins {
 namespace TraCIConstants {
@@ -72,13 +75,15 @@ protected:
 
     typedef std::map<std::string, std::vector<uint8_t>> SubMgrVarMapping;
     SubMgrVarMapping subscriptionMgrType;
-    TypeMapping moduleAPI;
+    MappingParser::TypeMapping moduleAPI;
     std::unique_ptr<ExecutiveSubscriptionManager> subscriptionManager;
 
 
     cXMLElement* launchConfig; /**< launch configuration to send to sumo-launchd */
     int seed; /**< seed value to set in launch configuration, if missing (-1: current run number) */
     std::string visualizer; /** If set the module name of the visualizer module. This is used to register new elements */
+
+    std::vector<NodeMappingDistribution*> nodeMappingDistVector;
 };
 
 } // end namepsace veins

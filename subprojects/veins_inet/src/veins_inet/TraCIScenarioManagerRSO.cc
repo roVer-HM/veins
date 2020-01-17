@@ -3,15 +3,15 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 #include "inet/visualizer/scene/NetworkNodeCanvasVisualizer.h"
 #include "inet/common/scenario/ScenarioManager.h"
@@ -46,6 +46,7 @@ TraCIScenarioManagerRSO::TraCIScenarioManagerRSO()
     , moduleVectorIndex()
     , subscriptionMgrType()
     , subscriptionManager(nullptr)
+    , nodeMappingDistVector()
 {
 }
 
@@ -100,7 +101,9 @@ void TraCIScenarioManagerRSO::initialize(int stage)
         moduleVectorIndex.insert(std::make_pair(module.second, 0));
     }
 
-    moduleAPI = parseMappings(par("moduleAPI").stdstringValue(), "moduleAPI", false);
+    MappingParser parser{};
+
+    moduleAPI = parser.parseMappings(par("moduleAPI").stdstringValue(), "moduleAPI", false);
     subscriptionMgrType.insert(parseSubscriptionData(par("VehicleRSO").stdstringValue(), "VehicleRSO", "defaultKey"));
     subscriptionMgrType.insert(parseSubscriptionData(par("SimulationRSO").stdstringValue(), "SimulationRSO", "defaultKey"));
     subscriptionMgrType.insert(parseSubscriptionData(par("TrafficLightRSO").stdstringValue(), "TrafficLightRSO", "defaultKey"));
@@ -111,6 +114,17 @@ void TraCIScenarioManagerRSO::initialize(int stage)
     seed = par("seed");
     visualizer = par("visualizer").stdstringValue();
 
+
+    // find all NodeMappingDistributio Modules and collect them in a vector
+    // If the received NodeTypeId matches the mapping_root of a NodeMappingDistribution
+    // the default settings of 'modulName', 'moduleType' and 'ModuleDisplayString'
+    // will be overriten by the setting choosen from the NodeMappingDistribution at hand
+    for (cModule::SubmoduleIterator it(getParentModule()); !it.end(); it++){
+        cModule* m = *it;
+        if (strcmp(m->getName(), "mappingDistribution") == 0){
+            nodeMappingDistVector.push_back(dynamic_cast<NodeMappingDistribution*>(m));
+        }
+    }
 }
 
 void TraCIScenarioManagerRSO::finish()
@@ -342,7 +356,14 @@ void TraCIScenarioManagerRSO::processMobileAgent(std::shared_ptr<IMobileAgent> m
    // ------------------------------
    if (!mod){
 
-       TypeMappingTripel m = getTypeMapping(mobileAgent->getTypeId());
+       MappingParser::TypeMappingTripel m = getTypeMapping(mobileAgent->getTypeId());
+
+
+       if (nodeMappingDistVector.size() > 0){
+           for (auto const& mChooser: nodeMappingDistVector){
+               m = mChooser->applyMapping(mobileAgent->getTypeId(), m);
+           }
+       }
 
        if (m.mType != "0") {
            addModule(mobileAgent->getId(), m.mType, m.mName, m.mDisplayString, mobileAgent);

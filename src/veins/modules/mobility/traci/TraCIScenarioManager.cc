@@ -837,7 +837,7 @@ void TraCIScenarioManager::processVehicleSubscription(std::string objectId, TraC
 
     if (!mod) {
         // no such module - need to create
-        TypeMappingTripel m = getTypeMapping(commandIfc->vehicle(objectId).getTypeId());
+        MappingParser::TypeMappingTripel m = getTypeMapping(commandIfc->vehicle(objectId).getTypeId());
 
 
         if (m.mType != "0") {
