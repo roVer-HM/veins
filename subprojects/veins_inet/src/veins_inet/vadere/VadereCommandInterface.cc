@@ -70,6 +70,26 @@ void VaderePersonItfc::setTargetList(std::vector<std::string> targetList)
 
 /* VadereSimulationItfc */
 
+void VadereSimulationItfc::sendSimulationConfig(SimCfg simCfg){
+    uint8_t variableId = VAR_SIM_CONFIG;
+    uint8_t variableType = TYPE_COMPOUND;
+    int32_t count = 9;
+    TraCIBuffer buf = connection->query(CMD_SET_SIM_VARIABLE,
+            TraCIBuffer() << variableId << nodeId << variableType << count
+            << TYPE_STRING << simCfg.oppConfigName
+            << TYPE_STRING << simCfg.oppExperiment
+            << TYPE_STRING << simCfg.oppDateTime
+            << TYPE_STRING << simCfg.oppResultRootDir
+            << TYPE_STRING << simCfg.oppIterationVariables
+            << TYPE_STRING << simCfg.oppRepetition
+            << TYPE_STRING << simCfg.oppOutputScalarFile
+            << TYPE_STRING << simCfg.oppOutputVecFile
+            << TYPE_INTEGER << simCfg.seed);
+//    ASSERT(buf.eof());
+    // todo
+
+}
+
 std::string VadereSimulationItfc::getHash(std::string scenario){
     uint8_t variableId = VAR_CACHE_HASH;
     uint8_t variableType = TYPE_STRING;
