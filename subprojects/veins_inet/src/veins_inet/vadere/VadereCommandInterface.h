@@ -56,6 +56,12 @@ public:
     }
 
     std::string getHash(std::string scenario);
+    struct SimCfg {
+        std::string oppConfigName, oppExperiment, oppDateTime, oppResultRootDir,
+        oppIterationVariables, oppRepetition, oppOutputScalarFile, oppOutputVecFile;
+        int seed;
+    };
+    void sendSimulationConfig(SimCfg simCfg);
 private:
     std::string nodeId;
 

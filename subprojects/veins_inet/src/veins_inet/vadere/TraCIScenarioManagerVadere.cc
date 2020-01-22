@@ -29,6 +29,7 @@ using namespace veins::TraCIConstants;
 
 Define_Module(veins::TraCIScenarioManagerVadere);
 
+
 namespace veins{
 TraCIScenarioManagerVadere::TraCIScenarioManagerVadere() {}
 
@@ -60,15 +61,38 @@ void TraCIScenarioManagerVadere::init_traci(){
 
     vadere::VadereScenario scenario = vadere::getScenarioContent(basedir, vadereScenarioPath);
 
+    // get scenarioHash for cache location
     std::string scenarioHash;
-    {
-        VadereSimulationItfc* simItfc = new VadereSimulationItfc(commandIfc.get());
-        scenarioHash = simItfc->getHash(scenario.second);
-        delete simItfc;
-    }
+
+    VadereSimulationItfc* simItfc = new VadereSimulationItfc(commandIfc.get());
+    scenarioHash = simItfc->getHash(scenario.second);
+
     std::vector<vadere::VadereCache> cachePaths;
     cachePaths = vadere::getCachePaths(basedir, vadereCachePath, scenarioHash);
 
+    // prepair SimCfg struct.
+    VadereSimulationItfc::SimCfg simCfg;
+    simCfg.oppConfigName= cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_CONFIGNAME);
+    simCfg.oppExperiment = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_EXPERIMENT);
+    simCfg.oppDateTime = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_DATETIME);
+    simCfg.oppResultRootDir = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_RESULTDIR);
+    simCfg.oppIterationVariables = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_ITERATIONVARSF);
+    simCfg.oppRepetition = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_REPETITION);
+    cConfigOption* vecObj = cConfigOption::find("output-vector-file");
+    if (vecObj){
+        simCfg.oppOutputVecFile = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getAsFilename(vecObj);
+    } else {
+        simCfg.oppOutputVecFile = "";
+    }
+    cConfigOption* scaObj = cConfigOption::find("output-scalar-file");
+    if (vecObj){
+        simCfg.oppOutputScalarFile = cSimulation::getActiveSimulation()->getEnvir()->getConfig()->getAsFilename(scaObj);
+    } else {
+        simCfg.oppOutputScalarFile = "";
+    }
+    simCfg.seed = (int)intrand(LONG_MIN);
+    simItfc->sendSimulationConfig(simCfg);
+    delete simItfc;
 
     TraCIBuffer buf;
     // if vadere version supports cache data and cache was found.
