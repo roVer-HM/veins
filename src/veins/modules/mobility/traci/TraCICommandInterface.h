@@ -504,6 +504,8 @@ public:
 
     // Vehicletype methods
     std::list<std::string> getVehicleTypeIds();
+    double getVehicleTypeMaxSpeed(std::string typeId);
+    void setVehicleTypeMaxSpeed(std::string typeId, double maxSpeed);
 
     // GuiView methods
     std::list<std::string> getGuiViewIds();
@@ -550,6 +552,7 @@ private:
     std::string genericGetString(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr);
     Coord genericGetCoord(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr);
     double genericGetDouble(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr);
+    void genericSetDouble(uint8_t commandId, std::string objectId, uint8_t variableId, double value);
     simtime_t genericGetTime(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr);
     int32_t genericGetInt(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr);
     std::list<std::string> genericGetStringList(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result = nullptr);

@@ -48,16 +48,26 @@ using veins::TraCITrafficLightInterface;
 
 Define_Module(veins::TraCIScenarioManager);
 
-
-
 TraCIScenarioManager::TraCIScenarioManager()
-    :TraCIGenericScenarioManager()
+    : TraCIGenericScenarioManager()
 {
 }
 
 TraCIScenarioManager::~TraCIScenarioManager()
 {
+    if (connection) {
+        TraCIBuffer buf = connection->query(CMD_CLOSE, TraCIBuffer());
+    }
+    if (connectAndStartTrigger) {
+        cancelAndDelete(connectAndStartTrigger);
+        connectAndStartTrigger = nullptr;
+    }
+    if (executeOneTimestepTrigger) {
+        cancelAndDelete(executeOneTimestepTrigger);
+        executeOneTimestepTrigger = nullptr;
+    }
 }
+
 
 
 void TraCIScenarioManager::initialize(int stage)
@@ -250,10 +260,6 @@ void TraCIScenarioManager::init_traci()
     }
 }
 
-
-
-
-
 void TraCIScenarioManager::finish()
 {
     while (hosts.begin() != hosts.end()) {
@@ -262,10 +268,6 @@ void TraCIScenarioManager::finish()
 
     recordScalar("roiArea", areaSum);
 }
-
-
-
-
 
 void TraCIScenarioManager::preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent)
 {
@@ -340,6 +342,8 @@ void TraCIScenarioManager::addModule(std::string nodeId, std::string type, std::
     mod->scheduleStart(simTime() + updateInterval);
 
     preInitializeModule(mod, nodeId, position, road_id, speed, heading, signals);
+
+    emit(traciModulePreInitSignal, mod);
 
     mod->callInitialize();
     hosts[nodeId] = mod;
@@ -851,8 +855,6 @@ void TraCIScenarioManager::processVehicleSubscription(std::string objectId, TraC
         updateModulePosition(mod, p, edge, speed, heading, VehicleSignalSet(signals));
     }
 }
-
-
 
 void TraCIScenarioManager::processSubcriptionResult(TraCIBuffer& buf)
 {

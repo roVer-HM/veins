@@ -235,6 +235,16 @@ std::list<std::string> TraCICommandInterface::getVehicleTypeIds()
     return genericGetStringList(CMD_GET_VEHICLETYPE_VARIABLE, "", ID_LIST, RESPONSE_GET_VEHICLETYPE_VARIABLE);
 }
 
+double TraCICommandInterface::getVehicleTypeMaxSpeed(std::string typeId)
+{
+    return genericGetDouble(CMD_GET_VEHICLETYPE_VARIABLE, typeId, VAR_MAXSPEED, RESPONSE_GET_VEHICLETYPE_VARIABLE);
+}
+
+void TraCICommandInterface::setVehicleTypeMaxSpeed(std::string typeId, double maxSpeed)
+{
+    genericSetDouble(CMD_SET_VEHICLETYPE_VARIABLE, typeId, VAR_MAXSPEED, maxSpeed);
+}
+
 std::list<std::string> TraCICommandInterface::getRouteIds()
 {
     return genericGetStringList(CMD_GET_ROUTE_VARIABLE, "", ID_LIST, RESPONSE_GET_ROUTE_VARIABLE);
@@ -1344,6 +1354,13 @@ double TraCICommandInterface::genericGetDouble(uint8_t commandId, std::string ob
     ASSERT(buf.eof());
 
     return res;
+}
+
+void TraCICommandInterface::genericSetDouble(uint8_t commandId, std::string objectId, uint8_t variableId, double value)
+{
+    uint8_t variableType = TYPE_DOUBLE;
+    TraCIBuffer buf = connection.query(commandId, TraCIBuffer() << variableId << objectId << variableType << value);
+    ASSERT(buf.eof());
 }
 
 simtime_t TraCICommandInterface::genericGetTime(uint8_t commandId, std::string objectId, uint8_t variableId, uint8_t responseId, TraCIConnection::Result* result)

@@ -26,6 +26,7 @@ using veins::TraCIBuffer;
 
 Define_Module(veins::TraCIGenericScenarioManager);
 const simsignal_t TraCIGenericScenarioManager::traciInitializedSignal = registerSignal("org_car2x_veins_modules_mobility_traciInitialized");
+const simsignal_t TraCIGenericScenarioManager::traciModulePreInitSignal = registerSignal("org_car2x_veins_modules_mobility_traciModulePreInit");
 const simsignal_t TraCIGenericScenarioManager::traciModuleAddedSignal = registerSignal("org_car2x_veins_modules_mobility_traciModuleAdded");
 const simsignal_t TraCIGenericScenarioManager::traciModuleRemovedSignal = registerSignal("org_car2x_veins_modules_mobility_traciModuleRemoved");
 const simsignal_t TraCIGenericScenarioManager::traciTimestepBeginSignal = registerSignal("org_car2x_veins_modules_mobility_traciTimestepBegin");

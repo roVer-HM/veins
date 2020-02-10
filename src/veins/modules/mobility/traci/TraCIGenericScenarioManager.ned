@@ -38,6 +38,7 @@ simple TraCIGenericScenarioManager like ITraCIManager
 {
     parameters:
         @signal[org_car2x_veins_modules_mobility_traciInitialized](type=bool);
+        @signal[org_car2x_veins_modules_mobility_traciModulePreInit](type=cModule);
         @signal[org_car2x_veins_modules_mobility_traciModuleAdded](type=cModule);
         @signal[org_car2x_veins_modules_mobility_traciModuleRemoved](type=cModule);
         @signal[org_car2x_veins_modules_mobility_traciTimestepBegin](type=simtime_t);
@@ -66,6 +67,6 @@ simple TraCIGenericScenarioManager like ITraCIManager
         bool autoShutdown = default(true);  // Shutdown module as soon as no more vehicles are in the simulation
         int margin = default(25);  // margin to add to all received vehicle positions
         bool ignoreGuiCommands = default(false); // whether to ignore all TraCI commands that only make sense when the server has a graphical user interface
-        
+
 }
 

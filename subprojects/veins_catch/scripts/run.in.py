@@ -1,6 +1,4 @@
-#!/usr/bin/env python2
-
-# ^-- contents of out/config.py go here
+#!/usr/bin/env python3
 
 #
 # Copyright (C) 2013-2019 Christoph Sommer <sommer@ccs-labs.org>
@@ -28,9 +26,13 @@
 Wrapper around veins_catch binary
 """
 
+from __future__ import print_function
 import os
 import argparse
 import subprocess
+
+# v-- contents of out/config.py go here
+# ^-- contents of out/config.py go here
 
 parser = argparse.ArgumentParser('Run a Veins simulation')
 parser.add_argument('-d', '--debug', action='store_true', help='Run using opp_run_dbg (instead of opp_run)')
@@ -55,7 +57,7 @@ if args.tool == 'memcheck':
 cmdline = prefix + [os.path.join('src', bin_run)] + bin_args
 
 if args.verbose:
-    print "Running with command line arguments: %s" % ' '.join(['"%s"' % arg for arg in cmdline])
+    print("Running with command line arguments: %s" % ' '.join(['"%s"' % arg for arg in cmdline]))
 
 os.environ["PATH"] += os.pathsep + os.pathsep.join(run_lib_paths)
 
