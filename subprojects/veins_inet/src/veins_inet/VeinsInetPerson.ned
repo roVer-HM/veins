@@ -35,9 +35,6 @@ module VeinsInetPerson extends AdhocHost
         ipv4.configurator.networkConfiguratorModule = "";
 
     submodules:
-        ifConfig: HostAutoConfigurator {
-            @display("p=125,320;is=s");
-        }
 
 }
 
