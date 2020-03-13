@@ -14,6 +14,7 @@
 //
 
 #include "NodeMappingDistribution.h"
+#include "veins/base/utils/MappingParser.h"
 
 Define_Module(veins::NodeMappingDistribution);
 namespace veins {
@@ -60,15 +61,24 @@ void NodeMappingDistribution::initialize() {
     }
 }
 
+/**
+ *  lookup all ModuleNames defined by this mapping and check if the are already
+ *  mentioned in the moduleVector. If not add the module with the initial count 0.
+ */
+void NodeMappingDistribution::updateModuleVector(std::map<std::string, int32_t> &moduleVector){
+    for(auto &pair : this->mModuleType){
+        auto mIter = moduleVector.find(pair.second);
+        if (mIter == moduleVector.end())
+            moduleVector.insert(std::make_pair(pair.second, 0));
+    }
+
+}
+
 bool NodeMappingDistribution::managesKey(const std::string key){
     return mappingKey.compare(key) == 0;
 }
 
 MappingParser::TypeMappingTripel NodeMappingDistribution::applyMapping(std::string key, MappingParser::TypeMappingTripel mappingTripel){
-    // return standard mapping. This NodeMappingDistribution does not manges given key
-    if (! managesKey(key))
-        return mappingTripel;
-
     double rndVal = uniform(0, 1.0);
 
     std::string subKey;
@@ -95,5 +105,6 @@ MappingParser::TypeMappingTripel NodeMappingDistribution::applyMapping(std::stri
 
     return mappingTripel;
 }
+
 } // namespace veins
 
