@@ -204,53 +204,27 @@
         <project id="veins_inet.org.omnetpp.cdt.omnetppProjectType.703777932" name="OMNeT++ Simulation" projectType="org.omnetpp.cdt.omnetppProjectType"/>
 
     </storageModule>
-<<<<<<< HEAD
-    	
-    <storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-    	
-    <storageModule moduleId="refreshScope"/>
-    	
-    <storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-    	
-=======
 
->>>>>>> f6169c92f14bbffa72eca4133401e49136edeaca
     <storageModule moduleId="scannerConfiguration">
 
         <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-<<<<<<< HEAD
-        		
-        <scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.release.912637432">
-            			
-=======
 
         <scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.release.912637432">
 
->>>>>>> f6169c92f14bbffa72eca4133401e49136edeaca
             <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.omnetpp.cdt.OmnetppGCCPerProjectProfile"/>
 
         </scannerConfigBuildInfo>
-<<<<<<< HEAD
-        		
-        <scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.debug.2114267205">
-            			
-=======
 
         <scannerConfigBuildInfo instanceId="org.omnetpp.cdt.gnu.config.debug.2114267205">
 
->>>>>>> f6169c92f14bbffa72eca4133401e49136edeaca
             <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.omnetpp.cdt.OmnetppGCCPerProjectProfile"/>
 
         </scannerConfigBuildInfo>
 
     </storageModule>
-<<<<<<< HEAD
-    
-=======
 
     <storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 
     <storageModule moduleId="refreshScope"/>
 
->>>>>>> f6169c92f14bbffa72eca4133401e49136edeaca
 </cproject>
