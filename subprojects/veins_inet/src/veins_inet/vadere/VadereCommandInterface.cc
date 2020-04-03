@@ -68,6 +68,19 @@ void VaderePersonItfc::setTargetList(std::vector<std::string> targetList)
 
 }
 
+void VaderePersonItfc::setInformation(simtime_t start, simtime_t obsolete_at, std::string information)
+{
+    uint8_t variableId = VAR_PERSON_STIMULUS;
+    uint8_t variableType = TYPE_COMPOUND;
+    int32_t count = 3;
+    TraCIBuffer buf = connection->query(CMD_SET_PERSON_VARIABLE,
+            TraCIBuffer() << variableId << nodeId << variableType << count
+            << TYPE_DOUBLE << start.dbl()
+            << TYPE_DOUBLE << -1.0
+            << TYPE_STRING << information);
+    ASSERT(buf.eof());
+}
+
 /* VadereSimulationItfc */
 
 void VadereSimulationItfc::sendSimulationConfig(SimCfg simCfg){
