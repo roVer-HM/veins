@@ -122,7 +122,9 @@ void TraCIScenarioManagerRSO::initialize(int stage)
     for (cModule::SubmoduleIterator it(getParentModule()); !it.end(); it++){
         cModule* m = *it;
         if (strcmp(m->getName(), "mappingDistribution") == 0){
-            nodeMappingDistVector.push_back(dynamic_cast<NodeMappingDistribution*>(m));
+            auto mapping = dynamic_cast<NodeMappingDistribution*>(m);
+            mapping->updateModuleVector(moduleVectorIndex);
+            nodeMappingDistVector.push_back(mapping);
         }
     }
 }
@@ -361,7 +363,9 @@ void TraCIScenarioManagerRSO::processMobileAgent(std::shared_ptr<IMobileAgent> m
 
        if (nodeMappingDistVector.size() > 0){
            for (auto const& mChooser: nodeMappingDistVector){
-               m = mChooser->applyMapping(mobileAgent->getTypeId(), m);
+               if (mChooser->managesKey(mobileAgent->getTypeId())){
+                   m = mChooser->applyMapping(mobileAgent->getTypeId(), m);
+               }
            }
        }
 

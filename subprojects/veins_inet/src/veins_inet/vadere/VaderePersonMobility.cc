@@ -22,11 +22,14 @@ namespace veins {
 
 using namespace inet::units::values;
 
-Register_Class(VaderePersonMobility)
+Register_Class(VaderePersonMobility);
 
 VaderePersonMobility::VaderePersonMobility() {}
 
-VaderePersonMobility::~VaderePersonMobility() {}
+VaderePersonMobility::~VaderePersonMobility() {
+    if (personCommandInterface)
+        delete personCommandInterface;
+}
 
 void VaderePersonMobility::preInitialize(std::shared_ptr<IMobileAgent> mobileAgent)
 {

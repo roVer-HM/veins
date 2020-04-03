@@ -44,6 +44,7 @@ namespace veins {
  * *.mappingDistribution[0].mapping_root="fooBar"
  * *.mappingDistribution[0].mapping_Name="x1=ueD2D x2=nodeB"
  * *.mappingDistribution[0].mapping_distribution="x1=0.35 x2=0.65"
+ * *.mappingDistribution[0].penetrationRate=1.0
  *
  * Without any NodeMappingDistribution set all mobility entities with a
  * type 'fooBar' will be collected in the vector node 'ueD2D' and
@@ -53,6 +54,8 @@ namespace veins {
  * be assigned to the node vector 'ueD2D' and the rest will be
  * assign to 'nodeB'. This allows different application settings
  * for the same type of mobile entity. (e.g. sender, receiver).
+ * If the penetrationRate is smaller than 1.0 is is first tested,
+ * if the given mobile entity will be equipped with a communication node.
  *
  * This definition also simplifies the definition of simulation
  * campaigns using OMNeT++ standard variable loops.
@@ -69,6 +72,7 @@ public:
     virtual ~NodeMappingDistribution();
 
     bool managesKey(const std::string key);
+    void updateModuleVector(std::map<std::string, int32_t> &moduleVector);
 
     MappingParser::TypeMappingTripel applyMapping(std::string key, MappingParser::TypeMappingTripel mappingTripel);
 
