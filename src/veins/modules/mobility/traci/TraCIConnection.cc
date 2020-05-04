@@ -172,6 +172,7 @@ TraCIBuffer TraCIConnection::query(uint8_t commandId, const TraCIBuffer& buf, Re
     }
     else {
         if (resultCode == RTYPE_NOTIMPLEMENTED) throw cRuntimeError("TraCI server reported command 0x%2x not implemented (\"%s\"). Might need newer version.", commandId, description.c_str());
+        if (resultCode != RTYPE_OK && description == "Simulation end reached.") throw cTerminationException("TraCI server reported Simulation end reached.");
         if (resultCode != RTYPE_OK) throw cRuntimeError("TraCI server reported status %d executing command 0x%2x (\"%s\").", (int) resultCode, commandId, description.c_str());
     }
     return obuf;
