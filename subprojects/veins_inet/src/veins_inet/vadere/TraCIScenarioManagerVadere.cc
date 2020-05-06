@@ -90,7 +90,13 @@ void TraCIScenarioManagerVadere::init_traci(){
     } else {
         simCfg.oppOutputScalarFile = "";
     }
-    simCfg.seed = (int)intrand(LONG_MIN);
+    if (seed == -1) {
+        // default seed is current repetition
+        const char* seed_s = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_RUNNUMBER);
+        seed = atoi(seed_s);
+    }
+    simCfg.seed = seed;
+    simCfg.useVadereSeed = par("useVadereSeed").boolValue();
     simItfc->sendSimulationConfig(simCfg);
     delete simItfc;
 

@@ -86,7 +86,7 @@ void VaderePersonItfc::setInformation(simtime_t start, simtime_t obsolete_at, st
 void VadereSimulationItfc::sendSimulationConfig(SimCfg simCfg){
     uint8_t variableId = VAR_SIM_CONFIG;
     uint8_t variableType = TYPE_COMPOUND;
-    int32_t count = 9;
+    int32_t count = 10;
     TraCIBuffer buf = connection->query(CMD_SET_SIM_VARIABLE,
             TraCIBuffer() << variableId << nodeId << variableType << count
             << TYPE_STRING << simCfg.oppConfigName
@@ -97,7 +97,8 @@ void VadereSimulationItfc::sendSimulationConfig(SimCfg simCfg){
             << TYPE_STRING << simCfg.oppRepetition
             << TYPE_STRING << simCfg.oppOutputScalarFile
             << TYPE_STRING << simCfg.oppOutputVecFile
-            << TYPE_INTEGER << simCfg.seed);
+            << TYPE_INTEGER << simCfg.seed
+            << TYPE_UBYTE << simCfg.useVadereSeed);
 //    ASSERT(buf.eof());
     // todo
 

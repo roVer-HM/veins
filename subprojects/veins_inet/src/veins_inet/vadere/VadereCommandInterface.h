@@ -61,6 +61,7 @@ public:
         std::string oppConfigName, oppExperiment, oppDateTime, oppResultRootDir,
         oppIterationVariables, oppRepetition, oppOutputScalarFile, oppOutputVecFile;
         int seed;
+        bool useVadereSeed;
     };
     void sendSimulationConfig(SimCfg simCfg);
 private:

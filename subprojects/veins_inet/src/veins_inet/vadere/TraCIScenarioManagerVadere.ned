@@ -30,4 +30,5 @@ simple TraCIScenarioManagerVadere extends TraCIScenarioManagerRSO
         PedestrianRSO = default("name=veins::TraCISubscriptionManagement::VaderePerson vars=ID_LIST,VAR_POSITION,VAR_TYPE,VAR_ANGLE,VAR_SPEED");
         string vadereScenarioPath;
         string vadereCachePath = default("");
+        bool useVadereSeed = default(false); // if true ignore seed value. Mobility provider will select seed.
 }
