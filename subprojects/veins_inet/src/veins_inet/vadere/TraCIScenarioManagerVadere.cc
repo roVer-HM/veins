@@ -75,7 +75,7 @@ void TraCIScenarioManagerVadere::init_traci(){
     simCfg.oppConfigName= cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_CONFIGNAME);
     simCfg.oppExperiment = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_EXPERIMENT);
     simCfg.oppDateTime = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_DATETIME);
-    simCfg.oppResultRootDir = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_RESULTDIR);
+    simCfg.oppResultRootDir = basedir + cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_RESULTDIR);
     simCfg.oppIterationVariables = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_ITERATIONVARSF);
     simCfg.oppRepetition = cSimulation::getActiveSimulation()->getEnvir()->getConfigEx()->getVariable(CFGVAR_REPETITION);
     cConfigOption* vecObj = cConfigOption::find("output-vector-file");
