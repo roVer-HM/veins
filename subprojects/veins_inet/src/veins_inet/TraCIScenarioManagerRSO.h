@@ -51,7 +51,7 @@ public:
 protected:
     virtual void init_traci() override; // override it!
     virtual void executeOneTimestep() override; // override it!
-    virtual void processSubcriptionResults();
+    virtual void processSubcriptionResults(simtime_t targetTime);
 
     virtual void processMobileAgent(std::shared_ptr<IMobileAgent> mobileAgent);
     virtual void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, std::shared_ptr<IMobileAgent> mobileAgent) override;

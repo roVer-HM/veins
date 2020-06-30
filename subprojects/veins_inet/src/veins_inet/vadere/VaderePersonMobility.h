@@ -21,6 +21,14 @@
 
 namespace veins {
 
+/**
+ * Use positions provided by vadere (mobility provider). Use same procedure as LiniarMobiliy to interpolate between
+ * two updates to smooth movement. Between two updates the velocity and orientation is constant
+ * and calculated only once.
+ * To allow interpolation the mobility provider must return the next position at t_1 = t_0 + dt.
+ * With each query to getPostion the current position (lastPostion) is updated based on a linear
+ * movement towards P_1.
+ */
 class VaderePersonMobility : public VeinsInetMobilityBase{
 public:
     VaderePersonMobility();
@@ -33,8 +41,26 @@ public:
     virtual void nextPosition(std::shared_ptr<IMobileAgent> mobileAgent) override;
 
     virtual VaderePersonItfc*  getPersonCommandInterface() const;
+
+    virtual inet::Coord getCurrentPosition() override; //MobilityBase
+    virtual inet::Coord getCurrentVelocity() override; //MobilityBase
+    virtual inet::Coord getCurrentAcceleration() override; //MobilityBase
+
+    virtual inet::Quaternion getCurrentAngularPosition() override; //MobilityBase
+    virtual inet::Quaternion getCurrentAngularVelocity() override; //MobilityBase
+    virtual inet::Quaternion getCurrentAngularAcceleration() override; //MobilityBase
+
+    virtual void move();
+
+    virtual void moveAndUpdate();
 protected:
     mutable VaderePersonItfc* personCommandInterface = nullptr; /**< cached value */
+
+    simtime_t lastUpdate;
+
+    simtime_t nextPosTime;
+    inet::Coord nextPos;
+
 
 };
 

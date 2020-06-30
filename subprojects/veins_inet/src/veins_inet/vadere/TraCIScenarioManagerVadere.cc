@@ -183,17 +183,60 @@ void TraCIScenarioManagerVadere::init_traci(){
         subscriptionManager->addSubscriptionManager(f->createSubscriptionManager(sub.second, connection, commandIfc));
     }
     subscriptionManager->initialize();
+
+    // simulate to firstStepAt
+    targetTime = firstStepAt;
+    executeOneTimestep();
 }
 
-//void TraCIScenarioManagerVadere::init_obstacles(){
-//    Tra
-//}
 
-void TraCIScenarioManagerVadere::processSubcriptionResults(){
+void TraCIScenarioManagerVadere::handleSelfMsg(cMessage* msg)
+{
+    if (msg == connectAndStartTrigger) {
+        connection.reset(TraCIConnection::connect(this, host.c_str(), port));
+        commandIfc.reset(new TraCICommandInterface(this, *connection, ignoreGuiCommands));
+        init_traci();
+        return;
+    }
+    if (msg == executeOneTimestepTrigger) {
+        // mobility provider is ahead dt = updateInterval
+        // needed to interpolate between NOW(=simTime()) and NOW+updateInterval
+        targetTime = simTime() + updateInterval;
+        executeOneTimestep();
+        if (!autoShutdownTriggered){
+            scheduleAt(simTime() + updateInterval, executeOneTimestepTrigger);
+        }
+        return;
+    }
+    throw cRuntimeError("TraCIScenarioManager received unknown self-message");
+}
+
+void TraCIScenarioManagerVadere::executeOneTimestep()
+{
+
+    EV_DEBUG << "Triggering TraCI server simulation advance to t=" << simTime() << endl;
+
+    ASSERT(targetTime >= simTime());
+
+    emit(traciTimestepBeginSignal, targetTime);
+
+    if (isConnected()) {
+        TraCIBuffer buf = connection->query(CMD_SIMSTEP2, TraCIBuffer() << targetTime);
+
+        subscriptionManager->processSubscriptionResultBuffer(buf);
+        processSubcriptionResults(targetTime);
+    }
+
+    emit(traciTimestepEndSignal, targetTime);
+}
+
+
+void TraCIScenarioManagerVadere::processSubcriptionResults(simtime_t targetTime){
 
     if (subscriptionManager->has(TraCIConstants::RESPONSE_SUBSCRIBE_PERSON_VARIABLE)){
         std::shared_ptr<SubscriptionManager<VaderePerson>> vMgr = subscriptionManager->get<SubscriptionManager<VaderePerson>>(TraCIConstants::RESPONSE_SUBSCRIBE_PERSON_VARIABLE);
         for (auto const agent : vMgr->getRSOVector()){
+            agent->setTime(targetTime);
             processMobileAgent(agent);
         }
         for (auto const &id : vMgr->getDeletedRSOs()){

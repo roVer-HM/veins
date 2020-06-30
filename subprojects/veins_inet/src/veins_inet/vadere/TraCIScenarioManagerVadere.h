@@ -31,8 +31,13 @@ public:
 protected:
     virtual void init_traci() override;
 //    virtual void init_obstacles() override;
+    virtual void handleSelfMsg(cMessage* msg) override;
+    virtual void executeOneTimestep() override;
 
-    virtual void processSubcriptionResults() override;
+    virtual void processSubcriptionResults(simtime_t targetTime) override;
+
+protected:
+    simtime_t targetTime = 0.0;
 
 };
 } /** end namespace veins */
