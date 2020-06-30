@@ -89,6 +89,10 @@ const std::string& SumoVehicle::getId() const{
     return RemoteSimulationObject::getId();
 }
 
+simtime_t SumoVehicle::getTime() const{
+    return RemoteSimulationObject::getTime();
+}
+
 double SumoVehicle::getAngel() const {
     ensureActive(VAR_ANGLE);
     return angel;

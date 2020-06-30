@@ -61,6 +61,14 @@ const std::string& RemoteSimulationObject::getId() const{
     return id;
 }
 
+void RemoteSimulationObject::setTime(simtime_t time){
+    this->time = time;
+}
+
+simtime_t RemoteSimulationObject::getTime() const {
+    return time;
+}
+
 void RemoteSimulationObject::ensureActive(int varId ) const {
     if (!isActive(varId))
         throw cRuntimeError("Variable 0x%02X not active", varId);

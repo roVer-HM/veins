@@ -102,6 +102,8 @@ public:
     void setId(std::string id);
     virtual const std::string& getId() const;
     const std::string& getRemoteSimulationObjectType() const;
+    virtual void setTime(simtime_t time);
+    virtual simtime_t getTime() const;
 
 protected:
    virtual void initVariableMap() = 0;
@@ -129,6 +131,8 @@ private:
 
    std::string id = "-1"; //not set
 
+   simtime_t time; //time step to which the data belongs.
+
 };
 
 
@@ -137,6 +141,7 @@ public:
     virtual ~IMobileAgent() = default;
 
     virtual const std::string& getId() const = 0;
+    virtual simtime_t getTime() const = 0;
     virtual const Coord& getPosition() const = 0;
     virtual double getX() const = 0;
     virtual double getY() const = 0;

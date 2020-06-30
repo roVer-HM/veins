@@ -83,6 +83,10 @@ const std::string& SumoPerson::getId() const{
     return RemoteSimulationObject::getId();
 }
 
+simtime_t SumoPerson::getTime() const{
+    return RemoteSimulationObject::getTime();
+}
+
 double SumoPerson::getAngel() const {
     ensureActive(VAR_ANGLE);
     return angel;
