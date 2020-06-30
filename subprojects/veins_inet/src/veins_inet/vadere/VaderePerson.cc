@@ -76,6 +76,10 @@ const std::string& VaderePerson::getId() const {
     return RemoteSimulationObject::getId();
 }
 
+simtime_t VaderePerson::getTime() const{
+    return RemoteSimulationObject::getTime();
+}
+
 double VaderePerson::getAngel() const {
     ensureActive(VAR_ANGLE);
     return angel;

@@ -36,10 +36,15 @@ void VaderePersonMobility::preInitialize(std::shared_ptr<IMobileAgent> mobileAge
     Enter_Method_Silent();
     this->external_id = mobileAgent->getId();
     inet::Coord coord = inet::Coord(mobileAgent->getPosition().x, mobileAgent->getPosition().y);
-    this->lastPosition = coord;
     double angle = mobileAgent->getAngel();
-    this->lastVelocity = inet::Coord(cos(angle), -sin(angle)) * mobileAgent->getSpeed();
-    this->lastOrientation = inet::Quaternion(inet::EulerAngles(rad(-angle), rad(0.0), rad(0.0)));
+
+    this->nextPosTime = mobileAgent->getTime();
+    this->nextPos = coord;
+
+    this->lastUpdate = simTime(); //setup set last and next position to same value.
+    this->lastPosition = coord;
+    this->lastVelocity = inet::Coord(); // velocity 0 when initialized.
+    this->lastOrientation = inet::Quaternion();
     emmitExternalId(mobileAgent->getId());
 }
 
@@ -49,9 +54,24 @@ void VaderePersonMobility::nextPosition(std::shared_ptr<IMobileAgent> mobileAgen
 
     inet::Coord coord = inet::Coord(mobileAgent->getPosition().x, mobileAgent->getPosition().y);
     double angle = mobileAgent->getAngel();
-    this->lastPosition = coord;
-    this->lastVelocity = inet::Coord(cos(angle), -sin(angle)) * mobileAgent->getSpeed();
-    this->lastOrientation = inet::Quaternion(inet::EulerAngles(rad(-angle), rad(0.0), rad(0.0)));
+
+    //
+    ASSERT(this->nextPosTime == simTime());
+    ASSERT(simTime() < mobileAgent->getTime());
+
+    this->lastPosition = this->nextPos;
+    this->lastUpdate = this->nextPosTime;
+
+    this->nextPos = coord;
+    this->nextPosTime = mobileAgent->getTime();
+
+    this->lastVelocity = (nextPos - lastPosition) / (nextPosTime - lastUpdate).dbl();
+    inet::Coord direction = this->lastVelocity;
+    direction.normalize();
+    auto alpha = rad(atan2(direction.y, direction.x));
+    auto beta = rad(-asin(direction.z));
+    auto gamma = rad(0.0);
+    this->lastOrientation = inet::Quaternion(inet::EulerAngles(alpha, beta, gamma));
 
     // Update display string to show node is getting updates
     auto hostMod = getParentModule();
@@ -70,6 +90,57 @@ VaderePersonItfc* VaderePersonMobility::getPersonCommandInterface() const
     if (!personCommandInterface) personCommandInterface = new VaderePersonItfc(getCommandInterface(), getExternalId());
     return personCommandInterface;
 }
+
+inet::Coord VaderePersonMobility::getCurrentPosition()
+{
+    moveAndUpdate();
+    return lastPosition;
+}
+
+inet::Coord VaderePersonMobility::getCurrentVelocity()
+{
+    moveAndUpdate();
+    return lastVelocity;
+}
+
+inet::Coord VaderePersonMobility::getCurrentAcceleration()
+{
+
+    throw cRuntimeError("Invalid operation");
+}
+
+inet::Quaternion VaderePersonMobility::getCurrentAngularPosition()
+{
+    moveAndUpdate();
+    return lastOrientation;
+}
+
+inet::Quaternion VaderePersonMobility::getCurrentAngularVelocity()
+{
+    moveAndUpdate();
+    return lastAngularVelocity;
+}
+
+inet::Quaternion VaderePersonMobility::getCurrentAngularAcceleration()
+{
+    throw cRuntimeError("Invalid operation");
+}
+
+void VaderePersonMobility::moveAndUpdate()
+{
+    simtime_t now = simTime();
+    if (lastUpdate != now) {
+        move();
+        lastUpdate = simTime();
+        emitMobilityStateChangedSignal();
+    }
+}
+
+void VaderePersonMobility::move(){
+    double elapsedTime = (simTime() - lastUpdate).dbl();
+    lastPosition += lastVelocity * elapsedTime;
+}
+
 
 
 } /* namespace veins */
