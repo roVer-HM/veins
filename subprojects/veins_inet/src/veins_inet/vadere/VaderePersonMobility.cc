@@ -31,12 +31,22 @@ VaderePersonMobility::~VaderePersonMobility() {
         delete personCommandInterface;
 }
 
+void VaderePersonMobility::setInitialPosition(){
+    // lastPosition correctly set during preInitialize
+    // using the display string to set initialPosition will cast
+    // the positions from int to double thus loosing significant position
+    // accuracy of +/- 0.5 m. This is to much for pedestrians.
+    // todo: FIX ME
+    EV_DEBUG << "do not use DisplayString" << endl;
+    if (par("updateDisplayString"))
+        updateDisplayStringFromMobilityState();
+}
+
 void VaderePersonMobility::preInitialize(std::shared_ptr<IMobileAgent> mobileAgent)
 {
     Enter_Method_Silent();
     this->external_id = mobileAgent->getId();
     inet::Coord coord = inet::Coord(mobileAgent->getPosition().x, mobileAgent->getPosition().y);
-    double angle = mobileAgent->getAngel();
 
     this->nextPosTime = mobileAgent->getTime();
     this->nextPos = coord;
@@ -53,7 +63,6 @@ void VaderePersonMobility::nextPosition(std::shared_ptr<IMobileAgent> mobileAgen
     Enter_Method_Silent();
 
     inet::Coord coord = inet::Coord(mobileAgent->getPosition().x, mobileAgent->getPosition().y);
-    double angle = mobileAgent->getAngel();
 
     //
     ASSERT(this->nextPosTime == simTime());

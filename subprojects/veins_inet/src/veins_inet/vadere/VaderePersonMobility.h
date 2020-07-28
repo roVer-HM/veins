@@ -50,6 +50,9 @@ public:
     virtual inet::Quaternion getCurrentAngularVelocity() override; //MobilityBase
     virtual inet::Quaternion getCurrentAngularAcceleration() override; //MobilityBase
 
+    void setInitialPosition() override;
+
+
     virtual void move();
 
     virtual void moveAndUpdate();

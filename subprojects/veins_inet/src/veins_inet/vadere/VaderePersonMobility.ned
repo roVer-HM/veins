@@ -18,7 +18,7 @@ import org.car2x.veins.subprojects.veins_inet.VeinsInetMobilityBase;
 //
 // TODO auto-generated type
 //
-network VaderePersonMobility extends VeinsInetMobilityBase
+simple VaderePersonMobility extends VeinsInetMobilityBase
 {
     parameters:
         @class(veins::VaderePersonMobility);
