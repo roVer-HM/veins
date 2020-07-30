@@ -39,6 +39,7 @@ public:
     std::vector<std::string> getTargetList() ;
     std::vector<std::string> getAllTargetIDs() ;
     void setTargetList(std::vector<std::string> targetList);
+    void setInformation(simtime_t start, simtime_t obsolete_at, std::string information);
     friend TraCICommandInterface;
 
 private:
@@ -60,6 +61,7 @@ public:
         std::string oppConfigName, oppExperiment, oppDateTime, oppResultRootDir,
         oppIterationVariables, oppRepetition, oppOutputScalarFile, oppOutputVecFile;
         int seed;
+        bool useVadereSeed;
     };
     void sendSimulationConfig(SimCfg simCfg);
 private:

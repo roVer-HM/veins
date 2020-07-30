@@ -26,6 +26,7 @@ namespace TraCIConstants {
 const uint8_t VAR_TARGET_LIST = 0xfe;
 const uint8_t VAR_CACHE_HASH = 0x7d;
 const uint8_t VAR_SIM_CONFIG = 0x7e;
+const uint8_t VAR_PERSON_STIMULUS = 0xfd;
 }
 }
 

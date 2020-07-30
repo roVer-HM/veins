@@ -51,6 +51,7 @@ public:
     std::set<std::string> getIdList();
     int getIdCount();
     const std::string& getId() const override; // RemoteSimulationObject|IMobileAgent
+    simtime_t getTime() const override; // RemoteSimulationObject|IMobileAgent
     double getAngel() const override; // IMobileAgent
     const Coord& getPosition() const override; // IMobileAgent
     double getSpeed() const override; // IMobileAgent

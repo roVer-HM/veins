@@ -269,7 +269,7 @@ void TraCIScenarioManagerRSO::executeOneTimestep()
         TraCIBuffer buf = connection->query(CMD_SIMSTEP2, TraCIBuffer() << targetTime);
 
         subscriptionManager->processSubscriptionResultBuffer(buf);
-        processSubcriptionResults();
+        processSubcriptionResults(targetTime);
 
     }
 
@@ -279,11 +279,12 @@ void TraCIScenarioManagerRSO::executeOneTimestep()
 }
 
 
-void TraCIScenarioManagerRSO::processSubcriptionResults(){
+void TraCIScenarioManagerRSO::processSubcriptionResults(simtime_t targetTime){
 
     if (subscriptionManager->has(TraCIConstants::RESPONSE_SUBSCRIBE_VEHICLE_VARIABLE)){
         std::shared_ptr<SubscriptionManager<SumoVehicle>> vMgr = subscriptionManager->get<SubscriptionManager<SumoVehicle>>(TraCIConstants::RESPONSE_SUBSCRIBE_VEHICLE_VARIABLE);
         for (auto const agent : vMgr->getRSOVector()){
+            agent->setTime(targetTime);
             processMobileAgent(agent);
         }
         for (auto const &id : vMgr->getDeletedRSOs()){
@@ -294,6 +295,7 @@ void TraCIScenarioManagerRSO::processSubcriptionResults(){
     if (subscriptionManager->has(TraCIConstants::RESPONSE_SUBSCRIBE_PERSON_VARIABLE)){
         std::shared_ptr<SubscriptionManager<SumoPerson>> pMgr = subscriptionManager->get<SubscriptionManager<SumoPerson>>(TraCIConstants::RESPONSE_SUBSCRIBE_PERSON_VARIABLE);
         for (auto const agent : pMgr->getRSOVector()){
+            agent->setTime(targetTime);
             processMobileAgent(agent);
         }
         for (auto const &id : pMgr->getDeletedRSOs()){
