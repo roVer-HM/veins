@@ -39,6 +39,7 @@ const simsignal_t Mac1609_4::sigChannelBusy = registerSignal("org_car2x_veins_mo
 const simsignal_t Mac1609_4::sigCollision = registerSignal("org_car2x_veins_modules_mac_sigCollision");
 const simsignal_t Mac1609_4::sigSentPacket = registerSignal("org_car2x_veins_modules_mac_sigSentPacket");
 const simsignal_t Mac1609_4::sigSentAck = registerSignal("org_car2x_veins_modules_mac_sigSentAck");
+const simsignal_t Mac1609_4::sigRetriesExceeded = registerSignal("org_car2x_veins_modules_mac_sigRetriesExceeded");
 
 void Mac1609_4::initialize(int stage)
 {
@@ -61,6 +62,7 @@ void Mac1609_4::initialize(int stage)
         dot11LongRetryLimit = par("dot11LongRetryLimit");
         ackLength = par("ackLength");
         useAcks = par("useAcks").boolValue();
+        frameErrorRate = par("frameErrorRate").doubleValue();
         ackErrorRate = par("ackErrorRate").doubleValue();
         rxStartIndication = false;
         ignoreChannelState = false;
@@ -142,6 +144,7 @@ void Mac1609_4::initialize(int stage)
         statsReceivedBroadcasts = 0;
         statsSentPackets = 0;
         statsSentAcks = 0;
+        statsRetriesExceeded = 0;
         statsTXRXLostPackets = 0;
         statsSNIRLostPackets = 0;
         statsDroppedPackets = 0;
@@ -432,6 +435,7 @@ void Mac1609_4::finish()
     recordScalar("ReceivedBroadcasts", statsReceivedBroadcasts);
     recordScalar("SentPackets", statsSentPackets);
     recordScalar("SentAcknowledgements", statsSentAcks);
+    recordScalar("RetriesExceeded", statsRetriesExceeded);
     recordScalar("SNIRLostPackets", statsSNIRLostPackets);
     recordScalar("RXTXLostPackets", statsTXRXLostPackets);
     recordScalar("TotalLostPackets", statsSNIRLostPackets + statsTXRXLostPackets);
@@ -551,7 +555,9 @@ void Mac1609_4::handleBroadcast(Mac80211Pkt* macPkt, DeciderResult80211* res)
 {
     statsReceivedBroadcasts++;
     unique_ptr<BaseFrame1609_4> wsm(check_and_cast<BaseFrame1609_4*>(macPkt->decapsulate()));
-    wsm->setControlInfo(new PhyToMacControlInfo(res));
+    auto ctrlInfo = new PhyToMacControlInfo(res);
+    ctrlInfo->setSourceAddress(macPkt->getSrcAddr());
+    wsm->setControlInfo(ctrlInfo);
     sendUp(wsm.release());
 }
 
@@ -567,20 +573,40 @@ void Mac1609_4::handleLowerMsg(cMessage* msg)
 
     EV_TRACE << "Received frame name= " << macPkt->getName() << ", myState= src=" << macPkt->getSrcAddr() << " dst=" << macPkt->getDestAddr() << " myAddr=" << myMacAddr << std::endl;
 
+    bool frameReceived = true;
+    if (dblrand() < frameErrorRate) frameReceived = false;
+
     if (dest == myMacAddr) {
         if (auto* ack = dynamic_cast<Mac80211Ack*>(macPkt)) {
             ASSERT(useAcks);
-            handleAck(ack);
+            if (dblrand() >= ackErrorRate)
+                handleAck(ack);
+            else
+                EV_TRACE << "Artificially dropping ACK";
             delete res;
         }
         else {
-            unique_ptr<BaseFrame1609_4> wsm(check_and_cast<BaseFrame1609_4*>(macPkt->decapsulate()));
-            wsm->setControlInfo(new PhyToMacControlInfo(res));
-            handleUnicast(macPkt->getSrcAddr(), std::move(wsm));
+            if (frameReceived) {
+                unique_ptr<BaseFrame1609_4> wsm(check_and_cast<BaseFrame1609_4*>(macPkt->decapsulate()));
+                auto ctrlInfo = new PhyToMacControlInfo(res);
+                ctrlInfo->setSourceAddress(macPkt->getSrcAddr());
+                wsm->setControlInfo(ctrlInfo);
+                handleUnicast(macPkt->getSrcAddr(), std::move(wsm));
+            }
+            else {
+                delete res;
+                EV_TRACE << "Artificially dropping frame";
+            }
         }
     }
     else if (dest == LAddress::L2BROADCAST()) {
-        handleBroadcast(macPkt, res);
+        if (frameReceived) {
+            handleBroadcast(macPkt, res);
+        }
+        else {
+            delete res;
+            EV_TRACE << "Artificially dropping frame";
+        }
     }
     else {
         EV_TRACE << "Packet not for me" << std::endl;
@@ -1124,6 +1150,9 @@ void Mac1609_4::handleRetransmit(t_access_category ac)
             // start contention only if there are more packets in the queue
             contend = true;
         }
+        // notify interested applications of a failed transmission, together with the actual packet
+        emit(sigRetriesExceeded, appPkt);
+        statsRetriesExceeded++;
         delete appPkt;
         myEDCA[ChannelType::control]->myQueues[ac].cwCur = myEDCA[ChannelType::control]->myQueues[ac].cwMin;
         myEDCA[ChannelType::control]->backoff(ac);

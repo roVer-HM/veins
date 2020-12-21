@@ -24,9 +24,7 @@
 
 #include "veins/base/utils/Coord.h"
 #include "veins_inet/VeinsInetMobility.h"
-
 #include "inet/common/scenario/ScenarioManager.h"
-
 
 using veins::VeinsInetManager;
 
@@ -36,7 +34,8 @@ VeinsInetManager::~VeinsInetManager()
 {
 }
 
-void VeinsInetManager::initialize(int stage) {
+void VeinsInetManager::initialize(int stage)
+{
     TraCIScenarioManagerLaunchd::initialize(stage);
 
     if (stage != 1)
@@ -47,9 +46,7 @@ void VeinsInetManager::initialize(int stage) {
         cModule* module = dynamic_cast<cModule*>(payload.p);
         ASSERT(module);
 
-        // The INET visualizer listens to model change notifications on the
-        // network object by default. We assume this is our parent.
-        cModule *root = getParentModule();
+        cModule* root = getSimulation()->getSystemModule();
 
         auto* notification = new inet::cPreModuleInitNotification();
         notification->module = module;

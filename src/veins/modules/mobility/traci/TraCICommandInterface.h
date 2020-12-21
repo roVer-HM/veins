@@ -183,6 +183,10 @@ public:
         double getHeight();
         double getAccel();
         double getDeccel();
+        double getSpeed();
+        double getAngle();
+        double getAcceleration();
+        double getDistanceTravelled();
 
         void setParameter(const std::string& parameter, int value);
         void setParameter(const std::string& parameter, double value);
@@ -269,6 +273,8 @@ public:
          * @return the accumulated waiting time
          */
         double getAccumulatedWaitingTime() const;
+
+        std::pair<std::string, double> getLeader(const double distance);
 
     protected:
         std::string nodeId;
@@ -367,6 +373,7 @@ public:
         double getLength();
         double getMaxSpeed();
         double getMeanSpeed();
+        void setDisallowed(std::list<std::string> disallowedClasses);
 
     protected:
         std::string laneId;
@@ -456,6 +463,7 @@ public:
             : TraCIObjectIterface(traci)
             , poiId(poiId) { }
 
+        Coord getPosition();
         void remove(int32_t layer);
 
     protected:
