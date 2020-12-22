@@ -145,7 +145,7 @@ void TraCIScenarioManager::init_traci()
         // query and set road network boundaries
         auto networkBoundaries = commandInterface->initNetworkBoundaries(par("margin"));
         if (world != nullptr && ((connection->traci2omnet(networkBoundaries.second).x > world->getPgs()->x) || (connection->traci2omnet(networkBoundaries.first).y > world->getPgs()->y))) {
-            EV_DEBUG << "WARNING: Playground size (" << world->getPgs()->x << ", " << world->getPgs()->y << ") might be too small for vehicle at network bounds (" << connection->traci2omnet(networkBoundaries.second).x << ", " << connection->traci2omnet(networkBoundaries.first).y << ")" << endl;
+            EV_WARN << "WARNING: Playground size (" << world->getPgs()->x << ", " << world->getPgs()->y << ") might be too small for vehicle at network bounds (" << connection->traci2omnet(networkBoundaries.second).x << ", " << connection->traci2omnet(networkBoundaries.first).y << ")" << endl;
         }
     }
 
@@ -224,7 +224,28 @@ void TraCIScenarioManager::init_traci()
         }
     }
 
-    init_obstacles();
+    // init_obstacles();
+    ObstacleControl* obstacles = ObstacleControlAccess().getIfExists();
+    if (obstacles) {
+        {
+            // get list of polygons
+            std::list<std::string> ids = commandInterface->getPolygonIds();
+            for (std::list<std::string>::iterator i = ids.begin(); i != ids.end(); ++i) {
+                std::string id = *i;
+                std::string typeId = commandInterface->polygon(id).getTypeId();
+                if (!obstacles->isTypeSupported(typeId)) continue;
+                std::list<Coord> coords = commandInterface->polygon(id).getShape();
+                std::vector<Coord> shape;
+                std::copy(coords.begin(), coords.end(), std::back_inserter(shape));
+                for (auto p : shape) {
+                    if ((p.x < 0) || (p.y < 0) || (p.x > world->getPgs()->x) || (p.y > world->getPgs()->y)) {
+                        EV_WARN << "WARNING: Playground (" << world->getPgs()->x << ", " << world->getPgs()->y << ") will not fit radio obstacle at (" << p.x << ", " << p.y << ")" << endl;
+                    }
+                }
+                obstacles->addFromTypeAndShape(id, typeId, shape);
+            }
+        }
+    }
 
 
     traciInitialized = true;
@@ -673,7 +694,7 @@ void TraCIScenarioManager::processSimSubscription(std::string objectId, TraCIBuf
             ASSERT(varType == getCommandInterface()->getTimeType());
             simtime_t serverTimestep;
             buf >> serverTimestep;
-            EV_DEBUG << "TraCI reports current time step as " << serverTimestep << "ms." << endl;
+            EV_DEBUG << "TraCI reports current time step as " << serverTimestep << " s." << endl;
             simtime_t omnetTimestep = simTime();
             ASSERT(omnetTimestep == serverTimestep);
         }

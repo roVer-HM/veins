@@ -136,8 +136,10 @@ protected:
     std::string road_id; /**< updated by nextPosition() */
     VehicleSignalSet signals; /**<updated by nextPosition() */
 
-    cMessage* startAccidentMsg;
-    cMessage* stopAccidentMsg;
+    cMessage* startAccidentMsg = nullptr;
+    cMessage* stopAccidentMsg = nullptr;
+    mutable TraCIScenarioManager* manager;
+    mutable TraCICommandInterface* commandInterface;
     mutable TraCICommandInterface::Vehicle* vehicleCommandInterface;
     double last_speed;
 
