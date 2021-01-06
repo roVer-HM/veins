@@ -12,6 +12,7 @@ doc/neddoc
 
 /out
 /.computed/
+.settings/
 
 examples/**/results
 examples/**/.tkenvrc

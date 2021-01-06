@@ -22,7 +22,7 @@
 
 package org.car2x.veins.subprojects.veins_inet.example;
 
-import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
+import inet.physicallayer.wireless.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetCar;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetManager;
 import org.car2x.veins.subprojects.veins_inet.TraCIScenarioManagerRSO;

@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-#include "inet/visualizer/scene/NetworkNodeCanvasVisualizer.h"
+#include "inet/visualizer/canvas/scene/NetworkNodeCanvasVisualizer.h"
 #include "inet/common/scenario/ScenarioManager.h"
 
 #include <veins_inet/TraCIScenarioManagerRSO.h>

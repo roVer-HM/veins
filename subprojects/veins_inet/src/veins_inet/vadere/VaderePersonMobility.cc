@@ -100,37 +100,37 @@ VaderePersonItfc* VaderePersonMobility::getPersonCommandInterface() const
     return personCommandInterface;
 }
 
-inet::Coord VaderePersonMobility::getCurrentPosition()
+const inet::Coord& VaderePersonMobility::getCurrentPosition()
 {
     moveAndUpdate();
     return lastPosition;
 }
 
-inet::Coord VaderePersonMobility::getCurrentVelocity()
+const inet::Coord& VaderePersonMobility::getCurrentVelocity()
 {
     moveAndUpdate();
     return lastVelocity;
 }
 
-inet::Coord VaderePersonMobility::getCurrentAcceleration()
+const inet::Coord& VaderePersonMobility::getCurrentAcceleration()
 {
 
     throw cRuntimeError("Invalid operation");
 }
 
-inet::Quaternion VaderePersonMobility::getCurrentAngularPosition()
+const inet::Quaternion& VaderePersonMobility::getCurrentAngularPosition()
 {
     moveAndUpdate();
     return lastOrientation;
 }
 
-inet::Quaternion VaderePersonMobility::getCurrentAngularVelocity()
+const inet::Quaternion& VaderePersonMobility::getCurrentAngularVelocity()
 {
     moveAndUpdate();
     return lastAngularVelocity;
 }
 
-inet::Quaternion VaderePersonMobility::getCurrentAngularAcceleration()
+const inet::Quaternion& VaderePersonMobility::getCurrentAngularAcceleration()
 {
     throw cRuntimeError("Invalid operation");
 }

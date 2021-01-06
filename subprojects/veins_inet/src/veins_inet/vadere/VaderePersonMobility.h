@@ -42,13 +42,13 @@ public:
 
     virtual VaderePersonItfc*  getPersonCommandInterface() const;
 
-    virtual inet::Coord getCurrentPosition() override; //MobilityBase
-    virtual inet::Coord getCurrentVelocity() override; //MobilityBase
-    virtual inet::Coord getCurrentAcceleration() override; //MobilityBase
+    virtual const inet::Coord& getCurrentPosition() override; //MobilityBase
+    virtual const inet::Coord& getCurrentVelocity() override; //MobilityBase
+    virtual const inet::Coord& getCurrentAcceleration() override; //MobilityBase
 
-    virtual inet::Quaternion getCurrentAngularPosition() override; //MobilityBase
-    virtual inet::Quaternion getCurrentAngularVelocity() override; //MobilityBase
-    virtual inet::Quaternion getCurrentAngularAcceleration() override; //MobilityBase
+    virtual const inet::Quaternion& getCurrentAngularPosition() override; //MobilityBase
+    virtual const inet::Quaternion& getCurrentAngularVelocity() override; //MobilityBase
+    virtual const inet::Quaternion& getCurrentAngularAcceleration() override; //MobilityBase
 
     void setInitialPosition() override;
 
