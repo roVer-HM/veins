@@ -102,7 +102,7 @@ if options.veins:
 
 # Add flags for INET
 if options.inet:
-    fname = os.path.join(options.inet, '_scripts/get_version')
+    fname = os.path.join(options.inet, 'bin/inet_version')
     expect_version = [b'4.3.0']
     try:
         info('Running "%s" to determine INET version.' % fname)
