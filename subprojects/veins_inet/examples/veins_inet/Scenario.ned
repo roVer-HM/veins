@@ -22,10 +22,10 @@
 
 package org.car2x.veins.subprojects.veins_inet.examples.veins_inet;
 
-import inet.physicallayer.ieee80211.packetlevel.Ieee80211DimensionalRadioMedium;
+import inet.physicallayer.wireless.ieee80211.packetlevel.Ieee80211DimensionalRadioMedium;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetCar;
 import org.car2x.veins.subprojects.veins_inet.VeinsInetManager;
-import inet.visualizer.integrated.IntegratedVisualizer;
+import inet.visualizer.common.IntegratedVisualizer;
 import inet.environment.common.PhysicalEnvironment;
 import org.car2x.veins.visualizer.roads.RoadsCanvasVisualizer;
 import org.car2x.veins.visualizer.roads.RoadsOsgVisualizer;

@@ -32,13 +32,14 @@ public:
     virtual void preInitialize(std::shared_ptr<IMobileAgent> mobileAgent) = 0;
     virtual void nextPosition(std::shared_ptr<IMobileAgent> mobileAgent) = 0;
 
-    virtual inet::Coord getCurrentPosition() override; //MobilityBase
-    virtual inet::Coord getCurrentVelocity() override; //MobilityBase
-    virtual inet::Coord getCurrentAcceleration() override; //MobilityBase
+    virtual int getId() const override { return cSimpleModule::getId(); } //MobilityBase
+    virtual const inet::Coord& getCurrentPosition() override; //MobilityBase
+    virtual const inet::Coord& getCurrentVelocity() override; //MobilityBase
+    virtual const inet::Coord& getCurrentAcceleration() override; //MobilityBase
 
-    virtual inet::Quaternion getCurrentAngularPosition() override; //MobilityBase
-    virtual inet::Quaternion getCurrentAngularVelocity() override; //MobilityBase
-    virtual inet::Quaternion getCurrentAngularAcceleration() override; //MobilityBase
+    virtual const inet::Quaternion& getCurrentAngularPosition() override; //MobilityBase
+    virtual const inet::Quaternion& getCurrentAngularVelocity() override; //MobilityBase
+    virtual const inet::Quaternion& getCurrentAngularAcceleration() override; //MobilityBase
 
     virtual TraCIGenericScenarioManager* getManager() const;
     virtual TraCICommandInterface* getCommandInterface() const;

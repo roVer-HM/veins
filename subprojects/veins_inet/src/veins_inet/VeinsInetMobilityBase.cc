@@ -43,32 +43,32 @@ void VeinsInetMobilityBase::initialize(int stage)
 }
 
 
-inet::Coord VeinsInetMobilityBase::getCurrentPosition()
+const inet::Coord& VeinsInetMobilityBase::getCurrentPosition()
 {
     return lastPosition;
 }
 
-inet::Coord VeinsInetMobilityBase::getCurrentVelocity()
+const inet::Coord& VeinsInetMobilityBase::getCurrentVelocity()
 {
     return lastVelocity;
 }
 
-inet::Coord VeinsInetMobilityBase::getCurrentAcceleration()
+const inet::Coord& VeinsInetMobilityBase::getCurrentAcceleration()
 {
     throw cRuntimeError("Invalid operation");
 }
 
-inet::Quaternion VeinsInetMobilityBase::getCurrentAngularPosition()
+const inet::Quaternion& VeinsInetMobilityBase::getCurrentAngularPosition()
 {
     return lastOrientation;
 }
 
-inet::Quaternion VeinsInetMobilityBase::getCurrentAngularVelocity()
+const inet::Quaternion& VeinsInetMobilityBase::getCurrentAngularVelocity()
 {
     return lastAngularVelocity;
 }
 
-inet::Quaternion VeinsInetMobilityBase::getCurrentAngularAcceleration()
+const inet::Quaternion& VeinsInetMobilityBase::getCurrentAngularAcceleration()
 {
     throw cRuntimeError("Invalid operation");
 }
