@@ -55,7 +55,6 @@ public:
     virtual void nextPosition(std::shared_ptr<IMobileAgent> mobileAgent) override;
     virtual void nextPosition(const inet::Coord& position, std::string road_id, double speed, double angle);
 
-
     virtual TraCICommandInterface::Vehicle* getVehicleCommandInterface() const;
 
 protected:

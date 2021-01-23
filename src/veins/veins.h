@@ -35,7 +35,7 @@
 
 // Version number of last release ("major.minor.patch") or an alpha version, if nonzero
 #define VEINS_VERSION_MAJOR 5
-#define VEINS_VERSION_MINOR 0
+#define VEINS_VERSION_MINOR 1
 #define VEINS_VERSION_PATCH 0
 #define VEINS_VERSION_ALPHA 0
 
@@ -68,7 +68,7 @@ using namespace omnetpp;
  * %Veins - The open source vehicular network simulation framework.
  */
 namespace veins {
-#ifdef __cpp_lib_make_unique
+#if (__cplusplus >= 201402L) || (defined __cpp_lib_make_unique)
 using std::make_unique;
 #else
 /**

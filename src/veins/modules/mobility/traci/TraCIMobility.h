@@ -78,6 +78,7 @@ public:
         void recordScalars(cSimpleModule& module);
     };
 
+    static const simsignal_t collisionSignal;
     const static simsignal_t parkingStateChangedSignal;
 
     TraCIMobility()
@@ -99,6 +100,7 @@ public:
     virtual void nextPosition(const Coord& position, std::string road_id = "", double speed = -1, Heading heading = Heading::nan, VehicleSignalSet signals = {VehicleSignal::undefined});
     virtual void changePosition() override;
     virtual void changeParkingState(bool);
+    virtual void collisionOccurred(bool newState);
 
     virtual bool getParkingState() const
     {

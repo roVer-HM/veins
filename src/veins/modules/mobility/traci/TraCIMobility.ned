@@ -41,6 +41,7 @@ simple TraCIMobility extends TraCIMobilityBase
 {
     parameters:
         @class(veins::TraCIMobility);
+        @signal[org_car2x_veins_modules_mobility_collision](type=bool);
         @signal[org_car2x_veins_modules_mobility_parkingStateChanged](type=veins::TraCIMobility);
         @display("i=block/cogwheel");
         int accidentCount = default(0);  // number of accidents
