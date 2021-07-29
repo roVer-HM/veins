@@ -104,7 +104,7 @@ if options.veins:
 # Add flags for INET
 if options.inet:
     fname = os.path.join(options.inet, 'bin/inet_version')
-    expect_version = [b'4.3.0']
+    expect_version = [b'4.3.0', b'4.3.2']
 #     fname = os.path.join(options.inet, '_scripts/get_version')
 #     expect_version = [b'4.2.0', b'4.2.1', b'4.2.2', b'4.3.0']
     try:
