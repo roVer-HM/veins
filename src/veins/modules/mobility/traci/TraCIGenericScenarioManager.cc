@@ -158,7 +158,7 @@ cModule* TraCIGenericScenarioManager::getManagedModule(std::string identifer){
     throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
 }
 
-void TraCIGenericScenarioManager::deleteManagedModule(std::string identifer){
+void TraCIGenericScenarioManager::unregisterManagedModule(std::string identifer){
     throw cRuntimeError("Do not use TraCIGenericScenarioManager directly. Use child class and override this method");
 }
 
@@ -238,7 +238,7 @@ void TraCIGenericScenarioManager::parseModuleTypes()
 
     intersection.clear();
     std::set_intersection(typeKeys.begin(), typeKeys.end(), displayStringKeys.begin(), displayStringKeys.end(), std::back_inserter(intersection));
-    if (intersection.size() != displayStringKeys.size()) throw cRuntimeError("keys of mappings of moduleType and moduleName are not the same");
+    if (intersection.size() != displayStringKeys.size()) throw cRuntimeError("keys of mappings of moduleType and moduleDisplayString are not the same");
 }
 
 int TraCIGenericScenarioManager::getPortNumber() const
@@ -255,6 +255,11 @@ int TraCIGenericScenarioManager::getPortNumber() const
     }
 
     return port;
+}
+
+void TraCIGenericScenarioManager::listenerRemoved()
+{
+    delete this;
 }
 
 } /* namespace veins */

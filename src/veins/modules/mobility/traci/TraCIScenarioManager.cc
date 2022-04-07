@@ -58,8 +58,6 @@ TraCIScenarioManager::~TraCIScenarioManager()
     // connection will be closed by base-class destructor - nothing to do here
 }
 
-
-
 void TraCIScenarioManager::initialize(int stage)
 {
 
@@ -189,7 +187,10 @@ void TraCIScenarioManager::init_traci()
 
         // query traffic lights via TraCI
         std::list<std::string> trafficLightIds = commandInterface->getTrafficlightIds();
+#if OMNETPP_BUILDNUM >= 1525
+#else
         size_t nrOfTrafficLights = trafficLightIds.size();
+#endif
         int cnt = 0;
         for (std::list<std::string>::iterator i = trafficLightIds.begin(); i != trafficLightIds.end(); ++i) {
             std::string tlId = *i;
@@ -199,7 +200,12 @@ void TraCIScenarioManager::init_traci()
 
             Coord position = commandInterface->junction(tlId).getPosition();
 
+#if OMNETPP_BUILDNUM >= 1525
+            parentmod->setSubmoduleVectorSize(trafficLightModuleName.c_str(), cnt + 1);
+            cModule* module = tlModuleType->create(trafficLightModuleName.c_str(), parentmod, cnt);
+#else
             cModule* module = tlModuleType->create(trafficLightModuleName.c_str(), parentmod, nrOfTrafficLights, cnt);
+#endif
             module->par("externalId") = tlId;
             module->finalizeParameters();
             module->getDisplayString().parse(trafficLightModuleDisplayString.c_str());
@@ -212,10 +218,8 @@ void TraCIScenarioManager::init_traci()
             tlIfModule->preInitialize(tlId, position, updateInterval);
 
             // initialize mobility for positioning
-            cModule* mobiSubmodule = module->getSubmodule("mobility");
-            mobiSubmodule->par("x") = position.x;
-            mobiSubmodule->par("y") = position.y;
-            mobiSubmodule->par("z") = position.z;
+            BaseMobility* mobiSubmodule = check_and_cast<BaseMobility*>(module->getSubmodule("mobility"));
+            mobiSubmodule->setStartPosition(position);
 
             module->callInitialize();
             trafficLights[tlId] = module;
@@ -281,12 +285,16 @@ void TraCIScenarioManager::init_traci()
     }
 }
 
-void TraCIScenarioManager::finish()
+
+void TraCIScenarioManager::preNetworkFinish()
 {
     while (hosts.begin() != hosts.end()) {
-        deleteManagedModule(hosts.begin()->first);
+        unregisterManagedModule(hosts.begin()->first);
     }
+}
 
+void TraCIScenarioManager::finish()
+{
     recordScalar("roiArea", areaSum);
 }
 
@@ -353,8 +361,13 @@ void TraCIScenarioManager::addModule(std::string nodeId, std::string type, std::
     cModuleType* nodeType = cModuleType::get(type.c_str());
     if (!nodeType) throw cRuntimeError("Module Type \"%s\" not found", type.c_str());
 
+#if OMNETPP_BUILDNUM >= 1525
+    parentmod->setSubmoduleVectorSize(name.c_str(), nodeVectorIndex + 1);
+    cModule* mod = nodeType->create(name.c_str(), parentmod, nodeVectorIndex);
+#else
     // TODO: this trashes the vectsize member of the cModule, although nobody seems to use it
     cModule* mod = nodeType->create(name.c_str(), parentmod, nodeVectorIndex, nodeVectorIndex);
+#endif
     mod->finalizeParameters();
     if (displayString.length() > 0) {
         mod->getDisplayString().parse(displayString.c_str());
@@ -402,7 +415,7 @@ bool TraCIScenarioManager::isModuleUnequipped(std::string nodeId)
     return true;
 }
 
-void TraCIScenarioManager::deleteManagedModule(std::string nodeId)
+void TraCIScenarioManager::unregisterManagedModule(std::string nodeId)
 {
     cModule* mod = getManagedModule(nodeId);
     if (!mod) throw cRuntimeError("no vehicle with Id \"%s\" found", nodeId.c_str());
@@ -603,7 +616,7 @@ void TraCIScenarioManager::processSimSubscription(std::string objectId, TraCIBuf
 
                 // check if this object has been deleted already (e.g. because it was outside the ROI)
                 cModule* mod = getManagedModule(idstring);
-                if (mod) deleteManagedModule(idstring);
+                if (mod) unregisterManagedModule(idstring);
 
                 if (unEquippedHosts.find(idstring) != unEquippedHosts.end()) {
                     unEquippedHosts.erase(idstring);
@@ -627,7 +640,7 @@ void TraCIScenarioManager::processSimSubscription(std::string objectId, TraCIBuf
 
                 // check if this object has been deleted already (e.g. because it was outside the ROI)
                 cModule* mod = getManagedModule(idstring);
-                if (mod) deleteManagedModule(idstring);
+                if (mod) unregisterManagedModule(idstring);
 
                 if (unEquippedHosts.find(idstring) != unEquippedHosts.end()) {
                     unEquippedHosts.erase(idstring);
@@ -871,7 +884,7 @@ void TraCIScenarioManager::processVehicleSubscription(std::string objectId, TraC
     bool inRoi = !roi.hasConstraints() ? true : (roi.onAnyRectangle(TraCICoord(px, py)) || roi.partOfRoads(edge));
     if (!inRoi) {
         if (mod) {
-            deleteManagedModule(objectId);
+            unregisterManagedModule(objectId);
             EV_DEBUG << "Vehicle #" << objectId << " left region of interest" << endl;
         }
         else if (unEquippedHosts.find(objectId) != unEquippedHosts.end()) {
@@ -921,5 +934,12 @@ void TraCIScenarioManager::processSubcriptionResult(TraCIBuffer& buf)
         processTrafficLightSubscription(objectId_resp, buf);
     else {
         throw cRuntimeError("Received unhandled subscription result");
+    }
+}
+
+void TraCIScenarioManager::lifecycleEvent(SimulationLifecycleEventType eventType, cObject* details)
+{
+    if (eventType == LF_PRE_NETWORK_FINISH) {
+        preNetworkFinish();
     }
 }

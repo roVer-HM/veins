@@ -73,6 +73,7 @@ public:
     TraCIScenarioManager();
     ~TraCIScenarioManager() override;
     void initialize(int stage) override;
+    void preNetworkFinish();
     void finish() override;
 
     const std::map<std::string, cModule*>& getManagedVehicleHosts()
@@ -120,7 +121,7 @@ protected:
     void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, std::shared_ptr<IMobileAgent> mobileAgent) override;
     void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, const Coord& position, std::string road_id = "", double speed = -1, Heading heading = Heading::nan, VehicleSignalSet signals = {VehicleSignal::undefined}, double length = 0, double height = 0, double width = 0);
     virtual cModule* getManagedModule(std::string nodeId) override; /**< returns a pointer to the managed module named moduleName, or 0 if no module can be found */
-    virtual void deleteManagedModule(std::string nodeId) override;
+    virtual void unregisterManagedModule(std::string nodeId) override;
 
     bool isModuleUnequipped(std::string nodeId); /**< returns true if this vehicle is Unequipped */
 
@@ -134,6 +135,7 @@ protected:
     void unsubscribeFromTrafficLightVariables(std::string tlId);
     void processTrafficLightSubscription(std::string objectId, TraCIBuffer& buf);
 
+    void lifecycleEvent(SimulationLifecycleEventType eventType, cObject* details) override;
 };
 
 class VEINS_API TraCIScenarioManagerAccess {

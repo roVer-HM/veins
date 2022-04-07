@@ -28,6 +28,12 @@
 #include <iostream>
 #include <fstream>
 
+// define ACCEPT_API_VERSION_SUMO if you want to accept the current sumo API version
+// (in addition to the VEINS launchd version usually accepted)
+#define ACCEPT_API_VERSION_SUMO
+
+#define API_VERSION_SUMO_CHECK (apiVersion == 20)
+
 namespace veins {
 
 namespace TraCIConstants {
@@ -92,7 +98,11 @@ void TraCIScenarioManagerLaunchd::init_traci()
         uint32_t apiVersion = version.first;
         std::string serverVersion = version.second;
 
-        if (apiVersion == 1) {
+        if (apiVersion == 1
+#ifdef ACCEPT_API_VERSION_SUMO
+                || API_VERSION_SUMO_CHECK
+#endif
+        ) {
             EV_DEBUG << "TraCI server \"" << serverVersion << "\" reports API version " << apiVersion << endl;
         }
         else {
