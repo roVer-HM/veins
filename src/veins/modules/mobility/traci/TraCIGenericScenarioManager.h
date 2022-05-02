@@ -45,7 +45,7 @@ namespace veins {
  * This generic class is agnostic to the type and number of different agents the server provides. The sub classes
  * must provide a way to handle Vehicles or Pedestrian or both.
  */
-class VEINS_API TraCIGenericScenarioManager : public cSimpleModule {
+class VEINS_API TraCIGenericScenarioManager : public cSimpleModule, public cISimulationLifecycleListener {
 public:
     static const simsignal_t traciInitializedSignal;
     static const simsignal_t traciModulePreInitSignal;
@@ -62,7 +62,6 @@ public:
     }
 
     virtual void initialize(int stage) override;
-
     void handleMessage(cMessage* msg) override;
     virtual void handleSelfMsg(cMessage* msg);
 
@@ -133,7 +132,7 @@ protected:
     virtual void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, std::shared_ptr<IMobileAgent> mobileAgent);
 
     virtual cModule* getManagedModule(std::string identifer);
-    virtual void deleteManagedModule(std::string identifer);
+    virtual void unregisterManagedModule(std::string identifer);
 //    bool isModuleUnequipped(std::string nodeId) const; /**< returns true if this vehicle is Unequipped */
 
 
@@ -146,7 +145,15 @@ protected:
      */
     void parseModuleTypes();
 
+    /**
+     * transforms a list of mappings of an omnetpp.ini parameter in a list
+     */
+    MappingParser::TypeMapping parseMappings(std::string parameter, std::string parameterName, bool allowEmpty = false);
+
     virtual int getPortNumber() const;
+    void lifecycleEvent(SimulationLifecycleEventType eventType, cObject* details) override {};
+    void listenerRemoved() override;
+
 };
 
 } /* namespace veins */

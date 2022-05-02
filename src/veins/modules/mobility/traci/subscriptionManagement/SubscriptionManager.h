@@ -331,7 +331,7 @@ bool SubscriptionManager<T>::update(TraCIBuffer& buf){
         }
 
     } else {
-        throw cRuntimeError("Subscription for remote simulation object with Id: '0x%2x' is not tracked by the SubscriptionManager ");
+        throw cRuntimeError("Subscription for remote simulation object with Id: '%s' is not tracked by the SubscriptionManager ", responseObjectID.c_str());
     }
 
 

@@ -235,12 +235,12 @@ void TraCIScenarioManagerVadere::processSubcriptionResults(simtime_t targetTime)
 
     if (subscriptionManager->has(TraCIConstants::RESPONSE_SUBSCRIBE_PERSON_VARIABLE)){
         std::shared_ptr<SubscriptionManager<VaderePerson>> vMgr = subscriptionManager->get<SubscriptionManager<VaderePerson>>(TraCIConstants::RESPONSE_SUBSCRIBE_PERSON_VARIABLE);
-        for (auto const agent : vMgr->getRSOVector()){
+        for (auto agent : vMgr->getRSOVector()){
             agent->setTime(targetTime);
             processMobileAgent(agent);
         }
         for (auto const &id : vMgr->getDeletedRSOs()){
-            deleteManagedModule(id);
+            unregisterManagedModule(id);
         }
     }
 }

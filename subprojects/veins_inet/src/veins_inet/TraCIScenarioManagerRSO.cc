@@ -37,7 +37,11 @@ using veins::TraCIBuffer;
 
 Define_Module(veins::TraCIScenarioManagerRSO);
 
+// define ACCEPT_API_VERSION_SUMO if you want to accept the current sumo API version
+// (in addition to the VEINS launchd version usually accepted)
+#define ACCEPT_API_VERSION_SUMO
 
+#define API_VERSION_SUMO_CHECK (apiVersion == 20)
 
 namespace veins {
 
@@ -177,7 +181,11 @@ void TraCIScenarioManagerRSO::init_traci(){
         uint32_t apiVersion = version.first;
         std::string serverVersion = version.second;
 
-        if (apiVersion == 1) {
+        if (apiVersion == 1
+#ifdef ACCEPT_API_VERSION_SUMO
+                || API_VERSION_SUMO_CHECK
+#endif
+        ) {
             EV_DEBUG << "TraCI server \"" << serverVersion << "\" reports API version " << apiVersion << endl;
         }
         else {
@@ -283,23 +291,23 @@ void TraCIScenarioManagerRSO::processSubcriptionResults(simtime_t targetTime){
 
     if (subscriptionManager->has(TraCIConstants::RESPONSE_SUBSCRIBE_VEHICLE_VARIABLE)){
         std::shared_ptr<SubscriptionManager<SumoVehicle>> vMgr = subscriptionManager->get<SubscriptionManager<SumoVehicle>>(TraCIConstants::RESPONSE_SUBSCRIBE_VEHICLE_VARIABLE);
-        for (auto const agent : vMgr->getRSOVector()){
+        for (auto const &agent : vMgr->getRSOVector()){
             agent->setTime(targetTime);
             processMobileAgent(agent);
         }
         for (auto const &id : vMgr->getDeletedRSOs()){
-            deleteManagedModule(id);
+            unregisterManagedModule(id);
         }
     }
 
     if (subscriptionManager->has(TraCIConstants::RESPONSE_SUBSCRIBE_PERSON_VARIABLE)){
         std::shared_ptr<SubscriptionManager<SumoPerson>> pMgr = subscriptionManager->get<SubscriptionManager<SumoPerson>>(TraCIConstants::RESPONSE_SUBSCRIBE_PERSON_VARIABLE);
-        for (auto const agent : pMgr->getRSOVector()){
+        for (auto const &agent : pMgr->getRSOVector()){
             agent->setTime(targetTime);
             processMobileAgent(agent);
         }
         for (auto const &id : pMgr->getDeletedRSOs()){
-            deleteManagedModule(id);
+            unregisterManagedModule(id);
         }
     }
 
@@ -403,8 +411,14 @@ void TraCIScenarioManagerRSO::addModule(std::string nodeId, std::string type, st
     cModuleType* nodeType = cModuleType::get(type.c_str());
     if (!nodeType) throw cRuntimeError("Module Type \"%s\" not found", type.c_str());
 
+#if OMNETPP_BUILDNUM >= 1525
+    parentmod->setSubmoduleVectorSize(name.c_str(), nodeVectorIndex + 1);
+    cModule* mod = nodeType->create(name.c_str(), parentmod, nodeVectorIndex);
+#else
     // TODO: this trashes the vectsize member of the cModule, although nobody seems to use it
     cModule* mod = nodeType->create(name.c_str(), parentmod, nodeVectorIndex, nodeVectorIndex);
+#endif
+
     mod->finalizeParameters();
     if (displayString.length() > 0) {
         mod->getDisplayString().parse(displayString.c_str());
@@ -429,7 +443,7 @@ void TraCIScenarioManagerRSO::addModule(std::string nodeId, std::string type, st
     emit(traciModuleAddedSignal, mod);
 }
 
-void TraCIScenarioManagerRSO::deleteManagedModule(std::string nodeId)
+void TraCIScenarioManagerRSO::unregisterManagedModule(std::string nodeId)
 {
     cModule* mod = getAndRemoveManagedModule(nodeId);
     if (!mod) throw cRuntimeError("no vehicle with Id \"%s\" found", nodeId.c_str());
@@ -449,7 +463,7 @@ void TraCIScenarioManagerRSO::deleteManagedModule(cModule * mod)
     }
 
     mod->callFinish();
-    mod->deleteModule();
+    // remark: we must not delete the module here - will be deleted later via parent
 }
 
 

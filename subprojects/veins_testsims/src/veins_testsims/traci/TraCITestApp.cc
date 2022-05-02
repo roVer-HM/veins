@@ -49,11 +49,14 @@ void TraCITestApp::initialize(int stage)
         hasStopped = false;
 
         EV_DEBUG << "TraCITestApp initialized with testNumber=" << testNumber << std::endl;
+
+        performTest(0);
     }
 }
 
 void TraCITestApp::finish()
 {
+    performTest(999);
 }
 
 void TraCITestApp::handleSelfMsg(cMessage* msg)
@@ -75,6 +78,11 @@ void TraCITestApp::receiveSignal(cComponent* source, simsignal_t signalID, cObje
 void TraCITestApp::handlePositionUpdate()
 {
     const simtime_t t = simTime();
+    performTest(t);
+}
+
+void TraCITestApp::performTest(const simtime_t t)
+{
     const std::string roadId = mobility->getRoadId();
     visitedEdges.insert(roadId);
 
@@ -141,9 +149,11 @@ void TraCITestApp::handlePositionUpdate()
             std::map<std::string, cModule*>::const_iterator i = traciScenarioManager->getManagedVehicleHosts().find("testVehicle0");
             bool r = (i != traciScenarioManager->getManagedVehicleHosts().end());
             assertTrue("(TraCICommandInterface::addVehicle) vehicle now driving", r);
-            const cModule* mod = i->second;
-            const TraCIMobility* traci2 = FindModule<TraCIMobility*>::findSubModule(const_cast<cModule*>(mod));
-            assertTrue("(TraCICommandInterface::addVehicle) vehicle driving at speed", traci2->getSpeed() > 25);
+            if (r) {
+                const cModule* mod = i->second;
+                const TraCIMobility* traci2 = FindModule<TraCIMobility*>::findSubModule(const_cast<cModule*>(mod));
+                assertTrue("(TraCICommandInterface::addVehicle) vehicle driving at speed", traci2->getSpeed() > 25);
+            }
         }
     }
 
@@ -286,7 +296,7 @@ void TraCITestApp::handlePositionUpdate()
             traciVehicle->changeRoute("42", 9999);
             traciVehicle->changeRoute("43", 9999);
         }
-        if (t == 30) {
+        if (t == 999) {
             assertTrue("(TraCICommandInterface::Vehicle::changeRoute, 9999) vehicle avoided 42", visitedEdges.find("42") == visitedEdges.end());
             assertTrue("(TraCICommandInterface::Vehicle::changeRoute, 9999) vehicle avoided 43", visitedEdges.find("43") == visitedEdges.end());
             assertTrue("(TraCICommandInterface::Vehicle::changeRoute, 9999) vehicle took 44", visitedEdges.find("44") != visitedEdges.end());
@@ -302,10 +312,23 @@ void TraCITestApp::handlePositionUpdate()
             traciVehicle->changeRoute("42", -1);
             traciVehicle->changeRoute("44", 9999);
         }
-        if (t == 30) {
+        if (t == 999) {
             assertTrue("(TraCICommandInterface::Vehicle::changeRoute, -1) vehicle took 42", visitedEdges.find("42") != visitedEdges.end());
             assertTrue("(TraCICommandInterface::Vehicle::changeRoute, -1) vehicle avoided 43", visitedEdges.find("43") == visitedEdges.end());
             assertTrue("(TraCICommandInterface::Vehicle::changeRoute, -1) vehicle avoided 44", visitedEdges.find("44") == visitedEdges.end());
+        }
+    }
+
+    if (testNumber == testCounter++) {
+        if (t == 1) {
+            traciVehicle->changeTarget("39");
+        }
+        if (t == 25) {
+            assertTrue("(TraCICommandInterface::Vehicle::changeTarget, -1) vehicle took 39", visitedEdges.find("39") != visitedEdges.end());
+        }
+        if (t == 999) {
+            assertTrue("(TraCICommandInterface::Vehicle::changeTarget, -1) vehicle despawned after visiting 39", visitedEdges.find("42") == visitedEdges.end());
+            assertTrue("(TraCICommandInterface::Vehicle::changeTarget, -1) vehicle despawned after visiting 39", visitedEdges.find("72") == visitedEdges.end());
         }
     }
 
@@ -316,6 +339,19 @@ void TraCITestApp::handlePositionUpdate()
         if (t == 30) {
             assertTrue("(TraCICommandInterface::Vehicle::stopAt) vehicle is at 43", roadId == "43");
             assertClose("(TraCICommandInterface::Vehicle::stopAt) vehicle is stopped", 0.0, mobility->getSpeed());
+        }
+    }
+
+    if (testNumber == testCounter++) {
+        if (t == 1) {
+            traci->vehicle(mobility->getExternalId()).stopAt("43", 20, 0, 10, 30);
+        }
+        if (t == 2) {
+            assertFalse("(TraCICommandInterface::Vehicle::isStopReached) vehicle is not stopped", traci->vehicle(mobility->getExternalId()).isStopReached());
+        }
+        if (t == 30) {
+            assertTrue("(TraCICommandInterface::Vehicle::isStopReached) vehicle is at 43", roadId == "43");
+            assertTrue("(TraCICommandInterface::Vehicle::isStopReached) vehicle is stopped", traci->vehicle(mobility->getExternalId()).isStopReached());
         }
     }
 
@@ -390,7 +426,7 @@ void TraCITestApp::handlePositionUpdate()
         if (t == 1) {
             traciVehicle->newRoute("44");
         }
-        if (t == 30) {
+        if (t == 999) {
             assertTrue("(TraCICommandInterface::Vehicle::newRoute) vehicle avoided 42", visitedEdges.find("42") == visitedEdges.end());
             assertTrue("(TraCICommandInterface::Vehicle::newRoute) vehicle avoided 43", visitedEdges.find("43") == visitedEdges.end());
             assertTrue("(TraCICommandInterface::Vehicle::newRoute) vehicle took 44", visitedEdges.find("44") != visitedEdges.end());
@@ -501,7 +537,7 @@ void TraCITestApp::handlePositionUpdate()
         if (t == 1) {
             traciVehicle->changeVehicleRoute({"25", "28", "31", "34", "37", "40", "13", "44"});
         }
-        if (t == 30) {
+        if (t == 999) {
             assertTrue("(TraCICommandInterface::Vehicle::newRoute) vehicle avoided 42", visitedEdges.find("42") == visitedEdges.end());
             assertTrue("(TraCICommandInterface::Vehicle::newRoute) vehicle avoided 43", visitedEdges.find("43") == visitedEdges.end());
             assertTrue("(TraCICommandInterface::Vehicle::newRoute) vehicle took 44", visitedEdges.find("44") != visitedEdges.end());
@@ -647,8 +683,18 @@ void TraCITestApp::handlePositionUpdate()
             std::list<std::string> junctions = traci->getJunctionIds();
             assertTrue("(TraCICommandInterface::Junction::getJunctionIds) returns test junction", std::find(junctions.begin(), junctions.end(), "1") != junctions.end());
             Coord pos = traci->junction("1").getPosition();
-            assertClose("(TraCICommandInterface::Junction::getPosition) shape x coordinate is correct", 25.0, pos.x);
-            assertClose("(TraCICommandInterface::Junction::getPosition) shape y coordinate is correct", 75.0, pos.y);
+            assertClose("(TraCICommandInterface::Junction::getPosition) junction x coordinate is correct", 25.0, pos.x);
+            assertClose("(TraCICommandInterface::Junction::getPosition) junction y coordinate is correct", 75.0, pos.y);
+        }
+    }
+
+    if (testNumber == testCounter++) {
+        if (t == 30) {
+            auto shape = traci->junction("10").getShape();
+            Coord shape_front_coord = shape.front();
+
+            assertClose("(TraCICommandInterface::Junction::getShape) shape's first x coordinate is correct", 321., floor(shape_front_coord.x));
+            assertClose("(TraCICommandInterface::Junction::getShape) shape's first y coordinate is correct", 73., floor(shape_front_coord.y));
         }
     }
 
@@ -661,6 +707,13 @@ void TraCITestApp::handlePositionUpdate()
             Coord shape_front_coord = traci->lane("10_0").getShape().front();
             assertClose("(TraCICommandInterface::Lane::getShape) shape x coordinate is correct", 523., floor(shape_front_coord.x));
             assertClose("(TraCICommandInterface::Lane::getShape) shape y coordinate is correct", 79., floor(shape_front_coord.y));
+        }
+    }
+
+    if (testNumber == testCounter++) {
+        if (t == 30) {
+            double width = traci->lane("10_0").getWidth();
+            assertClose("(TraCICommandInterface::Lane::getWidth) lane width is correct", 3.2, width);
         }
     }
 
@@ -710,9 +763,35 @@ void TraCITestApp::handlePositionUpdate()
         }
     }
 
+    if (testNumber == testCounter++) {
+        if (t == 1) {
+            auto routes_before = traci->getRouteIds();
+            assertEqual("(TraCICommandInterface::addRoute) number of routes is 1 before adding", size_t(1), routes_before.size());
+
+            traci->addRoute("route1", {"2", "27", "30"});
+
+            auto routes_after = traci->getRouteIds();
+            assertEqual("(TraCICommandInterface::addRoute) number of routes is 2 after adding", size_t(2), routes_after.size());
+            assertTrue("(TraCICommandInterface::addRoute) route list contains route1 after adding", std::find(routes_after.begin(), routes_after.end(), "route1") != routes_after.end());
+
+            auto roads = traci->route("route1").getRoadIds();
+            assertEqual("(TraCICommandInterface::Route::addRoute) road ids of new route has 3 entries", size_t(3), roads.size());
+            assertEqual("(TraCICommandInterface::Route::addRoute) road ids of new route starts with 2", "2", *roads.begin());
+        }
+    }
+
     //
     // TraCICommandInterface::Road
     //
+
+    if (testNumber == testCounter++) {
+        if (traci->getApiVersion() <= 18) {
+            skip("(TraCICommandInterface::Road::getName) skipped (requires SUMO 1.1.0 or newer)");
+        }
+        else if (t == 30) {
+            assertEqual("(TraCICommandInterface::Road::getName)", "25th street", traci->road("25").getName());
+        }
+    }
 
     if (testNumber == testCounter++) {
         if (t == 30) {

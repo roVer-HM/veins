@@ -55,7 +55,7 @@ protected:
 
     virtual void processMobileAgent(std::shared_ptr<IMobileAgent> mobileAgent);
     virtual void addModule(std::string nodeId, std::string type, std::string name, std::string displayString, std::shared_ptr<IMobileAgent> mobileAgent) override;
-    virtual void deleteManagedModule(std::string nodeId) override;
+    virtual void unregisterManagedModule(std::string nodeId) override;
     virtual void deleteManagedModule(cModule * mod);
 
     virtual void preInitializeModule(cModule* mod, std::shared_ptr<IMobileAgent> mobileAgent) override;

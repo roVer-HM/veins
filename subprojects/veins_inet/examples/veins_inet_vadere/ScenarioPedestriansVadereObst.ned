@@ -21,7 +21,13 @@
 package org.car2x.veins.subprojects.veins_inet.example.veins_inet_vadere;
 
 import inet.environment.common.PhysicalEnvironment;
-import inet.physicallayer.wireless.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
+
+//#if INET_VERSION < 0x0403
+import inet.physicallayer*.ieee80211.packetlevel.Ieee80211DimensionalRadioMedium;
+//#else
+import inet.physicallayer*.wireless.ieee80211.packetlevel.Ieee80211DimensionalRadioMedium;
+//#endif
+
 import inet.visualizer.contract.IIntegratedVisualizer;
 import org.car2x.veins.modules.obstacle.ObstacleControl;
 import org.car2x.veins.modules.world.annotations.AnnotationManager;
@@ -35,7 +41,7 @@ network ScenarioPedestriansVadereObst
     //    parameters:
     //        @display("bgb=1684,885;bgi=veins/background/hochschule_muenchenBGI");
     submodules:
-        radioMedium: Ieee80211ScalarRadioMedium {
+        radioMedium: Ieee80211DimensionalRadioMedium {
             parameters:
                 @display("p=580,275");
                 physicalEnvironmentModule = "physicalEnvironment";

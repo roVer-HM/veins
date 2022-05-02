@@ -52,7 +52,7 @@ parser = OptionParser()
 parser.add_option("-v", "--verbose", dest="count_verbose", default=0, action="count", help="increase verbosity [default: don't log infos, debug]")
 parser.add_option("-q", "--quiet", dest="count_quiet", default=0, action="count", help="decrease verbosity [default: log warnings, errors]")
 parser.add_option("--with-veins", dest="veins", help="link with a version of Veins installed in PATH [default: ../..]", metavar="PATH", default="../..")
-parser.add_option("--with-inet", dest="inet", help="link with a version of the INET Framework installed in PATH [default: ../../../inet]", metavar="PATH", default="../../../inet")
+parser.add_option("--with-inet", dest="inet", help="link with a version of the INET Framework installed in PATH [default: ../../../inet4]", metavar="PATH", default="../../../inet4")
 (options, args) = parser.parse_args()
 
 _LOGLEVELS = (logging.ERROR, logging.WARN, logging.INFO, logging.DEBUG)
@@ -74,7 +74,7 @@ run_imgs = [os.path.join('images')]
 # Add flags for Veins
 if options.veins:
     fname = os.path.join(options.veins, 'print-veins-version')
-    expect_version = [b'5.1']
+    expect_version = [b'5.2']
     try:
         info('Running "%s" to determine Veins version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
@@ -103,21 +103,30 @@ if options.veins:
 
 # Add flags for INET
 if options.inet:
-    fname = os.path.join(options.inet, 'bin/inet_version')
-    expect_version = [b'4.3.0', b'4.3.2']
-#     fname = os.path.join(options.inet, '_scripts/get_version')
-#     expect_version = [b'4.2.0', b'4.2.1', b'4.2.2', b'4.3.0']
+    expect_version = [b'4.3.9']
     try:
-        info('Running "%s" to determine INET version.' % fname)
-        version = subprocess.check_output(['env', fname], stderr=subprocess.STDOUT).strip()
-    except subprocess.CalledProcessError as e:
-        fname2 = os.path.join(options.inet, 'bin/inet_version')
+        fname1 = os.path.join(options.inet, 'Version')
+        info('Reading "%s" to determine INET version.' % fname1)
+        f = open(fname1, 'rb')
+        s = f.readline()
+        s = s.strip()
+        s = s.split(b'-', 3)
+        assert s[0] == b'inet', 'Version string does not start with "inet"'
+        version = s[1]
+        f.close()
+    except (AssertionError, EnvironmentError) as e1:
         try:
+            fname2 = os.path.join(options.inet, '_scripts/get_version')
             info('Running "%s" to determine INET version.' % fname2)
             version = subprocess.check_output(['env', fname2], stderr=subprocess.STDOUT).strip()
         except subprocess.CalledProcessError as e2:
-            error('Could not determine INET Version by running %s (%s) nor by running %s (%s). Check the path to INET (--with-inet=... option) and the INET version (should be version %s)' % (fname, e, fname2, e2, versions_to_hr(expect_version)))
-            sys.exit(1)
+            try:
+                fname3 = os.path.join(options.inet, 'bin/inet_version')
+                info('Running "%s" to determine INET version.' % fname3)
+                version = subprocess.check_output(['env', fname3], stderr=subprocess.STDOUT).strip()
+            except subprocess.CalledProcessError as e3:
+                error('Could not determine INET Version; neither by reading %s (%s), nor by running %s (%s), nor by running %s (%s). Check the path to INET (--with-inet=... option) and the INET version (should be version %s)' % (fname1, e1, fname2, e2, fname3, e3, versions_to_hr(expect_version)))
+                sys.exit(1)
     if not version in expect_version:
         warning('')
         warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
@@ -135,7 +144,7 @@ if options.inet:
     makemake_flags += inet_includes + inet_link + inet_defs
     run_libs = [os.path.relpath(os.path.join(options.inet, 'src', 'INET'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.inet, 'src'))] + run_neds
-    if not version in [b'4.2.0', b'4.2.1', b'4.2.2']:
+    if not version in [b'4.2.0', b'4.2.1', b'4.2.2', b'4.2.3', b'4.2.4']:
         run_excs = [os.path.relpath(os.path.join(options.inet, '.nedexclusions'))] + run_excs
     run_imgs = [os.path.relpath(os.path.join(options.inet, 'images'))] + run_imgs
 
