@@ -59,13 +59,11 @@ void VeinsInetApplicationBase::initialize(int stage)
     }
 }
 
-void VeinsInetApplicationBase::initializeFromMobilityModule(){
-    throw cRuntimeError("override this method and initialize the correct TraCICommandInterface");
-}
-
 void VeinsInetApplicationBase::handleStartOperation(LifecycleOperation* operation)
 {
-    initializeFromMobilityModule(); // retrieve Mobility Module and setup necessary TraCICommandInterface
+    mobility = veins::VeinsInetMobilityAccess().get(getParentModule());
+    traci = mobility->getCommandInterface();
+    traciVehicle = mobility->getVehicleCommandInterface();
 
     L3AddressResolver().tryResolve("224.0.0.1", destAddress);
     ASSERT(!destAddress.isUnspecified());
@@ -76,7 +74,6 @@ void VeinsInetApplicationBase::handleStartOperation(LifecycleOperation* operatio
     const char* interface = par("interface");
     ASSERT(interface[0]);
     IInterfaceTable* ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
-    
 #if INET_VERSION >= 0x0403
     NetworkInterface* ie = ift->findInterfaceByName(interface);
 #elif INET_VERSION >= 0x0402
@@ -84,7 +81,6 @@ void VeinsInetApplicationBase::handleStartOperation(LifecycleOperation* operatio
 #else
     InterfaceEntry* ie = ift->getInterfaceByName(interface);
 #endif
-
     ASSERT(ie);
     socket.setMulticastOutputInterface(ie->getInterfaceId());
 

@@ -31,11 +31,6 @@
 #include "inet/common/Units.h"
 #include "inet/common/geometry/common/GeographicCoordinateSystem.h"
 
-#include "veins/modules/mobility/traci/subscriptionManagement/RemoteSimulationObject.h"
-#include "veins/modules/mobility/traci/subscriptionManagement/SumoVehicle.h"
-
-using namespace veins::TraCISubscriptionManagement;
-
 namespace veins {
 
 using namespace inet::units::values;
@@ -51,12 +46,6 @@ VeinsInetMobility::~VeinsInetMobility()
     delete vehicleCommandInterface;
 }
 
-void VeinsInetMobility::preInitialize(std::shared_ptr<IMobileAgent> mobileAgent)
-{
-    std::shared_ptr<SumoVehicle> v = IMobileAgent::get<SumoVehicle>(mobileAgent);
-    preInitialize(v->getId(), inet::Coord(v->getPosition().x, v->getPosition().y) , v->getRoadId(), v->getSpeed(), v->getHeading().getRad());
-}
-
 void VeinsInetMobility::preInitialize(std::string external_id, const inet::Coord& position, std::string road_id, double speed, double angle)
 {
     Enter_Method_Silent();
@@ -66,10 +55,12 @@ void VeinsInetMobility::preInitialize(std::string external_id, const inet::Coord
     lastOrientation = inet::Quaternion(inet::EulerAngles(rad(-angle), rad(0.0), rad(0.0)));
 }
 
-void VeinsInetMobility::nextPosition(std::shared_ptr<IMobileAgent> mobileAgent)
+void VeinsInetMobility::initialize(int stage)
 {
-    std::shared_ptr<SumoVehicle> v = IMobileAgent::get<SumoVehicle>(mobileAgent);
-    nextPosition(inet::Coord(v->getPosition().x, v->getPosition().y), v->getRoadId(), v->getSpeed(), v->getHeading().getRad());
+    MobilityBase::initialize(stage);
+
+    // We patch the OMNeT++ Display String to set the initial position. Make sure this works.
+    ASSERT(hasPar("initFromDisplayString") && par("initFromDisplayString"));
 }
 
 void VeinsInetMobility::nextPosition(const inet::Coord& position, std::string road_id, double speed, double angle)
@@ -90,6 +81,97 @@ void VeinsInetMobility::nextPosition(const inet::Coord& position, std::string ro
     }
 
     emitMobilityStateChangedSignal();
+}
+
+#if INET_VERSION >= 0x0403
+const inet::Coord& VeinsInetMobility::getCurrentPosition()
+{
+    return lastPosition;
+}
+
+const inet::Coord& VeinsInetMobility::getCurrentVelocity()
+{
+    return lastVelocity;
+}
+
+const inet::Coord& VeinsInetMobility::getCurrentAcceleration()
+{
+    throw cRuntimeError("Invalid operation");
+}
+
+const inet::Quaternion& VeinsInetMobility::getCurrentAngularPosition()
+{
+    return lastOrientation;
+}
+
+const inet::Quaternion& VeinsInetMobility::getCurrentAngularVelocity()
+{
+    return lastAngularVelocity;
+}
+
+const inet::Quaternion& VeinsInetMobility::getCurrentAngularAcceleration()
+{
+    throw cRuntimeError("Invalid operation");
+}
+#else
+
+inet::Coord VeinsInetMobility::getCurrentPosition()
+{
+    return lastPosition;
+}
+
+inet::Coord VeinsInetMobility::getCurrentVelocity()
+{
+    return lastVelocity;
+}
+
+inet::Coord VeinsInetMobility::getCurrentAcceleration()
+{
+    throw cRuntimeError("Invalid operation");
+}
+
+inet::Quaternion VeinsInetMobility::getCurrentAngularPosition()
+{
+    return lastOrientation;
+}
+
+inet::Quaternion VeinsInetMobility::getCurrentAngularVelocity()
+{
+    return lastAngularVelocity;
+}
+
+inet::Quaternion VeinsInetMobility::getCurrentAngularAcceleration()
+{
+    throw cRuntimeError("Invalid operation");
+}
+#endif
+void VeinsInetMobility::setInitialPosition()
+{
+    subjectModule->getDisplayString().setTagArg("p", 0, lastPosition.x);
+    subjectModule->getDisplayString().setTagArg("p", 1, lastPosition.y);
+    MobilityBase::setInitialPosition();
+}
+
+void VeinsInetMobility::handleSelfMessage(cMessage* message)
+{
+}
+
+std::string VeinsInetMobility::getExternalId() const
+{
+    if (external_id == "") throw cRuntimeError("TraCIMobility::getExternalId called with no external_id set yet");
+    return external_id;
+}
+
+TraCIScenarioManager* VeinsInetMobility::getManager() const
+{
+    if (!manager) manager = TraCIScenarioManagerAccess().get();
+    return manager;
+}
+
+TraCICommandInterface* VeinsInetMobility::getCommandInterface() const
+{
+    if (!commandInterface) commandInterface = getManager()->getCommandInterface();
+    return commandInterface;
 }
 
 TraCICommandInterface::Vehicle* VeinsInetMobility::getVehicleCommandInterface() const

@@ -24,10 +24,9 @@
 
 #include "veins_inet/veins_inet.h"
 
-#include "veins_inet/VeinsInetVehicleApplicationBase.h"
-#include "veins_inet/VeinsInetMobility.h"
+#include "veins_inet/VeinsInetApplicationBase.h"
 
-class VEINS_INET_API VeinsInetSampleApplication : public veins::VeinsInetVehicleApplicationBase {
+class VEINS_INET_API VeinsInetSampleApplication : public veins::VeinsInetApplicationBase {
 protected:
     bool haveForwarded = false;
 

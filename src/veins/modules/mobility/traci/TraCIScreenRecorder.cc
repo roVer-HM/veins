@@ -87,7 +87,7 @@ void TraCIScreenRecorder::handleMessage(cMessage* msg)
     }
 
     // take screenshot
-    TraCIGenericScenarioManager* manager = TraCIScenarioManagerAccess().get();
+    TraCIScenarioManager* manager = TraCIScenarioManagerAccess().get();
     ASSERT(manager);
     TraCICommandInterface* traci = manager->getCommandInterface();
     if (!traci) {

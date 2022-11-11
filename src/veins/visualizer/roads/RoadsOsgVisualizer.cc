@@ -51,7 +51,7 @@ void RoadsOsgVisualizer::initialize(int stage)
 
     if (stage == 0) {
 
-        TraCIGenericScenarioManager* manager = TraCIScenarioManagerAccess().get();
+        TraCIScenarioManager* manager = TraCIScenarioManagerAccess().get();
         ASSERT(manager);
 
         figures = new osg::Group();
