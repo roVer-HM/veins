@@ -38,13 +38,23 @@ simple TraCIScenarioManager extends TraCIGenericScenarioManager
 {
     parameters:
         @display("i=block/network2");
+        @signal[org_car2x_veins_modules_mobility_traciInitialized](type=bool);
+        @signal[org_car2x_veins_modules_mobility_traciModulePreInit](type=cModule);
+        @signal[org_car2x_veins_modules_mobility_traciModuleAdded](type=cModule);
+        @signal[org_car2x_veins_modules_mobility_traciModuleRemoved](type=cModule);
+        @signal[org_car2x_veins_modules_mobility_traciModuleUpdated](type=cModule);
+        @signal[org_car2x_veins_modules_mobility_traciTrafficLightPreInit](type=cModule);
+        @signal[org_car2x_veins_modules_mobility_traciTrafficLightAdded](type=cModule);
+        @signal[org_car2x_veins_modules_mobility_traciTrafficLightRemoved](type=cModule);
+        @signal[org_car2x_veins_modules_mobility_traciTrafficLightUpdated](type=cModule);
+        @signal[org_car2x_veins_modules_mobility_traciTimestepBegin](type=simtime_t);
+        @signal[org_car2x_veins_modules_mobility_traciTimestepEnd](type=simtime_t);
         @class(veins::TraCIScenarioManager);
 
         string trafficLightModuleType = default("");  // module type to be used in the simulation for each managed traffic light
         string trafficLightModuleName = default("tls");  // module name to be used in the simulation for each managed traffic light
         string trafficLightFilter = default("");  // filter string to select which tls shall be subscribed, list sumo IDs separated by spaces
-        string trafficLightModuleDisplayString = default("i=misc/node2;is=vs;r=0,,#707070,1");  // module displayString to be used in the simulation for each managed traffic light
-
+        string trafficLightModuleDisplayString = default("i=veins/node/trafficlight;is=vs");  // module displayString to be used in the simulation for each managed traffic light
         string roiRoads = default("");  // which roads (e.g. "hwy1 hwy2") are considered to consitute the region of interest, if not empty
         string roiRects = default("");  // which rectangles (e.g. "0,0-10,10 20,20-30,30) are considered to consitute the region of interest, if not empty. Note that these rectangles have to use TraCI (SUMO) coordinates and not OMNeT++. They can be easily read from sumo-gui.
         double penetrationRate = default(1); //the probability of a vehicle being equipped with Car2X technology

@@ -35,8 +35,8 @@
 
 // Version number of last release ("major.minor.patch") or an alpha version, if nonzero
 #define VEINS_VERSION_MAJOR 5
-#define VEINS_VERSION_MINOR 2
-#define VEINS_VERSION_PATCH 0
+#define VEINS_VERSION_MINOR 3
+#define VEINS_VERSION_PATCH 1
 #define VEINS_VERSION_ALPHA 0
 
 // Explicitly check OMNeT++ version number
@@ -77,10 +77,21 @@ using std::make_unique;
  * Until Veins builds on C++14, this provides equivalent functionality.
  */
 template <typename T, typename ... Args>
-std::unique_ptr<T> make_unique(Args&& ... args)
+std::unique_ptr<T> make_unique(Args&&... args)
 {
     return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
+#endif
+
+// user-defined replacement for std::unary_function, if needed
+#if (defined __cpp_lib_unary_function)
+using std::unary_function;
+#else
+template <typename Arg, typename Result>
+struct unary_function {
+    typedef Arg argument_type;
+    typedef Result result_type;
+};
 #endif
 
 template <typename T>

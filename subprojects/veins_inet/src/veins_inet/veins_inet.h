@@ -27,8 +27,8 @@
 
 // Version number of last release ("major.minor.patch") or an alpha version, if nonzero
 #define VEINS_INET_VERSION_MAJOR 5
-#define VEINS_INET_VERSION_MINOR 2
-#define VEINS_INET_VERSION_PATCH 0
+#define VEINS_INET_VERSION_MINOR 3
+#define VEINS_INET_VERSION_PATCH 1
 #define VEINS_INET_VERSION_ALPHA 0
 
 // Explicitly check Veins version number
@@ -40,8 +40,9 @@
 #if !(INET_VERSION >= 0x0402 && INET_VERSION < 0x0500)
 #error INET version 4.2 or compatible required
 #endif
-#if !((INET_VERSION == 0x0402) || (INET_VERSION == 0x0403) || (INET_VERSION == 0x0404)|| (INET_VERSION == 0x0405))
-#pragma message("WARNING: Unsupported INET version. Only INET version 4.2, 4.3, 4.4 and 4.5 are supported.")
+
+#if !((INET_VERSION == 0x0402) || (INET_VERSION == 0x0403) || (INET_VERSION == 0x0404) || (INET_VERSION == 0x405))
+#pragma message("WARNING: Unsupported INET version. Only INET version 4.2 through 4.5 are supported.")
 #endif
 
 // VEINS_INET_API macro. Allows us to use the same .h files for both building a .dll and linking against it

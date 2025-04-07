@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 Christoph Sommer <sommer@cms-labs.org>
+// Copyright (C) 2018 Tobias Hardes <hardes@ccs-labs.org>
 //
 // Documentation for these modules is at http://veins.car2x.org/
 //
@@ -24,42 +24,30 @@
 
 #include "veins/veins.h"
 
-#ifdef WITH_OSG
-namespace osg {
-class Geode;
-class Group;
-}; // namespace osg
-#endif // WITH_OSG
+#include "veins/modules/application/ieee80211p/DemoBaseApplLayer.h"
+#include "veins/modules/mobility/traci/TraCIMobility.h"
+#include "veins/modules/mobility/traci/TraCICommandInterface.h"
 
-#include "veins/base/utils/Coord.h"
-#include "veins/modules/utility/SignalManager.h"
+using veins::TraCICommandInterface;
+using veins::TraCIMobility;
 
 namespace veins {
 
-/**
- * @brief
- * Simple support module to visualize road network as received via TraCI.
- *
- * See the Veins website <a href="http://veins.car2x.org/"> for a tutorial, documentation, and publications </a>.
- *
- * @author Christoph Sommer
- *
- * @see TraCIScenarioManager
- *
- */
-class VEINS_API RoadsOsgVisualizer : public cSimpleModule {
+class TraCIDemoTrafficLightApp : public DemoBaseApplLayer {
 public:
-    void initialize(int stage) override;
-#ifdef WITH_OSG
-    void handleMessage(cMessage* msg) override;
-    void finish() override;
+    TraCIDemoTrafficLightApp();
+    virtual ~TraCIDemoTrafficLightApp();
+    virtual void initialize(int stage);
 
 protected:
-    veins::SignalManager signalManager;
-    osg::Group* figures;
+    /** @brief this function is called upon receiving a BasicSafetyMessage, also referred to as a beacon  */
+    virtual void onBSM(DemoSafetyMessage* bsm);
 
-    osg::Geode* createLine(const std::list<veins::Coord>& coords, cFigure::Color color, double width);
-#endif // WITH_OSG
+    /** @brief handle messages from below and calls the onWSM, onBSM, and onWSA functions accordingly */
+    virtual void handleLowerMsg(cMessage* msg);
+
+    /** @brief Called every time a message arrives*/
+    virtual void handleMessage(cMessage* msg);
 };
 
 } // namespace veins
