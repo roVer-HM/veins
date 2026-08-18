@@ -113,12 +113,12 @@ std::string TraCIBuffer::read()
 {
     uint32_t length = read<uint32_t>();
     if (length == 0) return std::string();
-    char obuf[length + 1];
+    std::vector<char> obuf(length + 1);
 
     for (size_t i = 0; i < length; ++i) read<char>(obuf[i]);
     obuf[length] = 0;
 
-    return std::string(obuf, length);
+    return std::string(obuf.data(), length);
 }
 
 template <>

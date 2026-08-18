@@ -203,12 +203,12 @@ std::string TraCIConnection::receiveMessage()
     }
 
     uint32_t bufLength = msgLength - sizeof(msgLength);
-    char buf[bufLength];
+    std::vector<char> buf(bufLength);
     {
         EV_TRACE << "Reading TraCI message of " << bufLength << " bytes" << endl;
         uint32_t bytesRead = 0;
         while (bytesRead < bufLength) {
-            int receivedBytes = ::recv(socket(socketPtr), reinterpret_cast<char*>(&buf) + bytesRead, bufLength - bytesRead, 0);
+            int receivedBytes = ::recv(socket(socketPtr), buf.data() + bytesRead, bufLength - bytesRead, 0);
             if (receivedBytes > 0) {
                 bytesRead += receivedBytes;
             }
@@ -222,7 +222,7 @@ std::string TraCIConnection::receiveMessage()
             }
         }
     }
-    return std::string(buf, bufLength);
+    return std::string(buf.data(), bufLength);
 }
 
 void TraCIConnection::sendMessage(std::string buf)

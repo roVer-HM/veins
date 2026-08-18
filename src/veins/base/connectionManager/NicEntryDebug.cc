@@ -77,7 +77,7 @@ int NicEntryDebug::collectGates(const char* pattern, GateStack& gates)
     int i = 1;
     char gateName[20];
     // create the unique name for the gate (composed of the nic module id and a counter)
-    sprintf(gateName, pattern, nicId, i);
+    snprintf(gateName, sizeof(gateName), pattern, nicId, i);
     while (host->hasGate(gateName)) {
         cGate* hostGate = host->gate(gateName);
         if (hostGate->isConnectedOutside()) {
@@ -87,7 +87,7 @@ int NicEntryDebug::collectGates(const char* pattern, GateStack& gates)
         gates.push_back(hostGate);
 
         ++i;
-        sprintf(gateName, pattern, nicId, i);
+        snprintf(gateName, sizeof(gateName), pattern, nicId, i);
     }
 
     return i - 1;
@@ -124,7 +124,7 @@ cGate* NicEntryDebug::requestInGate(void)
         ++inCnt;
 
         // get a unique name for the gate (composed of the nic module id and a counter)
-        sprintf(gateName, "in%d-%d", nicId, inCnt);
+        snprintf(gateName, sizeof(gateName), "in%d-%d", nicId, inCnt);
 
         // create a new gate for the host module
         nicPtr->getParentModule()->addGate(gateName, cGate::INPUT);
@@ -179,7 +179,7 @@ cGate* NicEntryDebug::requestOutGate(void)
         ++outCnt;
 
         // get a unique name for the gate (composed of the nic module id and a counter)
-        sprintf(gateName, "out%d-%d", nicId, outCnt);
+        snprintf(gateName, sizeof(gateName), "out%d-%d", nicId, outCnt);
 
         // create a new gate for the host module
         nicPtr->getParentModule()->addGate(gateName, cGate::OUTPUT);
